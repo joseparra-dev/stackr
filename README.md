@@ -1,59 +1,62 @@
 # Stackr
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+> A treasury-grade personal portfolio tracker for crypto investors.
 
-## Development server
+Track your crypto buys and sells. See total portfolio value, P&L, allocation, and historical performance — all live, all in one place.
 
-To start a local development server, run:
+**Status:** In active development. Target launch: mid-2026.
 
-```bash
-ng serve
-```
+## Why
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Existing crypto trackers fall into two camps: heavy exchange clients (Binance, Coinbase) or hobby projects with shallow UX. Stackr fills the gap: treasury-grade analytics for serious individual investors who track positions manually.
 
-## Code scaffolding
+## Stack
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Frontend:** Angular 21 (standalone + signals), Tailwind v4, Angular CDK
+- **Backend (BaaS):** Supabase (PostgreSQL + Auth + RLS)
+- **Charts:** ng-apexcharts
+- **External APIs:** CoinGecko (prices), Binance WebSocket (real-time)
+- **Testing:** Vitest + Playwright
+- **CI/CD:** GitHub Actions + Vercel
+- **Workflow:** AI-augmented development with Cursor + Anthropic Skills + ADR-driven decisions
 
-```bash
-ng generate component component-name
-```
+See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the full stack rationale and [`docs/adr/`](./docs/adr/) for major architectural decisions.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Documentation
 
-```bash
-ng generate --help
-```
+- [Product Requirements](./docs/PRD.md)
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Roadmap](./docs/ROADMAP.md)
+- [Non-Goals](./docs/NON-GOALS.md) — what we explicitly DON'T build
+- [Architecture Decision Records](./docs/adr/)
+- [Agent guidelines](./AGENTS.md) — for AI pair-programming context
 
-## Building
+## Local development
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Prerequisites: Node 20+, pnpm 9+, Supabase CLI.
 
 ```bash
-ng test
+# Install dependencies
+pnpm install
+
+# Copy environment file and fill in your Supabase credentials
+cp .env.example .env.local
+
+# Start dev server
+pnpm start
+
+# Run tests
+pnpm test
+pnpm e2e
+
+# Lint, type-check, build
+pnpm lint && pnpm type-check && pnpm build
 ```
 
-## Running end-to-end tests
+## Author
 
-For end-to-end (e2e) testing, run:
+[Jose Parra](https://joseparra.dev) — Senior Frontend Engineer, Angular Specialist.
 
-```bash
-ng e2e
-```
+## License
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT

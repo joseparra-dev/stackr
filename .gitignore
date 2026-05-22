@@ -42,3 +42,32 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment files (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# Coverage
+coverage/
+*.lcov
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Supabase local
+.supabase/
+supabase/.branches/
+supabase/.temp/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,62 @@
+---
+description: Angular 21 conventions for Stackr
+globs: src/**/*.ts, src/**/*.html
+alwaysApply: true
+---
+
+# Angular 21 Conventions
+
+## Architecture
+- **Standalone components only.** Never use NgModules.
+- **Signals first.** Use signals for state, computed for derived state. RxJS only for streams (WebSockets, real-time).
+- **Folder by feature.** Each feature self-contained in `src/app/features/<name>/`.
+- **No barrel files** except in `src/app/shared/ui/`.
+
+## Naming
+- `*.component.ts` — regular components (PascalCase class with `Component` suffix).
+- `*.page.ts` — route-level components (PascalCase class with `Page` suffix).
+- `*.service.ts` — services (Injectable, providedIn: 'root' for singletons).
+- `*.store.ts` — state stores (Injectable + signals).
+- `*.guard.ts` — functional route guards (lowercase function names).
+- `*.types.ts` — interfaces and types only.
+- `*.spec.ts` — unit tests (Vitest).
+- Files: kebab-case. Classes: PascalCase. Functions/vars: camelCase.
+
+## Templates
+- **New control flow only:** `@if`, `@for`, `@switch`. Never `*ngIf`, `*ngFor`.
+- **Track by required** in `@for`.
+- **Self-closing tags** for void elements.
+- **No template-driven forms.** Use Reactive Forms or Signal Forms.
+
+## Component API
+- Use `input()` and `output()` (signal-based), not `@Input()` / `@Output()` decorators.
+- Use `inject()` for DI, not constructor injection (less verbose, easier to test).
+- Use `effect()` sparingly — prefer `computed()` for derived state.
+- Use `viewChild()` / `contentChild()` signal queries, not decorators.
+
+## TypeScript
+- `strict: true`, `noImplicitAny: true`.
+- **Never `any`.** Use `unknown` and narrow.
+- Prefer `type` over `interface` except for extension.
+- Always use `readonly` for immutable fields.
+- Use `as const` for literal arrays/objects.
+
+## Error Handling
+- Services throw or return `AppError` (from `@core/errors`), never raw exceptions.
+- Stores capture errors in dedicated `_error` signal.
+- Components render error UI based on `error.code`, never raw messages.
+- Global `ErrorHandler` ships errors to Sentry.
+
+## Imports
+- Use absolute imports with path aliases: `@app/`, `@core/`, `@shared/`, `@features/`, `@env/`.
+- Sort imports: external → @angular → @app → relative.
+
+## Styling
+- Tailwind v4 utility classes only. No `[ngStyle]` or inline styles.
+- Use CSS variables from `:root` and `[data-theme]`.
+- Mobile-first: base styles for mobile, `sm:` `md:` `lg:` `xl:` for larger.
+
+## Performance
+- Lazy-load all routes with `loadChildren` or `loadComponent`.
+- Use `ChangeDetectionStrategy.OnPush` always (default in Signals world).
+- Use `@defer` for below-the-fold blocks.

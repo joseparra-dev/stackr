@@ -1,0 +1,44 @@
+---
+description: Commit conventions enforced by commitlint
+alwaysApply: true
+---
+
+# Commit Conventions
+
+We use **Conventional Commits**. Enforced by commitlint.
+
+## Format
+():
+
+[optional body]
+
+[optional footer]
+
+## Types
+- `feat` — new user-facing feature
+- `fix` — bug fix
+- `perf` — performance improvement
+- `refactor` — code change that neither fixes a bug nor adds a feature
+- `style` — formatting, no logic change
+- `docs` — documentation only
+- `test` — test added or refactored
+- `chore` — tooling, deps, config
+- `ci` — CI/CD changes
+- `build` — build system or external deps
+- `revert` — revert a previous commit
+
+## Scope (optional but encouraged)
+- Feature name: `auth`, `transactions`, `holdings`, `prices`, `dashboard`, `settings`
+- Cross-cutting: `core`, `shared`, `ui`, `theme`, `i18n`, `deps`
+
+## Subject
+- Imperative mood: "add", not "added" or "adds".
+- Lowercase first letter.
+- No period at end.
+- Max 100 chars total in header.
+
+## Examples
+- `feat(transactions): add edit and delete actions`
+- `fix(auth): handle expired session redirect`
+- `chore(deps): bump @supabase/supabase-js to 2.45.0`
+- `docs(adr): document why we chose Supabase over Firebase`

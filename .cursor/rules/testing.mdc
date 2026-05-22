@@ -1,0 +1,33 @@
+---
+description: Testing conventions for Stackr
+globs: src/**/*.spec.ts, e2e/**/*.spec.ts
+alwaysApply: true
+---
+
+# Testing Conventions
+
+## Unit tests (Vitest)
+- Pure utility functions: **100% coverage required**. They contain financial math (P&L, FIFO).
+- Stores: cover happy path + error cases + edge cases. Target 80%+.
+- Services: mock HTTP with MSW. Test retries, error mapping. Target 70%+.
+- Components: only test critical UI logic (forms, complex interactions). Target 30-50%.
+
+## Test naming
+- `describe('<UnitName>')` — class or function under test.
+- `it('should <expected behavior> when <condition>')` — readable.
+- Group by behavior, not by method. Example:
+  - `describe('calculatePnL')` → `describe('with only buys')`, `describe('with FIFO matching')`, etc.
+
+## Fixtures
+- Reusable test data lives in `src/**/__fixtures__/`.
+- Never use random data — tests must be deterministic.
+
+## E2E (Playwright)
+- Only 2-3 critical flows: login → add txn → see dashboard.
+- Use page object pattern for reusable interactions.
+- Tests must be hermetic: fresh Supabase test schema per run (later, via test DB).
+
+## Mocks
+- Use `vi.fn()` and `vi.spyOn()` from Vitest.
+- For HTTP, use MSW (`msw` package) — already configured if needed.
+- Never mock signals/computed — they are reactive primitives, not mocked.

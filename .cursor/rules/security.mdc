@@ -1,0 +1,39 @@
+---
+description: Security by default — OWASP awareness for Stackr
+alwaysApply: true
+---
+
+# Security Conventions
+
+## Secrets
+- NEVER commit `.env.local` or any file with real keys.
+- Public keys (Supabase anon, CoinGecko URL) can be in env vars exposed to client.
+- Service role keys NEVER touch client code.
+
+## Auth
+- Always check `auth.uid()` in RLS policies, never trust frontend.
+- Session tokens persisted by Supabase SDK; never store in localStorage manually.
+- Logout invalidates the Supabase session (call `supabase.auth.signOut()`).
+
+## Input validation
+- All forms use Reactive Forms with explicit validators.
+- Server-side: Postgres CHECK constraints enforce data integrity (quantity > 0, fee >= 0, etc.).
+- Never inject user input into raw SQL — Supabase client uses parameterized queries by default.
+
+## Error handling
+- Generic error messages to user — never expose stack traces or internal errors.
+- Detailed errors logged to Sentry server-side only.
+- Fail closed: if auth check fails, redirect to login. If DB write fails, rollback optimistic UI.
+
+## RLS policies
+- Every user-data table has RLS enabled.
+- Default policy is DENY; explicit policies grant access.
+- Test policies with anonymous and impersonated users before deploying.
+
+## XSS / CSRF
+- Angular escapes templates by default. Never use `[innerHTML]` with user content.
+- Supabase auth uses secure HttpOnly cookies — CSRF protected.
+- No third-party scripts without SRI hashes.
+
+## Headers
+- `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, strict CSP — configured at hosting (Vercel).
