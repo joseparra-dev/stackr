@@ -1,0 +1,2 @@
+// Custom project words. Auto-extended by the "Add Word to Dictionary" action
+// in Code Spell Checker when running in the workspace context.

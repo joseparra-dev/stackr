@@ -1,22 +1,23 @@
 import { TestBed } from '@angular/core/testing';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as supabaseJs from '@supabase/supabase-js';
+import { provideSupabase, SUPABASE_CLIENT, type CreateSupabaseClient } from './supabase.client';
 
-import { provideSupabase, SUPABASE_CLIENT } from './supabase.client';
-
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: vi.fn((url: string, anonKey: string, options: unknown) => ({
+function makeCreateClientStub(): CreateSupabaseClient & ReturnType<typeof vi.fn> {
+  return vi.fn((url: string, anonKey: string, options: unknown) => ({
     __mock: true,
     url,
     anonKey,
     options,
-  })),
-}));
+  })) as unknown as CreateSupabaseClient & ReturnType<typeof vi.fn>;
+}
 
 describe('SUPABASE_CLIENT provider', () => {
+  let createClient: CreateSupabaseClient & ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    vi.mocked(supabaseJs.createClient).mockClear();
+    createClient = makeCreateClientStub();
   });
 
   it('builds the Supabase client with the configured URL and anon key', () => {
@@ -25,15 +26,16 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
 
-    const client = TestBed.inject(SUPABASE_CLIENT);
+    const client = TestBed.inject<SupabaseClient>(SUPABASE_CLIENT);
 
     expect(client).toBeDefined();
-    expect(supabaseJs.createClient).toHaveBeenCalledTimes(1);
-    expect(supabaseJs.createClient).toHaveBeenCalledWith(
+    expect(createClient).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledWith(
       'https://test.supabase.co',
       'test-anon-key',
       expect.any(Object),
@@ -46,13 +48,14 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
 
     TestBed.inject(SUPABASE_CLIENT);
 
-    expect(supabaseJs.createClient).toHaveBeenCalledWith(
+    expect(createClient).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(String),
       expect.objectContaining({
@@ -73,6 +76,7 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
@@ -81,24 +85,24 @@ describe('SUPABASE_CLIENT provider', () => {
     const second = TestBed.inject(SUPABASE_CLIENT);
 
     expect(first).toBe(second);
-    expect(supabaseJs.createClient).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledTimes(1);
   });
 
   it('fails closed when the Supabase URL is missing', () => {
     TestBed.configureTestingModule({
-      providers: [provideSupabase({ url: '', anonKey: 'test-anon-key' })],
+      providers: [provideSupabase({ url: '', anonKey: 'test-anon-key', createClient })],
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(supabaseJs.createClient).not.toHaveBeenCalled();
+    expect(createClient).not.toHaveBeenCalled();
   });
 
   it('fails closed when the anon key is missing', () => {
     TestBed.configureTestingModule({
-      providers: [provideSupabase({ url: 'https://test.supabase.co', anonKey: '' })],
+      providers: [provideSupabase({ url: 'https://test.supabase.co', anonKey: '', createClient })],
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(supabaseJs.createClient).not.toHaveBeenCalled();
+    expect(createClient).not.toHaveBeenCalled();
   });
 });

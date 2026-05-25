@@ -1,3 +1,20 @@
 {
-  "cSpell.words": ["stackr", "Stackr", "Supabase", "SUPABASE"]
+  "cSpell.language": "en,es",
+  "cSpell.enabledFileTypes": {
+    "typescript": true,
+    "typescriptreact": true,
+    "javascript": true,
+    "javascriptreact": true,
+    "html": true,
+    "css": true,
+    "scss": true,
+    "json": true,
+    "jsonc": true,
+    "markdown": true,
+    "yaml": true,
+    "yml": true,
+    "shellscript": true,
+    "dotenv": true
+  },
+  "cSpell.import": ["./cspell.json"]
 }
