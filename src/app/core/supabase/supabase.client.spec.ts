@@ -1,30 +1,23 @@
 import { TestBed } from '@angular/core/testing';
-import type * as SupabaseJs from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { provideSupabase, SUPABASE_CLIENT } from './supabase.client';
+import { provideSupabase, SUPABASE_CLIENT, type CreateSupabaseClient } from './supabase.client';
 
-const { createClientMock } = vi.hoisted(() => ({
-  createClientMock: vi.fn((url: string, anonKey: string, options: unknown) => ({
+function makeCreateClientStub(): CreateSupabaseClient & ReturnType<typeof vi.fn> {
+  return vi.fn((url: string, anonKey: string, options: unknown) => ({
     __mock: true,
     url,
     anonKey,
     options,
-  })),
-}));
-
-// `importOriginal` + spread keeps every other export (AuthError, isAuthError,
-// type re-exports) real. Without this, sibling specs that pull `AuthError`
-// from `@supabase/supabase-js` would race against this mock depending on
-// worker / module-cache order.
-vi.mock('@supabase/supabase-js', async (importOriginal) => {
-  const actual = await importOriginal<typeof SupabaseJs>();
-  return { ...actual, createClient: createClientMock };
-});
+  })) as unknown as CreateSupabaseClient & ReturnType<typeof vi.fn>;
+}
 
 describe('SUPABASE_CLIENT provider', () => {
+  let createClient: CreateSupabaseClient & ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    createClientMock.mockClear();
+    createClient = makeCreateClientStub();
   });
 
   it('builds the Supabase client with the configured URL and anon key', () => {
@@ -33,15 +26,16 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
 
-    const client = TestBed.inject(SUPABASE_CLIENT);
+    const client = TestBed.inject<SupabaseClient>(SUPABASE_CLIENT);
 
     expect(client).toBeDefined();
-    expect(createClientMock).toHaveBeenCalledTimes(1);
-    expect(createClientMock).toHaveBeenCalledWith(
+    expect(createClient).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledWith(
       'https://test.supabase.co',
       'test-anon-key',
       expect.any(Object),
@@ -54,13 +48,14 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
 
     TestBed.inject(SUPABASE_CLIENT);
 
-    expect(createClientMock).toHaveBeenCalledWith(
+    expect(createClient).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(String),
       expect.objectContaining({
@@ -81,6 +76,7 @@ describe('SUPABASE_CLIENT provider', () => {
         provideSupabase({
           url: 'https://test.supabase.co',
           anonKey: 'test-anon-key',
+          createClient,
         }),
       ],
     });
@@ -89,24 +85,24 @@ describe('SUPABASE_CLIENT provider', () => {
     const second = TestBed.inject(SUPABASE_CLIENT);
 
     expect(first).toBe(second);
-    expect(createClientMock).toHaveBeenCalledTimes(1);
+    expect(createClient).toHaveBeenCalledTimes(1);
   });
 
   it('fails closed when the Supabase URL is missing', () => {
     TestBed.configureTestingModule({
-      providers: [provideSupabase({ url: '', anonKey: 'test-anon-key' })],
+      providers: [provideSupabase({ url: '', anonKey: 'test-anon-key', createClient })],
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(createClientMock).not.toHaveBeenCalled();
+    expect(createClient).not.toHaveBeenCalled();
   });
 
   it('fails closed when the anon key is missing', () => {
     TestBed.configureTestingModule({
-      providers: [provideSupabase({ url: 'https://test.supabase.co', anonKey: '' })],
+      providers: [provideSupabase({ url: 'https://test.supabase.co', anonKey: '', createClient })],
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(createClientMock).not.toHaveBeenCalled();
+    expect(createClient).not.toHaveBeenCalled();
   });
 });

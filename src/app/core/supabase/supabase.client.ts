@@ -18,17 +18,32 @@ const DEFAULT_OPTIONS: SupabaseClientOptions<'public'> = {
   },
 };
 
-/** Exposed so tests can override credentials without touching `import.meta.env`. */
+export type CreateSupabaseClient = (
+  url: string,
+  anonKey: string,
+  options: SupabaseClientOptions<'public'>,
+) => SupabaseClient;
+
 export const SUPABASE_URL = new InjectionToken<string>('SUPABASE_URL');
 
 /** Publishable (anon) key — safe in the client, RLS enforces access. NEVER the `service_role` key. */
 export const SUPABASE_ANON_KEY = new InjectionToken<string>('SUPABASE_ANON_KEY');
+
+/**
+ * Factory used to build the Supabase client. Injected (instead of imported
+ * statically) so tests can swap it without relying on module mocking,
+ * which is brittle across CI/Linux + pnpm symlinks.
+ */
+export const SUPABASE_CREATE_CLIENT = new InjectionToken<CreateSupabaseClient>(
+  'SUPABASE_CREATE_CLIENT',
+);
 
 export const SUPABASE_CLIENT = new InjectionToken<SupabaseClient>('SUPABASE_CLIENT');
 
 export interface ProvideSupabaseConfig {
   readonly url?: string;
   readonly anonKey?: string;
+  readonly createClient?: CreateSupabaseClient;
 }
 
 export function provideSupabase(config?: ProvideSupabaseConfig): EnvironmentProviders {
@@ -36,8 +51,12 @@ export function provideSupabase(config?: ProvideSupabaseConfig): EnvironmentProv
     { provide: SUPABASE_URL, useValue: config?.url ?? environment.supabase.url },
     { provide: SUPABASE_ANON_KEY, useValue: config?.anonKey ?? environment.supabase.anonKey },
     {
+      provide: SUPABASE_CREATE_CLIENT,
+      useValue: config?.createClient ?? (createClient as CreateSupabaseClient),
+    },
+    {
       provide: SUPABASE_CLIENT,
-      useFactory: (url: string, anonKey: string): SupabaseClient => {
+      useFactory: (url: string, anonKey: string, factory: CreateSupabaseClient): SupabaseClient => {
         // Fail closed: never boot silently against an unconfigured backend.
         if (!url || !anonKey) {
           throw new Error(
@@ -45,9 +64,9 @@ export function provideSupabase(config?: ProvideSupabaseConfig): EnvironmentProv
               'Set them in .env.local before starting the app.',
           );
         }
-        return createClient(url, anonKey, DEFAULT_OPTIONS);
+        return factory(url, anonKey, DEFAULT_OPTIONS);
       },
-      deps: [SUPABASE_URL, SUPABASE_ANON_KEY],
+      deps: [SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_CREATE_CLIENT],
     },
   ]);
 }
