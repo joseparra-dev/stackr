@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import type * as SupabaseJs from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import * as supabaseJs from '@supabase/supabase-js';
 
 import { provideSupabase, SUPABASE_CLIENT } from './supabase.client';
 
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: vi.fn((url: string, anonKey: string, options: unknown) => ({
+const { createClientMock } = vi.hoisted(() => ({
+  createClientMock: vi.fn((url: string, anonKey: string, options: unknown) => ({
     __mock: true,
     url,
     anonKey,
@@ -14,9 +13,18 @@ vi.mock('@supabase/supabase-js', () => ({
   })),
 }));
 
+// `importOriginal` + spread keeps every other export (AuthError, isAuthError,
+// type re-exports) real. Without this, sibling specs that pull `AuthError`
+// from `@supabase/supabase-js` would race against this mock depending on
+// worker / module-cache order.
+vi.mock('@supabase/supabase-js', async (importOriginal) => {
+  const actual = await importOriginal<typeof SupabaseJs>();
+  return { ...actual, createClient: createClientMock };
+});
+
 describe('SUPABASE_CLIENT provider', () => {
   beforeEach(() => {
-    vi.mocked(supabaseJs.createClient).mockClear();
+    createClientMock.mockClear();
   });
 
   it('builds the Supabase client with the configured URL and anon key', () => {
@@ -32,8 +40,8 @@ describe('SUPABASE_CLIENT provider', () => {
     const client = TestBed.inject(SUPABASE_CLIENT);
 
     expect(client).toBeDefined();
-    expect(supabaseJs.createClient).toHaveBeenCalledTimes(1);
-    expect(supabaseJs.createClient).toHaveBeenCalledWith(
+    expect(createClientMock).toHaveBeenCalledTimes(1);
+    expect(createClientMock).toHaveBeenCalledWith(
       'https://test.supabase.co',
       'test-anon-key',
       expect.any(Object),
@@ -52,7 +60,7 @@ describe('SUPABASE_CLIENT provider', () => {
 
     TestBed.inject(SUPABASE_CLIENT);
 
-    expect(supabaseJs.createClient).toHaveBeenCalledWith(
+    expect(createClientMock).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(String),
       expect.objectContaining({
@@ -81,7 +89,7 @@ describe('SUPABASE_CLIENT provider', () => {
     const second = TestBed.inject(SUPABASE_CLIENT);
 
     expect(first).toBe(second);
-    expect(supabaseJs.createClient).toHaveBeenCalledTimes(1);
+    expect(createClientMock).toHaveBeenCalledTimes(1);
   });
 
   it('fails closed when the Supabase URL is missing', () => {
@@ -90,7 +98,7 @@ describe('SUPABASE_CLIENT provider', () => {
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(supabaseJs.createClient).not.toHaveBeenCalled();
+    expect(createClientMock).not.toHaveBeenCalled();
   });
 
   it('fails closed when the anon key is missing', () => {
@@ -99,6 +107,6 @@ describe('SUPABASE_CLIENT provider', () => {
     });
 
     expect(() => TestBed.inject(SUPABASE_CLIENT)).toThrowError(/Missing/i);
-    expect(supabaseJs.createClient).not.toHaveBeenCalled();
+    expect(createClientMock).not.toHaveBeenCalled();
   });
 });
