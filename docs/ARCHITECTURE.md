@@ -56,14 +56,16 @@ src/app/
 ## Naming conventions
 
 - Files: `kebab-case.ts`
-- `*.component.ts` — regular component, PascalCase class with `Component` suffix.
-- `*.page.ts` — route-level component, PascalCase class with `Page` suffix.
+- `*.page.ts` — route-level component, PascalCase class with `Page` suffix (e.g. `login.page.ts` → `LoginPage`). Suffix exists because "is this a route?" is a question we ask repeatedly during navigation/refactors.
+- Other components: **no suffix** in file or class — follow Angular 21+ CLI default (e.g. `button.ts` → `Button`). The `@Component()` decorator and folder context already convey what it is. Repeating "Component" was redundant noise.
 - `*.service.ts` — services (`@Injectable({ providedIn: 'root' })`).
 - `*.store.ts` — state stores (Signals-based).
 - `*.guard.ts` — functional guards (camelCase function names).
 - `*.types.ts` — interfaces/types only.
 - `*.spec.ts` — Vitest unit tests.
 - `*.e2e.spec.ts` — Playwright E2E.
+
+See `adr/0008-component-naming-convention.md`.
 
 ## State management
 

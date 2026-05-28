@@ -13,14 +13,15 @@ alwaysApply: true
 - **No barrel files** except in `src/app/shared/ui/`.
 
 ## Naming
-- `*.component.ts` — regular components (PascalCase class with `Component` suffix).
 - `*.page.ts` — route-level components (PascalCase class with `Page` suffix).
+- Other components: **no suffix** in file name nor class — follow Angular 21+ CLI default. File `button.ts`, class `Button`. The `@Component()` decorator already conveys what it is.
 - `*.service.ts` — services (Injectable, providedIn: 'root' for singletons).
 - `*.store.ts` — state stores (Injectable + signals).
 - `*.guard.ts` — functional route guards (lowercase function names).
 - `*.types.ts` — interfaces and types only.
 - `*.spec.ts` — unit tests (Vitest).
 - Files: kebab-case. Classes: PascalCase. Functions/vars: camelCase.
+- See `docs/adr/0008-component-naming-convention.md` for the rationale.
 
 ## Templates
 - **New control flow only:** `@if`, `@for`, `@switch`. Never `*ngIf`, `*ngFor`.
