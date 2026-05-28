@@ -3,7 +3,6 @@
 >
   <header class="text-center">
     <h1 class="text-3xl font-bold tracking-tight">Stackr</h1>
-    <p class="mt-1 text-sm text-[var(--color-text-muted)]">HU-02 smoke test — replaced in HU-04</p>
   </header>
 
   <section
@@ -34,14 +33,6 @@
   <div class="flex w-full gap-3">
     <button
       type="button"
-      class="flex-1 rounded-lg bg-[var(--color-brand-600)] px-4 py-2.5 text-sm font-medium text-white hover:bg-[var(--color-brand-700)] disabled:cursor-not-allowed disabled:opacity-50"
-      [disabled]="auth.loading() || auth.isAuthenticated()"
-      (click)="signIn()"
-    >
-      Sign in with Google
-    </button>
-    <button
-      type="button"
       class="flex-1 rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium hover:bg-[var(--color-surface-2)] disabled:cursor-not-allowed disabled:opacity-50"
       [disabled]="auth.loading() || !auth.isAuthenticated()"
       (click)="signOut()"
@@ -50,5 +41,3 @@
     </button>
   </div>
 </main>
-
-<router-outlet />
