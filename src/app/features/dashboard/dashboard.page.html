@@ -6,26 +6,26 @@
   </header>
 
   <section
-    class="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-sm"
+    class="w-full rounded-xl border border-(--color-border) bg-(--color-surface) p-6 shadow-sm"
     aria-label="Auth status"
   >
     <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-      <dt class="text-[var(--color-text-muted)]">loading</dt>
+      <dt class="text-(--color-text-muted)">loading</dt>
       <dd class="font-mono">{{ auth.loading() }}</dd>
 
-      <dt class="text-[var(--color-text-muted)]">isAuthenticated</dt>
+      <dt class="text-(--color-text-muted)">isAuthenticated</dt>
       <dd class="font-mono">{{ auth.isAuthenticated() }}</dd>
 
-      <dt class="text-[var(--color-text-muted)]">user</dt>
+      <dt class="text-(--color-text-muted)">user</dt>
       <dd class="font-mono break-all">
         @if (auth.user(); as u) { {{ u.email }} ({{ u.name ?? '—' }}) } @else { null }
       </dd>
 
       @if (auth.error(); as e) {
-      <dt class="text-[var(--color-danger)]">error.code</dt>
-      <dd class="font-mono text-[var(--color-danger)]">{{ e.code }}</dd>
-      <dt class="text-[var(--color-danger)]">error.message</dt>
-      <dd class="font-mono break-all text-[var(--color-danger)]">{{ e.message }}</dd>
+      <dt class="text-danger">error.code</dt>
+      <dd class="text-danger font-mono">{{ e.code }}</dd>
+      <dt class="text-danger">error.message</dt>
+      <dd class="text-danger font-mono break-all">{{ e.message }}</dd>
       }
     </dl>
   </section>
@@ -33,7 +33,7 @@
   <div class="flex w-full gap-3">
     <button
       type="button"
-      class="flex-1 rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium hover:bg-[var(--color-surface-2)] disabled:cursor-not-allowed disabled:opacity-50"
+      class="flex-1 rounded-lg border border-(--color-border) px-4 py-2.5 text-sm font-medium hover:bg-(--color-surface-2) disabled:cursor-not-allowed disabled:opacity-50"
       [disabled]="auth.loading() || !auth.isAuthenticated()"
       (click)="signOut()"
     >

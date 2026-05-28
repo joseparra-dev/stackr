@@ -9,7 +9,7 @@ import { AuthStore } from '@core/auth/auth.store';
     <section class="flex flex-col items-center justify-center gap-6">
       <button
         type="button"
-        class="flex-1 rounded-lg bg-[var(--color-brand-600)] px-4 py-2.5 text-sm font-medium text-white hover:bg-[var(--color-brand-700)] disabled:cursor-not-allowed disabled:opacity-50"
+        class="bg-brand-600 hover:bg-brand-700 flex-1 rounded-lg px-4 py-2.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
         [disabled]="auth.loading() || auth.isAuthenticated()"
         (click)="signIn()"
       >
