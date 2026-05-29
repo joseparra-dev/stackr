@@ -7,7 +7,11 @@ export const routes: Routes = [
     canActivate: [guestGuard],
     loadComponent: () => import('@features/auth/login/login.page').then((m) => m.LoginPage),
   },
-  { path: 'auth/callback', redirectTo: '', pathMatch: 'full' },
+  {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('@features/auth/callback/callback.page').then((m) => m.CallbackPage),
+  },
   {
     path: '',
     canActivate: [authGuard],
