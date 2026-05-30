@@ -1,0 +1,28 @@
+<nav aria-label="Main" class="flex h-full flex-col">
+  <header class="border-b border-(--color-border) px-4 py-5">
+    <p class="text-lg font-bold tracking-tight text-(--color-text)">Stackr</p>
+    <p class="mt-0.5 text-xs text-(--color-text-muted)">Portfolio tracker</p>
+  </header>
+  <ul class="flex flex-1 flex-col gap-1 px-3 py-4">
+    @for (item of sidebarItems; track item.path) {
+    <li>
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="bg-brand-600/10 text-brand-500 font-medium"
+        class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-(--color-text-muted) hover:bg-(--color-surface-2)"
+      >
+        @switch (item.icon) { @case ('dashboard') {
+        <svg lucideLayoutDashboard [size]="18" aria-hidden="true"></svg>
+        } @case ('transactions') {
+        <svg lucideArrowLeftRight [size]="18" aria-hidden="true"></svg>
+        } @case ('holdings') {
+        <svg lucideWallet [size]="18" aria-hidden="true"></svg>
+        } @case ('settings') {
+        <svg lucideSettings [size]="18" aria-hidden="true"></svg>
+        } }
+        <span>{{ item.label }}</span>
+      </a>
+    </li>
+    }
+  </ul>
+</nav>

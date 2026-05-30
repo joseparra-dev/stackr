@@ -1,4 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Sidebar } from './sidebar';
 
@@ -9,6 +11,7 @@ describe('Sidebar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Sidebar],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Sidebar);

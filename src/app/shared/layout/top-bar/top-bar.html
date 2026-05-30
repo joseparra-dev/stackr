@@ -1,1 +1,82 @@
-<button (click)="theme.toggle()">toggle theme</button>
+<header
+  class="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-(--color-border) bg-(--color-surface)/95 px-4 backdrop-blur-sm md:px-6"
+>
+  <button
+    type="button"
+    class="rounded-lg p-2 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text) md:hidden"
+    aria-label="Open navigation menu"
+    (click)="menuToggle.emit()"
+  >
+    <svg lucideMenu [size]="20" aria-hidden="true"></svg>
+  </button>
+
+  <h1
+    class="min-w-0 flex-1 truncate text-base font-semibold tracking-tight text-(--color-text) md:text-lg"
+  >
+    {{ pageTitle() }}
+  </h1>
+
+  <div class="flex items-center gap-1">
+    <button
+      type="button"
+      class="cursor-pointer rounded-lg p-2 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text)"
+      [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+      (click)="theme.toggle()"
+    >
+      @if (theme.isDark()) {
+      <svg lucideSun [size]="18" aria-hidden="true"></svg>
+      } @else {
+      <svg lucideMoon [size]="18" aria-hidden="true"></svg>
+      }
+    </button>
+
+    <div class="relative ml-1">
+      <button
+        type="button"
+        class="flex cursor-pointer items-center gap-2 rounded-lg py-1.5 pr-2 pl-1.5 hover:bg-(--color-surface-2)"
+        [attr.aria-expanded]="userMenuOpen()"
+        aria-haspopup="menu"
+        aria-label="User menu"
+        (click)="toggleUserMenu()"
+      >
+        @if (auth.user()?.avatarUrl; as avatarUrl) {
+        <img [src]="avatarUrl" alt="" class="size-8 rounded-full object-cover" />
+        } @else {
+        <span
+          class="bg-brand-600/15 text-brand-600 flex size-8 items-center justify-center rounded-full text-sm font-semibold"
+        >
+          {{ userInitial() }}
+        </span>
+        }
+        <span class="hidden max-w-40 truncate text-sm text-(--color-text-muted) sm:inline">
+          {{ userLabel() }}
+        </span>
+      </button>
+
+      @if (userMenuOpen()) {
+      <div
+        role="menu"
+        class="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) py-1 shadow-lg"
+      >
+        <div class="border-b border-(--color-border) px-4 py-3">
+          <p class="truncate text-sm font-medium text-(--color-text)">{{ userLabel() }}</p>
+          @if (auth.user(); as user) {
+          <p class="truncate text-xs text-(--color-text-muted)">{{ user.email }}</p>
+          }
+        </div>
+        <button
+          type="button"
+          role="menuitem"
+          class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-sm text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text)"
+          [disabled]="auth.loading() || !auth.isAuthenticated()"
+          [attr.aria-busy]="auth.loading() ? 'true' : null"
+          (click)="signOut()"
+        >
+          <svg lucideLogOut [size]="16" aria-hidden="true"></svg>
+          <span>Sign out</span>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</header>
