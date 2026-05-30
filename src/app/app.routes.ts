@@ -15,7 +15,16 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('@features/dashboard/dashboard.page').then((m) => m.DashboardPage),
+    loadComponent: () => import('@shared/layout/shell/shell').then((m) => m.Shell),
+    children: [
+      {
+        path: '',
+        data: { title: 'Dashboard' },
+        loadComponent: () =>
+          import('@features/dashboard/dashboard.page').then((m) => m.DashboardPage),
+      },
+    ],
   },
+
   { path: '**', redirectTo: '' },
 ];
