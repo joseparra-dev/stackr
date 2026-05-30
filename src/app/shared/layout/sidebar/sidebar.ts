@@ -11,6 +11,7 @@ interface SidebarItem {
   readonly label: string;
   readonly path: string;
   readonly icon: 'dashboard' | 'transactions' | 'holdings' | 'settings';
+  readonly exact?: boolean;
 }
 
 @Component({
@@ -28,7 +29,7 @@ interface SidebarItem {
 })
 export class Sidebar {
   readonly sidebarItems: readonly SidebarItem[] = [
-    { label: 'Dashboard', path: '/', icon: 'dashboard' },
+    { label: 'Dashboard', path: '/', icon: 'dashboard', exact: true },
     { label: 'Transactions', path: '/transactions', icon: 'transactions' },
     { label: 'Holdings', path: '/holdings', icon: 'holdings' },
     { label: 'Settings', path: '/settings', icon: 'settings' },

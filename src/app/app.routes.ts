@@ -23,6 +23,22 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@features/dashboard/dashboard.page').then((m) => m.DashboardPage),
       },
+      {
+        path: 'transactions',
+        data: { title: 'Transactions' },
+        loadComponent: () =>
+          import('@features/transactions/transactions.page').then((m) => m.TransactionsPage),
+      },
+      {
+        path: 'holdings',
+        data: { title: 'Holdings' },
+        loadComponent: () => import('@features/holdings/holdings.page').then((m) => m.HoldingsPage),
+      },
+      {
+        path: 'settings',
+        data: { title: 'Settings' },
+        loadComponent: () => import('@features/settings/settings.page').then((m) => m.SettingsPage),
+      },
     ],
   },
 
