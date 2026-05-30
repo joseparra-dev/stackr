@@ -3,6 +3,7 @@ import { inject, provideAppInitializer, provideBrowserGlobalErrorListeners } fro
 import { provideRouter } from '@angular/router';
 
 import { AuthStore } from '@core/auth/auth.store';
+import { PageTitleService } from '@core/page-title/page-title.service';
 import { provideSupabase } from '@core/supabase/supabase.client';
 
 import { routes } from './app.routes';
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
     // /login on a page refresh.
     provideAppInitializer(() => {
       inject(AuthStore);
+      inject(PageTitleService);
     }),
   ],
 };

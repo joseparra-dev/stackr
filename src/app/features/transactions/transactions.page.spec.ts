@@ -1,18 +1,18 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DashboardPage } from './dashboard.page';
+import { TransactionsPage } from './transactions.page';
 
-describe('DashboardPage', () => {
-  let component: DashboardPage;
-  let fixture: ComponentFixture<DashboardPage>;
+describe('TransactionsPage', () => {
+  let component: TransactionsPage;
+  let fixture: ComponentFixture<TransactionsPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardPage],
+      imports: [TransactionsPage],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardPage);
+    fixture = TestBed.createComponent(TransactionsPage);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
