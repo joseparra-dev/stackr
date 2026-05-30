@@ -6,6 +6,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { LucideLogOut, LucideMenu, LucideMoon, LucideSun } from '@lucide/angular';
 
 import { AuthStore } from '@core/auth/auth.store';
@@ -14,7 +15,7 @@ import { ThemeService } from '@core/theme/theme.service';
 
 @Component({
   selector: 'app-top-bar',
-  imports: [LucideLogOut, LucideMenu, LucideMoon, LucideSun],
+  imports: [RouterLink, LucideLogOut, LucideMenu, LucideMoon, LucideSun],
   templateUrl: './top-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

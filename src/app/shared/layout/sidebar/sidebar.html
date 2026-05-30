@@ -1,7 +1,19 @@
 <nav aria-label="Main" class="flex h-full flex-col">
   <header class="border-b border-(--color-border) px-4 py-5">
-    <p class="text-lg font-bold tracking-tight text-(--color-text)">Stackr</p>
-    <p class="mt-0.5 text-xs text-(--color-text-muted)">Portfolio tracker</p>
+    <a routerLink="/" class="flex items-center gap-2.5 rounded-lg" aria-label="Stackr home">
+      <img
+        src="/logo-icon.svg"
+        alt=""
+        width="28"
+        height="28"
+        aria-hidden="true"
+        class="size-7 shrink-0"
+      />
+      <div class="min-w-0">
+        <p class="text-lg font-bold tracking-tight text-(--color-text)">Stackr</p>
+        <p class="mt-0.5 text-xs text-(--color-text-muted)">Portfolio tracker</p>
+      </div>
+    </a>
   </header>
   <ul class="flex flex-1 flex-col gap-1 px-3 py-4">
     @for (item of sidebarItems; track item.path) {
