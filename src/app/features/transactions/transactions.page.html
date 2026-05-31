@@ -1,12 +1,37 @@
-<section
-  class="mx-auto flex max-w-lg flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-  aria-labelledby="transactions-empty-heading"
->
-  <h2 id="transactions-empty-heading" class="text-lg font-semibold text-(--color-text)">
-    No transactions yet
-  </h2>
-  <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-    Buy and sell history will live here. You will be able to add, edit, and filter entries in a
-    later milestone.
-  </p>
-</section>
+<div class="mx-auto flex max-w-lg flex-col gap-6">
+  <section
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
+    aria-labelledby="asset-search-heading"
+  >
+    <h2 id="asset-search-heading" class="text-sm font-semibold text-(--color-text)">
+      Search asset
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">Try typing “bit”, “eth”, or “sol”.</p>
+    <div class="mt-4">
+      <app-asset-combobox
+        (assetSelected)="onAssetSelected($event)"
+        (assetCleared)="onAssetCleared()"
+      />
+    </div>
+    @if (selectedAsset(); as asset) {
+    <p class="mt-4 text-sm text-(--color-text-muted)">
+      Selected:
+      <span class="font-medium text-(--color-text)">{{ asset.name }} ({{ asset.symbol }})</span>
+      · {{ asset.id }}
+    </p>
+    }
+  </section>
+
+  <section
+    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
+    aria-labelledby="transactions-empty-heading"
+  >
+    <h2 id="transactions-empty-heading" class="text-lg font-semibold text-(--color-text)">
+      No transactions yet
+    </h2>
+    <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
+      Buy and sell history will live here. You will be able to add, edit, and filter entries in a
+      later milestone.
+    </p>
+  </section>
+</div>
