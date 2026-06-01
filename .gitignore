@@ -44,7 +44,9 @@ __screenshots__/
 Thumbs.db
 
 # Environment files (NEVER commit secrets)
-.env
+# `.env` is a committed, secret-free baseline of NG_APP_* keys so the build is
+# deterministic and never references an undefined var. Real secrets live in
+# `.env.local` / `.env.*.local` (gitignored) or the hosting provider's env vars.
 .env.local
 .env.*.local
 

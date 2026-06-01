@@ -1,13 +1,16 @@
-import { envVar } from './env-vars';
-
+// Values are inlined at build time by @ngx-env/builder (esbuild `define`).
+// Every NG_APP_* key referenced here MUST exist at build time, otherwise the
+// access is left untouched and `import.meta.env` resolves to `undefined` at
+// runtime (white screen). The committed `.env` baseline guarantees all keys
+// are always defined; the hosting provider's env vars override them.
 export const environment = {
   production: true,
   supabase: {
-    url: envVar('NG_APP_SUPABASE_URL'),
-    anonKey: envVar('NG_APP_SUPABASE_ANON_KEY'),
+    url: import.meta.env['NG_APP_SUPABASE_URL'] ?? '',
+    anonKey: import.meta.env['NG_APP_SUPABASE_ANON_KEY'] ?? '',
   },
   coingecko: {
-    baseUrl: envVar('NG_APP_COINGECKO_BASE_URL', 'https://api.coingecko.com/api/v3'),
+    baseUrl: import.meta.env['NG_APP_COINGECKO_BASE_URL'] ?? 'https://api.coingecko.com/api/v3',
   },
-  sentryDsn: envVar('NG_APP_SENTRY_DSN'),
+  sentryDsn: import.meta.env['NG_APP_SENTRY_DSN'] ?? '',
 };
