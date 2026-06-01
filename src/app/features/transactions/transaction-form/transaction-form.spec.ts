@@ -2,6 +2,11 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AssetsService } from '@features/assets/assets.service';
+import {
+  TRANSACTION_SAVE_PORT,
+  transactionSaveStub,
+} from '@features/transactions/transaction-save.port';
+import { ToastService } from '@shared/ui';
 
 import { TransactionForm } from './transaction-form';
 
@@ -12,6 +17,8 @@ describe('TransactionForm', () => {
     await TestBed.configureTestingModule({
       imports: [TransactionForm],
       providers: [
+        ToastService,
+        { provide: TRANSACTION_SAVE_PORT, useValue: transactionSaveStub },
         {
           provide: AssetsService,
           useValue: {

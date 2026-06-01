@@ -1,12 +1,22 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5" novalidate>
   <header>
     <h2 id="transaction-form-title" class="text-lg font-semibold text-(--color-text)">
-      Add transaction
+      {{ title() }}
     </h2>
     <p class="mt-1 text-sm text-(--color-text-muted)">
       Record a buy or sell. All amounts are in USD.
     </p>
   </header>
+
+  @if (submitError(); as err) {
+  <div
+    role="alert"
+    aria-live="polite"
+    class="border-danger/30 bg-danger/10 text-danger rounded-lg border px-4 py-3 text-sm"
+  >
+    {{ errorMessage(err.code) }}
+  </div>
+  }
 
   <div>
     <label class="mb-1.5 block text-sm font-medium text-(--color-text)" for="transaction-asset">
@@ -118,12 +128,11 @@
 
   <div>
     <label class="{{ labelClass }}" for="transaction-executed-at">Executed at</label>
-    <input
+    <app-datetime-input
       id="transaction-executed-at"
-      type="datetime-local"
       formControlName="executedAt"
-      [class]="inputClass"
-      [class.border-danger]="hasFieldError('executedAt')"
+      [disableFuture]="true"
+      [invalid]="hasFieldError('executedAt')"
     />
     @if (fieldError('executedAt'); as message) {
     <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
@@ -154,6 +163,7 @@
   <div class="flex justify-end gap-3 border-t border-(--color-border) pt-4">
     <button
       type="button"
+      (click)="onCancel()"
       class="focus-visible:outline-brand-500 cursor-pointer rounded-lg border border-(--color-border) bg-(--color-surface) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-surface-2) focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       Cancel
@@ -171,7 +181,7 @@
       ></span>
       <span>Saving…</span>
       } @else {
-      <span>Save transaction</span>
+      <span>{{ submitLabel() }}</span>
       }
     </button>
   </div>

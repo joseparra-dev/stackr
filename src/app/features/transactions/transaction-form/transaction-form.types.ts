@@ -1,4 +1,6 @@
 import type { AssetSearchResult } from '@features/assets/assets.types';
+import { toDatetimeLocalValue as formatDatetimeLocalFromDate } from '@shared/utils/datetime-local';
+
 import type { Transaction, TransactionType } from '../transactions.types';
 
 export interface TransactionFormValue {
@@ -42,7 +44,5 @@ export function toPayload(value: TransactionFormValue): Omit<Transaction, 'id'> 
 }
 
 export function toDatetimeLocalValue(iso: string): string {
-  const date = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return formatDatetimeLocalFromDate(new Date(iso));
 }

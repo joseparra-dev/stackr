@@ -51,3 +51,53 @@ body {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* CDK Dialog — panel + backdrop (shared by all modals) */
+.cdk-overlay-backdrop.stackr-dialog-backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.stackr-dialog-panel {
+  display: block;
+  width: 100%;
+  max-width: 32rem;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 1.5rem;
+  box-shadow:
+    0 25px 50px -12px rgb(0 0 0 / 0.45),
+    0 0 0 1px rgb(255 255 255 / 0.04);
+}
+
+[data-theme='light'] .stackr-dialog-panel {
+  box-shadow:
+    0 25px 50px -12px rgb(0 0 0 / 0.15),
+    0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+/* Hide native number input spinners */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.stackr-datetime-panel {
+  z-index: 1001;
+}
+
+.stackr-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9ba3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 1.75rem;
+}

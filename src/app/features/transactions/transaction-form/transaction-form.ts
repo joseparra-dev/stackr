@@ -1,3 +1,4 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -9,15 +10,26 @@ import {
 } from '@angular/forms';
 import { startWith } from 'rxjs';
 
+import { AppError, errorMessage } from '@core/errors/app-error';
 import { AssetCombobox } from '@features/assets/asset-combobox';
 import type { AssetSearchResult } from '@features/assets/assets.types';
+import type { TransactionFormDialogData } from '@features/transactions/transaction-form/transaction-form.dialog.types';
 import { controlErrorMessage } from '@features/transactions/transaction-form/transaction-form.field-errors';
+import {
+  toDatetimeLocalValue,
+  toFormValue,
+  type TransactionFormValue,
+} from '@features/transactions/transaction-form/transaction-form.types';
 import {
   notFutureDateValidator,
   quantityPositiveValidator,
 } from '@features/transactions/transaction-form/transaction-form.validator';
-import { toDatetimeLocalValue } from '@features/transactions/transaction-form/transaction-form.types';
+import {
+  TRANSACTION_SAVE_PORT,
+  transactionSaveStub,
+} from '@features/transactions/transaction-save.port';
 import type { TransactionType } from '@features/transactions/transactions.types';
+import { DatetimeInput, ToastService } from '@shared/ui';
 
 interface TransactionFormControls {
   readonly id: FormControl<string>;
@@ -32,14 +44,22 @@ interface TransactionFormControls {
 
 @Component({
   selector: 'app-transaction-form',
-  imports: [ReactiveFormsModule, AssetCombobox],
+  imports: [ReactiveFormsModule, AssetCombobox, DatetimeInput],
   templateUrl: './transaction-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionForm {
   private readonly fb = inject(NonNullableFormBuilder);
+  private readonly dialogRef = inject(DialogRef<boolean>, { optional: true });
+  private readonly dialogData = inject<TransactionFormDialogData | null>(DIALOG_DATA, {
+    optional: true,
+  });
+  private readonly savePort =
+    inject(TRANSACTION_SAVE_PORT, { optional: true }) ?? transactionSaveStub;
+  private readonly toast = inject(ToastService);
 
   readonly submitting = signal(false);
+  readonly submitError = signal<AppError | null>(null);
 
   protected readonly form: FormGroup<TransactionFormControls> =
     this.fb.group<TransactionFormControls>({
@@ -62,9 +82,15 @@ export class TransactionForm {
       notes: this.fb.control('', Validators.maxLength(500)),
     });
 
+  protected readonly title = computed(() =>
+    this.dialogData?.mode === 'edit' ? 'Edit transaction' : 'Add transaction',
+  );
+  protected readonly submitLabel = computed(() =>
+    this.dialogData?.mode === 'edit' ? 'Save changes' : 'Save transaction',
+  );
+
   protected readonly inputClass =
     'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed disabled:opacity-60';
-  protected readonly inputErrorClass = 'border-danger focus-visible:outline-danger';
   protected readonly labelClass = 'mb-1.5 block text-sm font-medium text-(--color-text)';
 
   private readonly notesValue = toSignal(
@@ -72,6 +98,12 @@ export class TransactionForm {
     { initialValue: '' },
   );
   protected readonly notesCount = computed(() => this.notesValue().length);
+
+  protected readonly errorMessage = errorMessage;
+
+  constructor() {
+    this.applyDialogData();
+  }
 
   protected fieldError(name: keyof TransactionFormControls): string | null {
     const control = this.form.controls[name];
@@ -86,13 +118,40 @@ export class TransactionForm {
     return this.fieldError(name) !== null;
   }
 
-  protected onSubmit(): void {
+  protected onCancel(): void {
+    this.dialogRef?.close(false);
+  }
+
+  protected async onSubmit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     this.submitting.set(true);
-    this.submitting.set(false);
+    this.submitError.set(null);
+    this.form.disable();
+
+    try {
+      await this.savePort.save(this.form.getRawValue() as TransactionFormValue);
+      this.toast.success(
+        this.dialogData?.mode === 'edit' ? 'Transaction updated.' : 'Transaction saved.',
+      );
+      this.dialogRef?.close(true);
+    } catch (cause) {
+      this.submitError.set(AppError.from(cause));
+    } finally {
+      this.form.enable();
+      this.submitting.set(false);
+    }
+  }
+
+  private applyDialogData(): void {
+    const data = this.dialogData;
+    if (data?.mode !== 'edit' || !data.transaction || !data.asset) {
+      return;
+    }
+
+    this.form.patchValue(toFormValue(data.transaction, data.asset));
   }
 }

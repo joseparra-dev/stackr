@@ -3,12 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { Toast } from '@shared/ui';
+
 import { Sidebar } from '../sidebar/sidebar';
 import { TopBar } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Sidebar, TopBar],
+  imports: [RouterOutlet, Sidebar, TopBar, Toast],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './shell.html',
 })
