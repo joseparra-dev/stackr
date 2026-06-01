@@ -1,26 +1,18 @@
-<div class="mx-auto flex max-w-lg flex-col gap-6">
-  <section
-    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
-    aria-labelledby="asset-search-heading"
-  >
-    <h2 id="asset-search-heading" class="text-sm font-semibold text-(--color-text)">
-      Search asset
-    </h2>
-    <p class="mt-1 text-sm text-(--color-text-muted)">Try typing “bit”, “eth”, or “sol”.</p>
-    <div class="mt-4">
-      <app-asset-combobox
-        (assetSelected)="onAssetSelected($event)"
-        (assetCleared)="onAssetCleared()"
-      />
+<div class="mx-auto flex max-w-4xl flex-col gap-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-xl font-semibold text-(--color-text)">Transactions</h1>
+      <p class="mt-1 text-sm text-(--color-text-muted)">Buy and sell history for your portfolio.</p>
     </div>
-    @if (selectedAsset(); as asset) {
-    <p class="mt-4 text-sm text-(--color-text-muted)">
-      Selected:
-      <span class="font-medium text-(--color-text)">{{ asset.name }} ({{ asset.symbol }})</span>
-      · {{ asset.id }}
-    </p>
-    }
-  </section>
+    <button
+      type="button"
+      (click)="openCreateDialog()"
+      class="bg-brand-600 hover:bg-brand-700 focus-visible:outline-brand-500 inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
+      <svg lucidePlus [size]="16" aria-hidden="true"></svg>
+      Add transaction
+    </button>
+  </div>
 
   <section
     class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
@@ -30,8 +22,15 @@
       No transactions yet
     </h2>
     <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-      Buy and sell history will live here. You will be able to add, edit, and filter entries in a
-      later milestone.
+      Add your first buy or sell to start tracking holdings and P&amp;L.
     </p>
+    <button
+      type="button"
+      (click)="openCreateDialog()"
+      class="bg-brand-600 hover:bg-brand-700 focus-visible:outline-brand-500 mt-6 inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
+      <svg lucidePlus [size]="16" aria-hidden="true"></svg>
+      Add your first transaction
+    </button>
   </section>
 </div>

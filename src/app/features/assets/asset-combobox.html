@@ -10,7 +10,7 @@
       class="focus-visible:outline-brand-500 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 pr-10 text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       [value]="searchQuery()"
       [placeholder]="placeholder()"
-      [disabled]="disabled()"
+      [disabled]="isDisabled()"
       [attr.aria-expanded]="panelOpen()"
       [attr.aria-busy]="loading() ? 'true' : null"
       [attr.aria-activedescendant]="activeOptionId()"
