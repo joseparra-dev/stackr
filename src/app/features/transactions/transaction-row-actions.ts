@@ -1,25 +1,69 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  CdkConnectedOverlay,
+  CdkOverlayOrigin,
+  Overlay,
+  type ConnectedPosition,
+} from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { LucideMoreHorizontal, LucidePencil, LucideTrash2 } from '@lucide/angular';
+
+const MENU_POSITIONS: ConnectedPosition[] = [
+  {
+    originX: 'end',
+    originY: 'bottom',
+    overlayX: 'end',
+    overlayY: 'top',
+    offsetY: 4,
+  },
+  {
+    originX: 'end',
+    originY: 'top',
+    overlayX: 'end',
+    overlayY: 'bottom',
+    offsetY: -4,
+  },
+];
 
 @Component({
   selector: 'app-transaction-row-actions',
-  imports: [LucideMoreHorizontal, LucidePencil, LucideTrash2],
+  imports: [
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
+    LucideMoreHorizontal,
+    LucidePencil,
+    LucideTrash2,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './transaction-row-actions.html',
 })
 export class TransactionRowActions {
-  readonly open = input(false);
   readonly menuId = input.required<string>();
   readonly ariaLabel = input.required<string>();
-  readonly variant = input<'table' | 'card'>('table');
 
-  readonly menuToggle = output<void>();
   readonly edit = output<void>();
   readonly delete = output<void>();
 
-  protected panelClass(): string {
-    const base =
-      'absolute z-10 mt-1 w-36 rounded-lg border border-(--color-border) bg-(--color-surface) py-1 shadow-lg';
-    return this.variant() === 'table' ? `${base} right-4` : `${base} right-0`;
+  private readonly overlay = inject(Overlay);
+
+  protected readonly menuOpen = signal(false);
+  protected readonly menuPositions = MENU_POSITIONS;
+  protected readonly scrollStrategy = this.overlay.scrollStrategies.reposition();
+
+  protected toggleMenu(): void {
+    this.menuOpen.update((open) => !open);
+  }
+
+  protected closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  protected onEdit(): void {
+    this.closeMenu();
+    this.edit.emit();
+  }
+
+  protected onDelete(): void {
+    this.closeMenu();
+    this.delete.emit();
   }
 }
