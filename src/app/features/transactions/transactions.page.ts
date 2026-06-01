@@ -4,10 +4,6 @@ import { LucidePlus } from '@lucide/angular';
 
 import { TransactionForm } from '@features/transactions/transaction-form/transaction-form';
 import type { TransactionFormDialogData } from '@features/transactions/transaction-form/transaction-form.dialog.types';
-import {
-  TRANSACTION_SAVE_PORT,
-  transactionSaveStub,
-} from '@features/transactions/transaction-save.port';
 
 @Component({
   selector: 'app-transactions-page',
@@ -25,7 +21,6 @@ export class TransactionsPage {
       panelClass: 'stackr-dialog-panel',
       backdropClass: 'stackr-dialog-backdrop',
       data: { mode: 'create' },
-      providers: [{ provide: TRANSACTION_SAVE_PORT, useValue: transactionSaveStub }],
     });
   }
 }

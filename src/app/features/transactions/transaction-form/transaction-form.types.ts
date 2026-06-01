@@ -1,7 +1,7 @@
 import type { AssetSearchResult } from '@features/assets/assets.types';
 import { toDatetimeLocalValue as formatDatetimeLocalFromDate } from '@shared/utils/datetime-local';
 
-import type { Transaction, TransactionType } from '../transactions.types';
+import type { Transaction, TransactionInput, TransactionType } from '../transactions.types';
 
 export interface TransactionFormValue {
   readonly id: string;
@@ -37,6 +37,22 @@ export function toPayload(value: TransactionFormValue): Omit<Transaction, 'id'> 
     type: value.type,
     quantity: value.quantity!,
     pricePerUnitUsd: value.pricePerUnitUsd!,
+    feeUsd: value.feeUsd,
+    executedAt: new Date(value.executedAt).toISOString(),
+    notes: value.notes.trim() || null,
+  };
+}
+
+export function formValueToInput(value: TransactionFormValue): TransactionInput {
+  if (!value.asset || value.quantity === null || value.pricePerUnitUsd === null) {
+    throw new Error('Cannot build TransactionInput: form is incomplete');
+  }
+
+  return {
+    asset: value.asset,
+    type: value.type,
+    quantity: value.quantity,
+    pricePerUnitUsd: value.pricePerUnitUsd,
     feeUsd: value.feeUsd,
     executedAt: new Date(value.executedAt).toISOString(),
     notes: value.notes.trim() || null,
