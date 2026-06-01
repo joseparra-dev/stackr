@@ -6,32 +6,27 @@ export interface Transaction {
   readonly id: string;
   readonly assetId: string;
   readonly type: TransactionType;
-  readonly quantity: number; // numeric(28,12) en DB
-  readonly pricePerUnitUsd: number; // numeric(20,8)
-  readonly feeUsd: number; // default 0
-  readonly executedAt: string; // ISO timestamptz
+  readonly quantity: number;
+  readonly pricePerUnitUsd: number;
+  readonly feeUsd: number;
+  readonly executedAt: string;
   readonly notes: string | null;
 }
 
-/**
- * What the UI hands to the service to create/update a transaction. Carries the
- * full asset (not just the id) because the RPC upserts the asset reference row
- * before writing the transaction.
- */
+export interface TransactionWithAsset extends Transaction {
+  readonly asset: AssetSearchResult;
+}
+
 export interface TransactionInput {
   readonly asset: AssetSearchResult;
   readonly type: TransactionType;
   readonly quantity: number;
   readonly pricePerUnitUsd: number;
   readonly feeUsd: number;
-  readonly executedAt: string; // ISO timestamptz
+  readonly executedAt: string;
   readonly notes: string | null;
 }
 
-/**
- * Raw row as returned by Supabase/PostgREST (snake_case). `numeric` columns come
- * back as strings to preserve precision — the mapper parses them.
- */
 export interface TransactionRow {
   readonly id: string;
   readonly user_id: string;
@@ -46,7 +41,18 @@ export interface TransactionRow {
   readonly updated_at: string;
 }
 
-/** Argument object for the `create_transaction` / `update_transaction` RPCs. */
+export interface AssetRow {
+  readonly id: string;
+  readonly symbol: string;
+  readonly name: string;
+  readonly image_url: string | null;
+  readonly market_cap_rank: number | null;
+}
+
+export interface TransactionWithAssetRow extends TransactionRow {
+  readonly assets: AssetRow | AssetRow[] | null;
+}
+
 export interface TransactionRpcArgs {
   readonly p_asset_id: string;
   readonly p_asset_symbol: string;

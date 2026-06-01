@@ -84,5 +84,6 @@ If you have new feature ideas during the build, add them here. Do not implement 
 - Native mobile app via Capacitor
 - Multi-portfolio per user
 - CSV import from exchanges
+- Reorganize `features/transactions/` into subfolders (`transaction-list/`, `utils/`) before holdings/filters add more files
 - AI-powered investment insights
 - Zoneless change detection migration

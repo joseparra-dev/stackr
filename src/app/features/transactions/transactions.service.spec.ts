@@ -5,7 +5,11 @@ import { SUPABASE_CLIENT } from '@core/supabase/supabase.client';
 import type { AssetSearchResult } from '@features/assets/assets.types';
 
 import { TransactionsService } from './transactions.service';
-import type { TransactionInput, TransactionRow } from './transactions.types';
+import type {
+  TransactionInput,
+  TransactionRow,
+  TransactionWithAssetRow,
+} from './transactions.types';
 
 const asset: AssetSearchResult = {
   id: 'bitcoin',
@@ -65,12 +69,22 @@ describe('TransactionsService', () => {
     });
   });
 
-  it('list() maps rows from Supabase', async () => {
-    client.chain.order.mockResolvedValue({ data: [row], error: null });
+  it('list() maps joined rows from Supabase', async () => {
+    const joinedRow: TransactionWithAssetRow = {
+      ...row,
+      assets: {
+        id: 'bitcoin',
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        image_url: 'https://cdn/btc.png',
+        market_cap_rank: 1,
+      },
+    };
+    client.chain.order.mockResolvedValue({ data: [joinedRow], error: null });
     const service = TestBed.inject(TransactionsService);
     const result = await service.list();
     expect(result[0]?.id).toBe('tx-1');
-    expect(result[0]?.quantity).toBe(1);
+    expect(result[0]?.asset.symbol).toBe('BTC');
   });
 
   it('getById() returns null when no row exists', async () => {

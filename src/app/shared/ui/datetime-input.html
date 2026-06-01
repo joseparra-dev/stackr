@@ -14,7 +14,12 @@
     (click)="togglePanel()"
   >
     <span class="truncate">{{ displayValue() || placeholder() }}</span>
-    <svg lucideCalendar [size]="16" class="shrink-0 text-(--color-text-muted)" aria-hidden="true" />
+    <svg
+      lucideCalendar
+      [size]="16"
+      class="shrink-0 text-(--color-text-muted)"
+      aria-hidden="true"
+    ></svg>
   </button>
 
   <ng-template
@@ -30,7 +35,7 @@
       #panel
       role="dialog"
       aria-label="Choose date and time"
-      class="stackr-datetime-panel w-[17.5rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-3 shadow-lg"
+      class="stackr-datetime-panel w-70 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 shadow-lg"
       tabindex="-1"
       (keydown.escape)="closePanel()"
     >
@@ -41,7 +46,7 @@
           class="focus-visible:outline-brand-500 inline-flex cursor-pointer rounded-md p-1 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-2"
           (click)="previousMonth()"
         >
-          <svg lucideChevronLeft [size]="14" aria-hidden="true" />
+          <svg lucideChevronLeft [size]="14" aria-hidden="true"></svg>
         </button>
         <span class="text-xs font-medium text-(--color-text)">{{ monthTitle() }}</span>
         <button
@@ -50,7 +55,7 @@
           class="focus-visible:outline-brand-500 inline-flex cursor-pointer rounded-md p-1 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-2"
           (click)="nextMonth()"
         >
-          <svg lucideChevronRight [size]="14" aria-hidden="true" />
+          <svg lucideChevronRight [size]="14" aria-hidden="true"></svg>
         </button>
       </div>
 

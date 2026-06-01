@@ -1,0 +1,125 @@
+<div class="hidden overflow-x-auto rounded-xl border border-(--color-border) md:block">
+  <table class="w-full min-w-[720px] text-left text-sm" aria-label="Transactions">
+    <thead
+      class="border-b border-(--color-border) bg-(--color-surface-2) text-xs font-medium text-(--color-text-muted)"
+    >
+      <tr>
+        <th scope="col" class="px-4 py-3">Date</th>
+        <th scope="col" class="px-4 py-3">Asset</th>
+        <th scope="col" class="px-4 py-3">Type</th>
+        <th scope="col" class="px-4 py-3 text-right">Quantity</th>
+        <th scope="col" class="px-4 py-3 text-right">Price</th>
+        <th scope="col" class="px-4 py-3 text-right">Fee</th>
+        <th scope="col" class="px-4 py-3 text-right">Total</th>
+        <th scope="col" class="px-4 py-3"><span class="sr-only">Actions</span></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-(--color-border) bg-(--color-surface)">
+      @for (tx of transactions(); track tx.id) {
+      <tr class="text-(--color-text)">
+        <td class="px-4 py-3 whitespace-nowrap">{{ formatTransactionDate(tx.executedAt) }}</td>
+        <td class="px-4 py-3">
+          <div class="flex items-center gap-2">
+            @if (tx.asset.thumbUrl) {
+            <img
+              [src]="tx.asset.thumbUrl"
+              [alt]=""
+              width="24"
+              height="24"
+              class="size-6 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
+            />
+            }
+            <span class="font-medium">{{ tx.asset.symbol }}</span>
+          </div>
+        </td>
+        <td class="px-4 py-3">
+          <span class="rounded-md px-2 py-0.5 text-xs font-medium" [class]="typeClass(tx.type)">
+            {{ formatTypeLabel(tx.type) }}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatQuantity(tx.quantity) }}</td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatUsd(tx.pricePerUnitUsd) }}</td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatUsd(tx.feeUsd) }}</td>
+        <td class="px-4 py-3 text-right font-medium tabular-nums">
+          {{ formatUsd(transactionTotal(tx)) }}
+        </td>
+        <td class="px-4 py-3">
+          <app-transaction-row-actions
+            variant="table"
+            [open]="isMenuOpen(tx.id)"
+            [menuId]="'tx-menu-' + tx.id"
+            [ariaLabel]="actionsLabel(tx)"
+            (menuToggle)="toggleMenu(tx.id)"
+            (edit)="onEdit(tx)"
+            (delete)="onDelete(tx)"
+          />
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="flex flex-col gap-3 md:hidden" aria-label="Transactions">
+  @for (tx of transactions(); track tx.id) {
+  <article
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-4"
+    [attr.aria-label]="tx.asset.symbol + ' ' + formatTypeLabel(tx.type)"
+  >
+    <div class="flex items-start justify-between gap-3">
+      <div class="flex items-center gap-3">
+        @if (tx.asset.thumbUrl) {
+        <img
+          [src]="tx.asset.thumbUrl"
+          [alt]=""
+          width="32"
+          height="32"
+          class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
+        />
+        }
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-(--color-text)">{{ tx.asset.symbol }}</span>
+            <span class="rounded-md px-2 py-0.5 text-xs font-medium" [class]="typeClass(tx.type)">
+              {{ formatTypeLabel(tx.type) }}
+            </span>
+          </div>
+          <p class="mt-0.5 text-xs text-(--color-text-muted)">
+            {{ formatTransactionDate(tx.executedAt) }}
+          </p>
+        </div>
+      </div>
+      <app-transaction-row-actions
+        variant="card"
+        [open]="isMenuOpen(tx.id)"
+        [menuId]="'tx-card-menu-' + tx.id"
+        [ariaLabel]="'Actions for ' + tx.asset.symbol"
+        (menuToggle)="toggleMenu(tx.id)"
+        (edit)="onEdit(tx)"
+        (delete)="onDelete(tx)"
+      />
+    </div>
+
+    <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Quantity</dt>
+        <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatQuantity(tx.quantity) }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Price</dt>
+        <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatUsd(tx.pricePerUnitUsd) }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Fee</dt>
+        <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatUsd(tx.feeUsd) }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Total</dt>
+        <dd class="mt-0.5 font-medium text-(--color-text) tabular-nums">
+          {{ formatUsd(transactionTotal(tx)) }}
+        </dd>
+      </div>
+    </dl>
+  </article>
+  }
+</div>
