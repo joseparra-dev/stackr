@@ -1,0 +1,178 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5" novalidate>
+  <header>
+    <h2 id="transaction-form-title" class="text-lg font-semibold text-(--color-text)">
+      Add transaction
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      Record a buy or sell. All amounts are in USD.
+    </p>
+  </header>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium text-(--color-text)" for="transaction-asset">
+      Asset
+    </label>
+    <app-asset-combobox
+      id="transaction-asset"
+      formControlName="asset"
+      placeholder="Search by name or symbol…"
+    />
+    @if (fieldError('asset'); as message) {
+    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    }
+  </div>
+
+  <fieldset>
+    <legend class="mb-2 text-sm font-medium text-(--color-text)">Type</legend>
+    <div class="flex gap-4">
+      <label
+        class="flex cursor-pointer items-center gap-2 text-sm text-(--color-text)"
+        for="transaction-type-buy"
+      >
+        <input
+          id="transaction-type-buy"
+          type="radio"
+          formControlName="type"
+          value="buy"
+          class="accent-brand-600 size-4"
+        />
+        Buy
+      </label>
+      <label
+        class="flex cursor-pointer items-center gap-2 text-sm text-(--color-text)"
+        for="transaction-type-sell"
+      >
+        <input
+          id="transaction-type-sell"
+          type="radio"
+          formControlName="type"
+          value="sell"
+          class="accent-brand-600 size-4"
+        />
+        Sell
+      </label>
+    </div>
+    @if (fieldError('type'); as message) {
+    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    }
+  </fieldset>
+
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div>
+      <label class="{{ labelClass }}" for="transaction-quantity">Quantity</label>
+      <input
+        id="transaction-quantity"
+        type="number"
+        formControlName="quantity"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="0.00"
+        [class]="inputClass"
+        [class.border-danger]="hasFieldError('quantity')"
+      />
+      @if (fieldError('quantity'); as message) {
+      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div>
+      <label class="{{ labelClass }}" for="transaction-price">Price per unit (USD)</label>
+      <input
+        id="transaction-price"
+        type="number"
+        formControlName="pricePerUnitUsd"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="0.00"
+        [class]="inputClass"
+        [class.border-danger]="hasFieldError('pricePerUnitUsd')"
+      />
+      @if (fieldError('pricePerUnitUsd'); as message) {
+      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div>
+      <label class="{{ labelClass }}" for="transaction-fee">
+        Fee (USD)
+        <span class="font-normal text-(--color-text-muted)">optional</span>
+      </label>
+      <input
+        id="transaction-fee"
+        type="number"
+        formControlName="feeUsd"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="0.00"
+        [class]="inputClass"
+        [class.border-danger]="hasFieldError('feeUsd')"
+      />
+      @if (fieldError('feeUsd'); as message) {
+      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      }
+    </div>
+  </div>
+
+  <div>
+    <label class="{{ labelClass }}" for="transaction-executed-at">Executed at</label>
+    <input
+      id="transaction-executed-at"
+      type="datetime-local"
+      formControlName="executedAt"
+      [class]="inputClass"
+      [class.border-danger]="hasFieldError('executedAt')"
+    />
+    @if (fieldError('executedAt'); as message) {
+    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    }
+  </div>
+
+  <div>
+    <div class="mb-1.5 flex items-baseline justify-between gap-2">
+      <label class="text-sm font-medium text-(--color-text)" for="transaction-notes">Notes</label>
+      <span class="text-xs text-(--color-text-muted)" aria-live="polite">
+        {{ notesCount() }}/500
+      </span>
+    </div>
+    <textarea
+      id="transaction-notes"
+      formControlName="notes"
+      rows="3"
+      maxlength="500"
+      placeholder="Optional context for this trade"
+      class="{{ inputClass }} resize-y min-h-20"
+      [class.border-danger]="hasFieldError('notes')"
+    ></textarea>
+    @if (fieldError('notes'); as message) {
+    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    }
+  </div>
+
+  <div class="flex justify-end gap-3 border-t border-(--color-border) pt-4">
+    <button
+      type="button"
+      class="focus-visible:outline-brand-500 cursor-pointer rounded-lg border border-(--color-border) bg-(--color-surface) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-surface-2) focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      [disabled]="submitting()"
+      [attr.aria-busy]="submitting() ? 'true' : null"
+      class="bg-brand-600 hover:bg-brand-700 focus-visible:outline-brand-500 inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      @if (submitting()) {
+      <span
+        aria-hidden="true"
+        class="inline-block size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+      ></span>
+      <span>Saving…</span>
+      } @else {
+      <span>Save transaction</span>
+      }
+    </button>
+  </div>
+</form>

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   inject,
   input,
   linkedSignal,
@@ -11,6 +12,7 @@ import {
   type ElementRef,
 } from '@angular/core';
 import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, from, of } from 'rxjs';
 
 import { AppError, errorMessage } from '@core/errors/app-error';
@@ -26,8 +28,15 @@ const MIN_QUERY_LENGTH = 2;
   imports: [],
   templateUrl: './asset-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AssetCombobox),
+      multi: true,
+    },
+  ],
 })
-export class AssetCombobox {
+export class AssetCombobox implements ControlValueAccessor {
   readonly disabled = input(false);
   readonly placeholder = input('Search by name or symbol…');
 
@@ -37,9 +46,15 @@ export class AssetCombobox {
   private readonly assetsService = inject(AssetsService);
   private readonly queryInput = viewChild<ElementRef<HTMLInputElement>>('queryInput');
 
+  private readonly disabledByCva = signal(false);
+  readonly isDisabled = computed(() => this.disabled() || this.disabledByCva());
+
   private readonly rawQuery = signal('');
   private readonly focused = signal(false);
   private readonly selectionLocked = signal(false);
+
+  private onChange: (value: AssetSearchResult | null) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
 
   private readonly apiQuery = computed(() =>
     this.selectionLocked() ? '' : this.rawQuery().trim(),
@@ -98,6 +113,29 @@ export class AssetCombobox {
 
   readonly errorMessage = errorMessage;
 
+  writeValue(value: AssetSearchResult | null): void {
+    if (value) {
+      this.selectionLocked.set(true);
+      this.syncInput(`${value.name} (${value.symbol})`);
+      return;
+    }
+
+    this.selectionLocked.set(false);
+    this.syncInput('');
+  }
+
+  registerOnChange(fn: (value: AssetSearchResult | null) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabledByCva.set(isDisabled);
+  }
+
   onQueryInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.focused.set(true);
@@ -106,6 +144,7 @@ export class AssetCombobox {
       this.selectionLocked.set(false);
       this.rawQuery.set('');
       input.value = '';
+      this.onChange(null);
       this.assetCleared.emit();
       return;
     }
@@ -119,6 +158,7 @@ export class AssetCombobox {
 
   onInputBlur(): void {
     this.focused.set(false);
+    this.onTouched();
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -152,9 +192,11 @@ export class AssetCombobox {
   selectAsset(asset: AssetSearchResult): void {
     this.assetsService.cacheSelected(asset);
     this.selectionLocked.set(true);
-    this.rawQuery.set(`${asset.name} (${asset.symbol})`);
+    this.syncInput(`${asset.name} (${asset.symbol})`);
     this.focused.set(false);
     this.queryInput()?.nativeElement.blur();
+    this.onChange(asset);
+    this.onTouched();
     this.assetSelected.emit(asset);
   }
 
@@ -164,6 +206,14 @@ export class AssetCombobox {
 
   optionId(assetId: string): string {
     return `asset-option-${assetId}`;
+  }
+
+  private syncInput(value: string): void {
+    this.rawQuery.set(value);
+    const input = this.queryInput()?.nativeElement;
+    if (input) {
+      input.value = value;
+    }
   }
 
   private moveHighlight(delta: number): void {
