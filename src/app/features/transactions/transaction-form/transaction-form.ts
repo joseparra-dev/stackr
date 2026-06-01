@@ -24,10 +24,7 @@ import {
   notFutureDateValidator,
   quantityPositiveValidator,
 } from '@features/transactions/transaction-form/transaction-form.validator';
-import {
-  TRANSACTION_SAVE_PORT,
-  transactionSaveStub,
-} from '@features/transactions/transaction-save.port';
+import { TRANSACTION_SAVE_PORT } from '@features/transactions/transaction-save.port';
 import type { TransactionType } from '@features/transactions/transactions.types';
 import { DatetimeInput, ToastService } from '@shared/ui';
 
@@ -54,8 +51,7 @@ export class TransactionForm {
   private readonly dialogData = inject<TransactionFormDialogData | null>(DIALOG_DATA, {
     optional: true,
   });
-  private readonly savePort =
-    inject(TRANSACTION_SAVE_PORT, { optional: true }) ?? transactionSaveStub;
+  private readonly savePort = inject(TRANSACTION_SAVE_PORT);
   private readonly toast = inject(ToastService);
 
   readonly submitting = signal(false);
