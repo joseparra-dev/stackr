@@ -2,14 +2,15 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { AppError } from '@core/errors/app-error';
 
+import { withAsset } from './transactions.mapper';
 import { TransactionsService } from './transactions.service';
-import type { Transaction, TransactionInput } from './transactions.types';
+import type { TransactionInput, TransactionWithAsset } from './transactions.types';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsStore {
   private readonly service = inject(TransactionsService);
 
-  private readonly _transactions = signal<Transaction[]>([]);
+  private readonly _transactions = signal<TransactionWithAsset[]>([]);
   private readonly _loading = signal(false);
   private readonly _error = signal<AppError | null>(null);
 
@@ -41,9 +42,9 @@ export class TransactionsStore {
     this._transactions.set([optimistic, ...prev]);
     try {
       const created = await this.service.create(input);
-      // Replace the temp row with the server row, preserving its position.
+      const withAssetRow = withAsset(created, input.asset);
       this._transactions.set(
-        this._transactions().map((t) => (t.id === optimistic.id ? created : t)),
+        this._transactions().map((t) => (t.id === optimistic.id ? withAssetRow : t)),
       );
     } catch (err) {
       this._transactions.set(prev);
@@ -57,12 +58,12 @@ export class TransactionsStore {
     const index = prev.findIndex((t) => t.id === id);
     if (index === -1) return;
 
-    // Apply optimistically in place — keep the original position.
     const optimistic = optimisticTransaction(id, input);
     this._transactions.set(prev.map((t) => (t.id === id ? optimistic : t)));
     try {
       const updated = await this.service.update(id, input);
-      this._transactions.set(this._transactions().map((t) => (t.id === id ? updated : t)));
+      const withAssetRow = withAsset(updated, input.asset);
+      this._transactions.set(this._transactions().map((t) => (t.id === id ? withAssetRow : t)));
     } catch (err) {
       this._transactions.set(prev);
       this._error.set(AppError.from(err));
@@ -83,7 +84,7 @@ export class TransactionsStore {
   }
 }
 
-function optimisticTransaction(id: string, input: TransactionInput): Transaction {
+function optimisticTransaction(id: string, input: TransactionInput): TransactionWithAsset {
   return {
     id,
     assetId: input.asset.id,
@@ -93,5 +94,6 @@ function optimisticTransaction(id: string, input: TransactionInput): Transaction
     feeUsd: input.feeUsd,
     executedAt: input.executedAt,
     notes: input.notes,
+    asset: input.asset,
   };
 }

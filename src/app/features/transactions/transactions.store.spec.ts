@@ -6,7 +6,7 @@ import type { AssetSearchResult } from '@features/assets/assets.types';
 
 import { TransactionsService } from './transactions.service';
 import { TransactionsStore } from './transactions.store';
-import type { Transaction, TransactionInput } from './transactions.types';
+import type { TransactionInput, TransactionWithAsset } from './transactions.types';
 
 const asset: AssetSearchResult = {
   id: 'bitcoin',
@@ -26,7 +26,7 @@ const input: TransactionInput = {
   notes: null,
 };
 
-const tx: Transaction = {
+const tx: TransactionWithAsset = {
   id: 'tx-1',
   assetId: 'bitcoin',
   type: 'buy',
@@ -35,6 +35,7 @@ const tx: Transaction = {
   feeUsd: 0,
   executedAt: '2026-05-31T22:00:00.000Z',
   notes: null,
+  asset,
 };
 
 function makeServiceMock() {

@@ -2,8 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import type { AssetSearchResult } from '@features/assets/assets.types';
 
-import { rowToTransaction, toRpcArgs } from './transactions.mapper';
-import type { TransactionInput, TransactionRow } from './transactions.types';
+import { rowToTransaction, rowToTransactionWithAsset, toRpcArgs } from './transactions.mapper';
+import type {
+  TransactionInput,
+  TransactionRow,
+  TransactionWithAssetRow,
+} from './transactions.types';
 
 const asset: AssetSearchResult = {
   id: 'bitcoin',
@@ -68,6 +72,33 @@ describe('transactions.mapper', () => {
         p_executed_at: '2026-05-31T22:00:00.000Z',
         p_notes: 'test note',
       });
+    });
+  });
+
+  describe('rowToTransactionWithAsset', () => {
+    it('maps joined asset row to TransactionWithAsset', () => {
+      const row: TransactionWithAssetRow = {
+        id: 'tx-1',
+        user_id: 'user-1',
+        asset_id: 'bitcoin',
+        type: 'buy',
+        quantity: '1',
+        price_per_unit_usd: '50000',
+        fee_usd: '0',
+        executed_at: '2026-05-31T22:00:00.000Z',
+        notes: null,
+        created_at: '2026-05-31T22:01:00.000Z',
+        updated_at: '2026-05-31T22:01:00.000Z',
+        assets: {
+          id: 'bitcoin',
+          symbol: 'BTC',
+          name: 'Bitcoin',
+          image_url: 'https://cdn/btc.png',
+          market_cap_rank: 1,
+        },
+      };
+
+      expect(rowToTransactionWithAsset(row).asset.symbol).toBe('BTC');
     });
   });
 });

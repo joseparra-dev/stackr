@@ -3,37 +3,57 @@ import { inject, Injectable } from '@angular/core';
 import { mapSupabaseError } from '@core/errors/map-supabase-error';
 import { SUPABASE_CLIENT } from '@core/supabase/supabase.client';
 
-import { rowToTransaction, toRpcArgs } from './transactions.mapper';
-import type { Transaction, TransactionInput, TransactionRow } from './transactions.types';
+import { rowToTransaction, rowToTransactionWithAsset, toRpcArgs } from './transactions.mapper';
+import type {
+  Transaction,
+  TransactionInput,
+  TransactionRow,
+  TransactionWithAsset,
+  TransactionWithAssetRow,
+} from './transactions.types';
 
 const TABLE = 'transactions';
 
-/**
- * Thin async wrapper over Supabase for transaction CRUD. Every method resolves
- * with domain types or rejects with an {@link AppError} (never a raw Supabase
- * error). Promise-based on purpose — no RxJS here.
- */
+const LIST_SELECT = `
+  id,
+  user_id,
+  asset_id,
+  type,
+  quantity,
+  price_per_unit_usd,
+  fee_usd,
+  executed_at,
+  notes,
+  created_at,
+  updated_at,
+  assets ( id, symbol, name, image_url, market_cap_rank )
+`;
+
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
   private readonly client = inject(SUPABASE_CLIENT);
 
-  async list(): Promise<Transaction[]> {
+  async list(): Promise<TransactionWithAsset[]> {
     const { data, error } = await this.client
       .from(TABLE)
-      .select('*')
+      .select(LIST_SELECT)
       .order('executed_at', { ascending: false });
 
     if (error) throw mapSupabaseError(error);
 
-    return ((data ?? []) as TransactionRow[]).map(rowToTransaction);
+    return ((data ?? []) as unknown as TransactionWithAssetRow[]).map(rowToTransactionWithAsset);
   }
 
-  async getById(id: string): Promise<Transaction | null> {
-    const { data, error } = await this.client.from(TABLE).select('*').eq('id', id).maybeSingle();
+  async getById(id: string): Promise<TransactionWithAsset | null> {
+    const { data, error } = await this.client
+      .from(TABLE)
+      .select(LIST_SELECT)
+      .eq('id', id)
+      .maybeSingle();
 
     if (error) throw mapSupabaseError(error);
 
-    return data ? rowToTransaction(data as TransactionRow) : null;
+    return data ? rowToTransactionWithAsset(data as unknown as TransactionWithAssetRow) : null;
   }
 
   async create(input: TransactionInput): Promise<Transaction> {
