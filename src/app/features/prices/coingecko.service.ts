@@ -6,6 +6,7 @@ import { mapCoinGeckoError } from '@core/errors/map-coingecko-error';
 import { environment } from '@env/environment';
 
 import type { CoinGeckoSimplePriceResponse, PriceMap } from './coingecko.types';
+import { POLL_INTERVAL_MS } from './coingecko.types';
 import { withExponentialBackoff } from './fetch-with-backoff';
 import { getStaleIds, mergePrices, pricesForIds, type CacheEntry } from './price-cache';
 
@@ -13,6 +14,9 @@ import { getStaleIds, mergePrices, pricesForIds, type CacheEntry } from './price
 export class CoinGeckoService {
   private readonly http = inject(HttpClient);
   private cache = new Map<string, CacheEntry>();
+  private polledAssetIds: readonly string[] = [];
+  private pollTimer: ReturnType<typeof setInterval> | null = null;
+  private boundVisibilityHandler: (() => void) | null = null;
 
   async getPrices(assetIds: string[]): Promise<PriceMap> {
     const unique = [...new Set(assetIds)];
@@ -29,6 +33,22 @@ export class CoinGeckoService {
     return pricesForIds(unique, this.cache);
   }
 
+  startPolling(assetIds: string[]): void {
+    this.stopPolling();
+    this.polledAssetIds = [...new Set(assetIds)];
+    if (this.polledAssetIds.length === 0) return;
+
+    this.ensureVisibilityListener();
+    void this.getPrices(this.polledAssetIds);
+    this.startPollTimer();
+  }
+
+  stopPolling(): void {
+    this.clearPollTimer();
+    this.removeVisibilityListener();
+    this.polledAssetIds = [];
+  }
+
   private async fetchPrices(ids: readonly string[]): Promise<PriceMap> {
     const url = `${environment.coingecko.baseUrl}/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
 
@@ -41,6 +61,50 @@ export class CoinGeckoService {
         throw mapCoinGeckoError(cause);
       }
     });
+  }
+
+  private onVisibilityChange(): void {
+    if (this.polledAssetIds.length === 0) return;
+
+    if (document.hidden) {
+      this.clearPollTimer();
+      return;
+    }
+
+    void this.getPrices(this.polledAssetIds);
+    this.startPollTimer();
+  }
+
+  private startPollTimer(): void {
+    this.clearPollTimer();
+    if (typeof document === 'undefined' || document.hidden || this.polledAssetIds.length === 0) {
+      return;
+    }
+
+    this.pollTimer = setInterval(() => {
+      void this.getPrices(this.polledAssetIds);
+    }, POLL_INTERVAL_MS);
+  }
+
+  private clearPollTimer(): void {
+    if (this.pollTimer !== null) {
+      clearInterval(this.pollTimer);
+      this.pollTimer = null;
+    }
+  }
+
+  private ensureVisibilityListener(): void {
+    if (this.boundVisibilityHandler !== null || typeof document === 'undefined') return;
+
+    this.boundVisibilityHandler = () => this.onVisibilityChange();
+    document.addEventListener('visibilitychange', this.boundVisibilityHandler);
+  }
+
+  private removeVisibilityListener(): void {
+    if (this.boundVisibilityHandler === null || typeof document === 'undefined') return;
+
+    document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
+    this.boundVisibilityHandler = null;
   }
 }
 

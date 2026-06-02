@@ -4,11 +4,15 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '@env/environment';
-import { PRICE_CACHE_TTL_MS } from './coingecko.types';
+import { POLL_INTERVAL_MS, PRICE_CACHE_TTL_MS } from './coingecko.types';
 
 import { CoinGeckoService } from './coingecko.service';
 
 const PRICES_URL = `${environment.coingecko.baseUrl}/simple/price`;
+
+function setDocumentHidden(hidden: boolean): void {
+  Object.defineProperty(document, 'hidden', { configurable: true, value: hidden });
+}
 
 describe('CoinGeckoService', () => {
   let service: CoinGeckoService;
@@ -24,8 +28,11 @@ describe('CoinGeckoService', () => {
   });
 
   afterEach(() => {
+    service.stopPolling();
+    setDocumentHidden(false);
     httpMock.verify();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('returns an empty map for empty input without HTTP', async () => {
@@ -141,5 +148,80 @@ describe('CoinGeckoService', () => {
 
     await expect(promise).resolves.toEqual({ bitcoin: 67_000 });
     vi.useRealTimers();
+  });
+
+  describe('startPolling', () => {
+    it('does nothing when asset ids are empty', () => {
+      service.startPolling([]);
+      httpMock.expectNone(PRICES_URL);
+    });
+
+    it('fetches immediately and polls every 30 seconds', async () => {
+      vi.useFakeTimers();
+      let now = 1_000_000;
+      vi.spyOn(Date, 'now').mockImplementation(() => now);
+
+      service.startPolling(['bitcoin']);
+
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 67_000 },
+      });
+      await Promise.resolve();
+
+      now += POLL_INTERVAL_MS;
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 68_000 },
+      });
+      await Promise.resolve();
+    });
+
+    it('stops polling when stopPolling is called', async () => {
+      vi.useFakeTimers();
+      let now = 1_000_000;
+      vi.spyOn(Date, 'now').mockImplementation(() => now);
+
+      service.startPolling(['bitcoin']);
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 67_000 },
+      });
+      await Promise.resolve();
+
+      service.stopPolling();
+
+      now += POLL_INTERVAL_MS;
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+
+      httpMock.expectNone(PRICES_URL);
+    });
+
+    it('pauses polling while the document is hidden and refetches when visible', async () => {
+      vi.useFakeTimers();
+      let now = 1_000_000;
+      vi.spyOn(Date, 'now').mockImplementation(() => now);
+      setDocumentHidden(false);
+
+      service.startPolling(['bitcoin']);
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 67_000 },
+      });
+      await Promise.resolve();
+
+      setDocumentHidden(true);
+      document.dispatchEvent(new Event('visibilitychange'));
+
+      now += POLL_INTERVAL_MS;
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+      httpMock.expectNone(PRICES_URL);
+
+      setDocumentHidden(false);
+      document.dispatchEvent(new Event('visibilitychange'));
+
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 68_000 },
+      });
+      await Promise.resolve();
+    });
   });
 });
