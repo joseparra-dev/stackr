@@ -196,6 +196,33 @@ describe('CoinGeckoService', () => {
       httpMock.expectNone(PRICES_URL);
     });
 
+    it('invokes onUpdate after a successful poll', async () => {
+      const onUpdate = vi.fn();
+
+      service.startPolling(['bitcoin'], onUpdate);
+
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+        bitcoin: { usd: 67_000 },
+      });
+
+      await vi.waitFor(() => expect(onUpdate).toHaveBeenCalled());
+      expect(onUpdate).toHaveBeenCalledWith({ bitcoin: 67_000 });
+    });
+
+    it('invokes onError when a poll fails', async () => {
+      const onError = vi.fn();
+
+      service.startPolling(['bitcoin'], undefined, onError);
+
+      httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush(null, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+
+      await vi.waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'api/server-error' }));
+    });
+
     it('pauses polling while the document is hidden and refetches when visible', async () => {
       vi.useFakeTimers();
       let now = 1_000_000;
