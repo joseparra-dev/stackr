@@ -45,11 +45,8 @@
         </td>
         <td class="px-4 py-3">
           <app-transaction-row-actions
-            variant="table"
-            [open]="isMenuOpen(tx.id)"
             [menuId]="'tx-menu-' + tx.id"
             [ariaLabel]="actionsLabel(tx)"
-            (menuToggle)="toggleMenu(tx.id)"
             (edit)="onEdit(tx)"
             (delete)="onDelete(tx)"
           />
@@ -90,11 +87,8 @@
         </div>
       </div>
       <app-transaction-row-actions
-        variant="card"
-        [open]="isMenuOpen(tx.id)"
         [menuId]="'tx-card-menu-' + tx.id"
         [ariaLabel]="'Actions for ' + tx.asset.symbol"
-        (menuToggle)="toggleMenu(tx.id)"
         (edit)="onEdit(tx)"
         (delete)="onDelete(tx)"
       />

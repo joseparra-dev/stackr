@@ -1,35 +1,52 @@
-<div class="relative text-right">
+<div class="text-right">
   <button
+    #trigger="cdkOverlayOrigin"
     type="button"
-    [attr.aria-expanded]="open()"
+    cdkOverlayOrigin
+    [attr.aria-expanded]="menuOpen()"
     aria-haspopup="menu"
     [attr.aria-controls]="menuId()"
     [attr.aria-label]="ariaLabel()"
     class="focus-visible:outline-brand-500 inline-flex cursor-pointer rounded-lg p-1.5 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-2"
-    (click)="menuToggle.emit()"
+    (click)="toggleMenu()"
   >
     <svg lucideMoreHorizontal [size]="16" aria-hidden="true" />
   </button>
-  @if (open()) {
-  <div [id]="menuId()" role="menu" [class]="panelClass()">
-    <button
-      type="button"
-      role="menuitem"
-      class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-(--color-text) hover:bg-(--color-surface-2)"
-      (click)="edit.emit()"
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="menuOpen()"
+    [cdkConnectedOverlayPositions]="menuPositions"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    (overlayOutsideClick)="closeMenu()"
+    (detach)="closeMenu()"
+  >
+    <div
+      [id]="menuId()"
+      role="menu"
+      tabindex="-1"
+      class="z-10 w-36 rounded-lg border border-(--color-border) bg-(--color-surface) py-1 shadow-lg"
+      (keydown.escape)="closeMenu()"
     >
-      <svg lucidePencil [size]="14" aria-hidden="true" />
-      Edit
-    </button>
-    <button
-      type="button"
-      role="menuitem"
-      class="text-danger flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm hover:bg-(--color-surface-2)"
-      (click)="delete.emit()"
-    >
-      <svg lucideTrash2 [size]="14" aria-hidden="true" />
-      Delete
-    </button>
-  </div>
-  }
+      <button
+        type="button"
+        role="menuitem"
+        class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-(--color-text) hover:bg-(--color-surface-2)"
+        (click)="onEdit()"
+      >
+        <svg lucidePencil [size]="14" aria-hidden="true" />
+        Edit
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        class="text-danger flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm hover:bg-(--color-surface-2)"
+        (click)="onDelete()"
+      >
+        <svg lucideTrash2 [size]="14" aria-hidden="true" />
+        Delete
+      </button>
+    </div>
+  </ng-template>
 </div>
