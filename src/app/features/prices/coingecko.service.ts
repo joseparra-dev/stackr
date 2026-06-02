@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, map } from 'rxjs';
 
+import { AppError } from '@core/errors/app-error';
 import { mapCoinGeckoError } from '@core/errors/map-coingecko-error';
 import { environment } from '@env/environment';
 
@@ -17,6 +18,8 @@ export class CoinGeckoService {
   private polledAssetIds: readonly string[] = [];
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private boundVisibilityHandler: (() => void) | null = null;
+  private onUpdate: ((prices: PriceMap) => void) | null = null;
+  private onError: ((error: AppError) => void) | null = null;
 
   async getPrices(assetIds: readonly string[]): Promise<PriceMap> {
     const unique = [...new Set(assetIds)];
@@ -33,13 +36,20 @@ export class CoinGeckoService {
     return pricesForIds(unique, this.cache);
   }
 
-  startPolling(assetIds: string[]): void {
+  startPolling(
+    assetIds: readonly string[],
+    onUpdate?: (prices: PriceMap) => void,
+    onError?: (error: AppError) => void,
+  ): void {
     this.stopPolling();
     this.polledAssetIds = [...new Set(assetIds)];
+    this.onUpdate = onUpdate ?? null;
+    this.onError = onError ?? null;
+
     if (this.polledAssetIds.length === 0) return;
 
     this.ensureVisibilityListener();
-    void this.getPrices(this.polledAssetIds);
+    void this.runPoll();
     this.startPollTimer();
   }
 
@@ -47,6 +57,17 @@ export class CoinGeckoService {
     this.clearPollTimer();
     this.removeVisibilityListener();
     this.polledAssetIds = [];
+    this.onUpdate = null;
+    this.onError = null;
+  }
+
+  private async runPoll(): Promise<void> {
+    try {
+      const prices = await this.getPrices(this.polledAssetIds);
+      this.onUpdate?.(prices);
+    } catch (cause) {
+      this.onError?.(AppError.from(cause));
+    }
   }
 
   private async fetchPrices(ids: readonly string[]): Promise<PriceMap> {
@@ -71,7 +92,7 @@ export class CoinGeckoService {
       return;
     }
 
-    void this.getPrices(this.polledAssetIds);
+    void this.runPoll();
     this.startPollTimer();
   }
 
@@ -82,7 +103,7 @@ export class CoinGeckoService {
     }
 
     this.pollTimer = setInterval(() => {
-      void this.getPrices(this.polledAssetIds);
+      void this.runPoll();
     }, POLL_INTERVAL_MS);
   }
 
