@@ -18,7 +18,7 @@ export class CoinGeckoService {
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private boundVisibilityHandler: (() => void) | null = null;
 
-  async getPrices(assetIds: string[]): Promise<PriceMap> {
+  async getPrices(assetIds: readonly string[]): Promise<PriceMap> {
     const unique = [...new Set(assetIds)];
     if (unique.length === 0) return {};
 
