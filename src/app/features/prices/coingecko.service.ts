@@ -6,6 +6,7 @@ import { mapCoinGeckoError } from '@core/errors/map-coingecko-error';
 import { environment } from '@env/environment';
 
 import type { CoinGeckoSimplePriceResponse, PriceMap } from './coingecko.types';
+import { withExponentialBackoff } from './fetch-with-backoff';
 import { getStaleIds, mergePrices, pricesForIds, type CacheEntry } from './price-cache';
 
 @Injectable({ providedIn: 'root' })
@@ -31,13 +32,15 @@ export class CoinGeckoService {
   private async fetchPrices(ids: readonly string[]): Promise<PriceMap> {
     const url = `${environment.coingecko.baseUrl}/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
 
-    try {
-      return await firstValueFrom(
-        this.http.get<CoinGeckoSimplePriceResponse>(url).pipe(map(mapSimplePriceResponse)),
-      );
-    } catch (cause) {
-      throw mapCoinGeckoError(cause);
-    }
+    return withExponentialBackoff(async () => {
+      try {
+        return await firstValueFrom(
+          this.http.get<CoinGeckoSimplePriceResponse>(url).pipe(map(mapSimplePriceResponse)),
+        );
+      } catch (cause) {
+        throw mapCoinGeckoError(cause);
+      }
+    });
   }
 }
 

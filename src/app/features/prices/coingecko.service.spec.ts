@@ -105,13 +105,41 @@ describe('CoinGeckoService', () => {
     await expect(second).resolves.toEqual({ bitcoin: 68_000 });
   });
 
-  it('throws AppError when CoinGecko returns HTTP 429', async () => {
+  it('throws AppError when CoinGecko keeps returning HTTP 429', async () => {
+    vi.useFakeTimers();
+
     const promise = service.getPrices(['solana']);
-    httpMock.expectOne(`${PRICES_URL}?ids=solana&vs_currencies=usd`).flush(null, {
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      httpMock.expectOne(`${PRICES_URL}?ids=solana&vs_currencies=usd`).flush(null, {
+        status: 429,
+        statusText: 'Too Many Requests',
+      });
+      if (attempt < 2) {
+        await vi.advanceTimersByTimeAsync(1_000 * 2 ** attempt);
+      }
+    }
+
+    await expect(promise).rejects.toMatchObject({ code: 'api/rate-limit' });
+    vi.useRealTimers();
+  });
+
+  it('retries on HTTP 429 and succeeds on a later attempt', async () => {
+    vi.useFakeTimers();
+
+    const promise = service.getPrices(['bitcoin']);
+
+    httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush(null, {
       status: 429,
       statusText: 'Too Many Requests',
     });
+    await vi.advanceTimersByTimeAsync(1_000);
 
-    await expect(promise).rejects.toMatchObject({ code: 'api/rate-limit' });
+    httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush({
+      bitcoin: { usd: 67_000 },
+    });
+
+    await expect(promise).resolves.toEqual({ bitcoin: 67_000 });
+    vi.useRealTimers();
   });
 });
