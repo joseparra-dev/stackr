@@ -18,8 +18,9 @@ import {
   type ApexYAxis,
 } from 'ng-apexcharts';
 
+import type { AppError } from '@core/errors/app-error';
 import { ThemeService } from '@core/theme/theme.service';
-import { EmptyState } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
 import { formatUsd } from '@shared/utils/format-usd';
 import type { DailyPortfolioPoint, HistoryRangeDays } from '@shared/utils/portfolio-history';
 
@@ -35,7 +36,7 @@ const AREA_COLOR = '#3b82f6';
 
 @Component({
   selector: 'app-portfolio-value-chart',
-  imports: [ChartComponent, EmptyState],
+  imports: [ChartComponent, EmptyState, ErrorState, Skeleton],
   templateUrl: './portfolio-value-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,10 +45,12 @@ export class PortfolioValueChart {
 
   readonly points = input.required<readonly DailyPortfolioPoint[]>();
   readonly loading = input(false);
+  readonly error = input<AppError | null>(null);
   readonly hasEnoughData = input(true);
   readonly selectedRange = input.required<HistoryRangeDays>();
 
   readonly rangeChange = output<HistoryRangeDays>();
+  readonly retry = output<void>();
 
   protected readonly rangeOptions = RANGE_OPTIONS;
   protected readonly chartColors = [AREA_COLOR];

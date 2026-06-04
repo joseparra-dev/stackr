@@ -14,12 +14,12 @@ import { HoldingsStore } from '@features/holdings/holdings.store';
 import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { Holding } from '@shared/utils/holdings.types';
-import { EmptyState } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
 import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-usd';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AllocationChart, EmptyState, PortfolioValueChart],
+  imports: [AllocationChart, EmptyState, ErrorState, PortfolioValueChart, Skeleton],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,6 +30,7 @@ export class DashboardPage {
   private readonly portfolioHistoryStore = inject(PortfolioHistoryStore);
 
   readonly loading = this.transactionsStore.loading;
+  readonly error = this.transactionsStore.error;
   readonly hasTransactions = this.transactionsStore.hasTransactions;
   readonly holdings = this.holdingsStore.holdings;
   readonly totalValueUSD = this.holdingsStore.totalValueUSD;
@@ -42,6 +43,7 @@ export class DashboardPage {
 
   readonly historyPoints = this.portfolioHistoryStore.points;
   readonly historyLoading = this.portfolioHistoryStore.loading;
+  readonly historyError = this.portfolioHistoryStore.error;
   readonly historyRangeDays = this.portfolioHistoryStore.rangeDays;
   readonly historyHasEnoughData = this.portfolioHistoryStore.hasEnoughData;
 
@@ -90,6 +92,16 @@ export class DashboardPage {
         void this.portfolioHistoryStore.load(transactions, assetIds);
       });
     });
+  }
+
+  retryLoad(): void {
+    void this.transactionsStore.load();
+  }
+
+  retryHistory(): void {
+    const transactions = this.transactionsStore.transactions();
+    const assetIds = [...new Set(transactions.map((tx) => tx.assetId))];
+    void this.portfolioHistoryStore.load(transactions, assetIds);
   }
 
   onHistoryRangeChange(days: 7 | 30 | 90): void {

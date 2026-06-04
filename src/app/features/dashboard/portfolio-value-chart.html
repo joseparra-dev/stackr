@@ -31,7 +31,9 @@
   </div>
 
   @if (loading()) {
-  <div class="mt-4 h-64 animate-pulse rounded-lg bg-(--color-surface-2)" role="status" aria-busy="true"></div>
+  <app-skeleton variant="chart" />
+  } @else if (error(); as err) {
+  <app-error-state class="mt-4 block" [error]="err" (retry)="retry.emit()" />
   } @else if (!hasEnoughData()) {
   <app-empty-state
     headingId="portfolio-history-empty-heading"
