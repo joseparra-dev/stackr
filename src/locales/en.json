@@ -213,7 +213,7 @@
       "es": "Spanish"
     },
     "danger": {
-      "heading": "Danger zone",
+      "heading": "Irreversible actions",
       "description": "Permanently delete your account and all portfolio data. This cannot be undone.",
       "deleteAccount": "Delete account",
       "deleteDialog": {

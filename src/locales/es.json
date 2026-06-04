@@ -213,7 +213,7 @@
       "es": "Español"
     },
     "danger": {
-      "heading": "Zona de peligro",
+      "heading": "Acciones irreversibles",
       "description": "Elimina tu cuenta y todos los datos del portafolio de forma permanente. No se puede deshacer.",
       "deleteAccount": "Eliminar cuenta",
       "deleteDialog": {
