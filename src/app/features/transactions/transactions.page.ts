@@ -24,7 +24,7 @@ import {
 } from '@features/transactions/transactions-filter';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
-import { ToastService } from '@shared/ui';
+import { EmptyState, ToastService } from '@shared/ui';
 
 const DIALOG_OPTIONS = {
   width: '100%',
@@ -35,7 +35,7 @@ const DIALOG_OPTIONS = {
 
 @Component({
   selector: 'app-transactions-page',
-  imports: [LucidePlus, TransactionFilterBar, TransactionList],
+  imports: [EmptyState, LucidePlus, TransactionFilterBar, TransactionList],
   templateUrl: './transactions.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
