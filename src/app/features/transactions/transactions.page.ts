@@ -1,6 +1,9 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucidePlus } from '@lucide/angular';
+import { map } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 
 import { errorMessage } from '@core/errors/app-error';
@@ -9,6 +12,11 @@ import type { DeleteTransactionDialogData } from '@features/transactions/delete-
 import { TransactionForm } from '@features/transactions/transaction-form/transaction-form';
 import type { TransactionFormDialogData } from '@features/transactions/transaction-form/transaction-form.dialog.types';
 import { TransactionList } from '@features/transactions/transaction-list';
+import {
+  assetFilterLabel,
+  filterTransactionsByAsset,
+  TRANSACTIONS_ASSET_FILTER_PARAM,
+} from '@features/transactions/transactions-filter';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
 import { ToastService } from '@shared/ui';
@@ -22,19 +30,36 @@ const DIALOG_OPTIONS = {
 
 @Component({
   selector: 'app-transactions-page',
-  imports: [LucidePlus, TransactionList],
+  imports: [LucidePlus, RouterLink, TransactionList],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './transactions.page.html',
 })
 export class TransactionsPage {
   private readonly dialog = inject(Dialog);
+  private readonly route = inject(ActivatedRoute);
   private readonly store = inject(TransactionsStore);
   private readonly toast = inject(ToastService);
 
-  readonly transactions = this.store.transactions;
+  private readonly assetFilterId = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get(TRANSACTIONS_ASSET_FILTER_PARAM))),
+    { initialValue: null },
+  );
+
   readonly loading = this.store.loading;
   readonly error = this.store.error;
   readonly hasTransactions = this.store.hasTransactions;
+
+  readonly assetFilter = computed(() => this.assetFilterId() ?? null);
+
+  readonly assetFilterSymbol = computed(() =>
+    assetFilterLabel(this.store.transactions(), this.assetFilter()),
+  );
+
+  readonly transactions = computed(() =>
+    filterTransactionsByAsset(this.store.transactions(), this.assetFilter()),
+  );
+
+  readonly hasFilteredTransactions = computed(() => this.transactions().length > 0);
 
   protected readonly errorMessage = errorMessage;
 

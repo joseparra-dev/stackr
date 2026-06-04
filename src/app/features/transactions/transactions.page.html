@@ -54,7 +54,39 @@
       Add your first transaction
     </button>
   </section>
+  } @else if (assetFilter() && !hasFilteredTransactions()) {
+  <section
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) px-6 py-10 text-center"
+    aria-live="polite"
+  >
+    <p class="text-sm text-(--color-text-muted)">
+      No transactions for {{ assetFilterSymbol() ?? 'this asset' }}.
+    </p>
+    <a
+      routerLink="/transactions"
+      class="text-brand-600 hover:text-brand-700 mt-4 inline-block text-sm font-medium"
+    >
+      Clear filter
+    </a>
+  </section>
   } @else {
+  @if (assetFilter(); as filterId) {
+  <div
+    class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-(--color-border) bg-(--color-surface-2) px-4 py-3 text-sm"
+  >
+    <p class="text-(--color-text)">
+      Showing transactions for
+      <span class="font-semibold">{{ assetFilterSymbol() ?? filterId }}</span>
+    </p>
+    <a
+      routerLink="/transactions"
+      class="text-brand-600 hover:text-brand-700 font-medium"
+    >
+      Clear filter
+    </a>
+  </div>
+  }
+
   <app-transaction-list
     [transactions]="transactions()"
     (edit)="openEditDialog($event)"

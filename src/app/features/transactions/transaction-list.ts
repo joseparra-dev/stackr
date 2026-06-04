@@ -17,7 +17,7 @@ import type { TransactionWithAsset } from './transactions.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionList {
-  readonly transactions = input.required<TransactionWithAsset[]>();
+  readonly transactions = input.required<readonly TransactionWithAsset[]>();
 
   readonly edit = output<TransactionWithAsset>();
   readonly delete = output<TransactionWithAsset>();
