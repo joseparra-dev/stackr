@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -11,7 +12,7 @@ import { TopBar } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-shell',
-  imports: [OfflineBanner, RouterOutlet, Sidebar, TopBar, Toast, TranslatePipe],
+  imports: [CdkTrapFocus, OfflineBanner, RouterOutlet, Sidebar, TopBar, Toast, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './shell.html',
 })

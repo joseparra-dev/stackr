@@ -24,14 +24,14 @@ import {
 } from '@features/transactions/transactions-filter';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
-import { EmptyState, ErrorState, Skeleton, ToastService, TranslatePipe } from '@shared/ui';
-
-const DIALOG_OPTIONS = {
-  width: '100%',
-  maxWidth: '32rem',
-  panelClass: 'stackr-dialog-panel',
-  backdropClass: 'stackr-dialog-backdrop',
-} as const;
+import {
+  EmptyState,
+  ErrorState,
+  Skeleton,
+  STACKR_DIALOG_OPTIONS,
+  ToastService,
+  TranslatePipe,
+} from '@shared/ui';
 
 @Component({
   selector: 'app-transactions-page',
@@ -117,14 +117,14 @@ export class TransactionsPage {
 
   protected openCreateDialog(): void {
     this.dialog.open<boolean, TransactionFormDialogData>(TransactionForm, {
-      ...DIALOG_OPTIONS,
+      ...STACKR_DIALOG_OPTIONS,
       data: { mode: 'create' },
     });
   }
 
   protected openEditDialog(tx: TransactionWithAsset): void {
     this.dialog.open<boolean, TransactionFormDialogData>(TransactionForm, {
-      ...DIALOG_OPTIONS,
+      ...STACKR_DIALOG_OPTIONS,
       data: { mode: 'edit', transaction: tx, asset: tx.asset },
     });
   }
@@ -132,8 +132,10 @@ export class TransactionsPage {
   protected async confirmDelete(tx: TransactionWithAsset): Promise<void> {
     const confirmed = await firstValueFrom(
       this.dialog.open<boolean, DeleteTransactionDialogData>(DeleteTransactionDialog, {
-        ...DIALOG_OPTIONS,
+        ...STACKR_DIALOG_OPTIONS,
         maxWidth: '28rem',
+        role: 'alertdialog',
+        ariaLabelledBy: 'delete-transaction-title',
         data: { assetSymbol: tx.asset.symbol, type: tx.type },
       }).closed,
     );

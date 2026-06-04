@@ -27,7 +27,9 @@
       "closeNavigation": "Cerrar navegación",
       "switchToLightMode": "Cambiar a modo claro",
       "switchToDarkMode": "Cambiar a modo oscuro",
-      "userMenu": "Menú de usuario"
+      "userMenu": "Menú de usuario",
+      "skipToContent": "Saltar al contenido principal",
+      "navigatedTo": "Navegación a {page}"
     },
     "signOut": "Cerrar sesión"
   },

@@ -21,7 +21,7 @@
   --color-surface-2: #1c1c21;
   --color-border: #2a2a30;
   --color-text: #f4f4f5;
-  --color-text-muted: #9b9ba3;
+  --color-text-muted: #a8a8b0;
   color-scheme: dark;
 }
 
@@ -31,7 +31,7 @@
   --color-surface-2: #f4f4f5;
   --color-border: #e4e4e7;
   --color-text: #18181b;
-  --color-text-muted: #71717a;
+  --color-text-muted: #5f5f68;
   color-scheme: light;
 }
 
@@ -92,6 +92,32 @@ input[type='number'] {
 
 .stackr-datetime-panel {
   z-index: 1001;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  z-index: 100;
 }
 
 .stackr-select {
