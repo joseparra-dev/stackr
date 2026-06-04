@@ -58,7 +58,14 @@
         try {
           var stored = localStorage.getItem('stackr:theme');
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var theme = stored || (prefersDark ? 'dark' : 'light');
+          var theme =
+            stored === 'system' || !stored
+              ? prefersDark
+                ? 'dark'
+                : 'light'
+              : stored === 'dark'
+                ? 'dark'
+                : 'light';
           document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {}
       })();
