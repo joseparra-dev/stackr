@@ -5,6 +5,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { BehaviorSubject, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AppError } from '@core/errors/app-error';
 import { bitcoinAsset, ethereumAsset, makeTransaction } from '@shared/utils/__fixtures__/transactions';
 
 import { TransactionsStore } from './transactions.store';
@@ -13,6 +14,8 @@ import { TransactionsPage } from './transactions.page';
 describe('TransactionsPage', () => {
   let fixture: ComponentFixture<TransactionsPage>;
   let router: Router;
+  let load: ReturnType<typeof vi.fn>;
+  let error: ReturnType<typeof signal<AppError | null>>;
   const queryParams$ = new BehaviorSubject(convertToParamMap({}));
 
   beforeEach(async () => {
@@ -20,6 +23,9 @@ describe('TransactionsPage', () => {
       makeTransaction({ asset: bitcoinAsset }),
       makeTransaction({ id: 'tx-2', asset: ethereumAsset, type: 'sell' }),
     ]);
+    const loading = signal(false);
+    error = signal<AppError | null>(null);
+    load = vi.fn().mockResolvedValue(undefined);
 
     await TestBed.configureTestingModule({
       imports: [TransactionsPage],
@@ -29,10 +35,10 @@ describe('TransactionsPage', () => {
           provide: TransactionsStore,
           useValue: {
             transactions: transactions.asReadonly(),
-            loading: signal(false).asReadonly(),
-            error: signal(null).asReadonly(),
+            loading: loading.asReadonly(),
+            error: error.asReadonly(),
             hasTransactions: signal(true).asReadonly(),
-            load: vi.fn().mockResolvedValue(undefined),
+            load,
           },
         },
         {
@@ -56,6 +62,18 @@ describe('TransactionsPage', () => {
 
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
+  });
+
+  it('shows error state with retry when load fails', async () => {
+    error.set(new AppError('api/server-error', 'fail'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.textContent).toContain('Try again');
+    const buttons = [...fixture.nativeElement.querySelectorAll('button')] as HTMLButtonElement[];
+    const retryButton = buttons.find((b) => b.textContent?.includes('Try again'));
+    retryButton?.click();
+    expect(load).toHaveBeenCalled();
   });
 
   it('filters rows from url query params', async () => {

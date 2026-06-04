@@ -5,18 +5,9 @@
   </div>
 
   @if (loading()) {
-  <div
-    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
-    role="status"
-    aria-live="polite"
-    aria-busy="true"
-  >
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      @for (card of [1, 2, 3]; track card) {
-      <div class="h-24 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
-      }
-    </div>
-  </div>
+  <app-skeleton variant="summary-cards" />
+  } @else if (error(); as err) {
+  <app-error-state [error]="err" (retry)="retryLoad()" />
   } @else if (!hasTransactions()) {
   <app-empty-state
     headingId="dashboard-empty-heading"
@@ -80,9 +71,11 @@
   <app-portfolio-value-chart
     [points]="historyPoints()"
     [loading]="historyLoading()"
+    [error]="historyError()"
     [hasEnoughData]="historyHasEnoughData()"
     [selectedRange]="historyRangeDays()"
     (rangeChange)="onHistoryRangeChange($event)"
+    (retry)="retryHistory()"
   />
   }
 </div>

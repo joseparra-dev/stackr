@@ -3,7 +3,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ThemeService } from '@core/theme/theme.service';
-import { EmptyState } from '@shared/ui';
+import { AppError } from '@core/errors/app-error';
+import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
 
 import { PortfolioValueChart } from './portfolio-value-chart';
 
@@ -16,11 +17,26 @@ describe('PortfolioValueChart', () => {
       providers: [ThemeService],
     })
       .overrideComponent(PortfolioValueChart, {
-        set: { imports: [EmptyState], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
+        set: { imports: [EmptyState, ErrorState, Skeleton], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
       })
       .compileComponents();
 
     fixture = TestBed.createComponent(PortfolioValueChart);
+  });
+
+  it('shows error state with retry when history fails', () => {
+    const retry = vi.fn();
+    fixture.componentRef.setInput('points', []);
+    fixture.componentRef.setInput('selectedRange', 7);
+    fixture.componentRef.setInput('error', new AppError('network/offline', 'offline'));
+    fixture.componentInstance.retry.subscribe(retry);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('No internet connection');
+    const buttons = [...fixture.nativeElement.querySelectorAll('button')] as HTMLButtonElement[];
+    const retryButton = buttons.find((b) => b.textContent?.includes('Try again'));
+    retryButton?.click();
+    expect(retry).toHaveBeenCalled();
   });
 
   it('shows empty state when there is not enough data', () => {
