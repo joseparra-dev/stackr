@@ -1,3 +1,8 @@
+import { errorTranslationKey } from '@core/i18n/error-keys';
+import { resolveTranslation, type TranslationTree } from '@core/i18n/translate';
+
+import en from '../../../locales/en.json';
+
 export type AppErrorCode =
   | 'auth/unauthorized'
   | 'auth/session-expired'
@@ -7,6 +12,8 @@ export type AppErrorCode =
   | 'api/server-error'
   | 'validation/invalid-input'
   | 'unknown';
+
+const EN_TRANSLATIONS = en as TranslationTree;
 
 export class AppError extends Error {
   public override readonly cause?: unknown;
@@ -21,8 +28,6 @@ export class AppError extends Error {
     this.cause = cause;
   }
 
-  /** Returns the value unchanged when it's already an `AppError`, so
-   *  re-throws don't lose code/cause. */
   static from(value: unknown, fallbackMessage = 'Unexpected error'): AppError {
     if (value instanceof AppError) {
       return value;
@@ -33,26 +38,9 @@ export class AppError extends Error {
 }
 
 export function errorMessage(code: AppErrorCode): string {
-  switch (code) {
-    case 'auth/unauthorized':
-      return 'Sign-in failed. Please try again.';
-    case 'auth/session-expired':
-      return 'Your session has expired. Please sign in again.';
-    case 'network/offline':
-      return 'No internet connection. Check your network and try again.';
-    case 'network/timeout':
-      return 'The request took too long. Please try again.';
-    case 'api/rate-limit':
-      return 'Too many attempts. Please wait a moment and try again.';
-    case 'api/server-error':
-      return 'Something went wrong on our side. Please try again later.';
-    case 'validation/invalid-input':
-      return 'Some of the information provided is invalid.';
-    case 'unknown':
-      return 'Something went wrong. Please try again.';
-    default: {
-      const _exhaustive: never = code;
-      return _exhaustive;
-    }
-  }
+  return (
+    resolveTranslation(EN_TRANSLATIONS, errorTranslationKey(code)) ??
+    resolveTranslation(EN_TRANSLATIONS, 'errors.unknown') ??
+    'Something went wrong. Please try again.'
+  );
 }
