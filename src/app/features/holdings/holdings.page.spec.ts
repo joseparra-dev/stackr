@@ -108,7 +108,7 @@ describe('HoldingsPage', () => {
     });
 
     expect(router.navigate).toHaveBeenCalledWith(['/transactions'], {
-      queryParams: { asset: 'bitcoin' },
+      queryParams: { assets: 'bitcoin' },
     });
   });
 });
