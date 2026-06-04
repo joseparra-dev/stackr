@@ -16,14 +16,14 @@ import type { Holding } from '@shared/utils/holdings.types';
 
 import { TRANSACTIONS_ASSETS_FILTER_PARAM } from '@features/transactions/transactions-filter';
 
-import { EmptyState } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
 
 import { HoldingsTable } from './holdings-table';
 import { nextSortState, sortHoldings, type HoldingsSortKey, type SortDirection } from './holdings-sort';
 
 @Component({
   selector: 'app-holdings-page',
-  imports: [EmptyState, HoldingsTable],
+  imports: [EmptyState, ErrorState, HoldingsTable, Skeleton],
   templateUrl: './holdings.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -37,6 +37,7 @@ export class HoldingsPage {
   private readonly sortDirection = signal<SortDirection>('desc');
 
   readonly loading = this.transactionsStore.loading;
+  readonly error = this.transactionsStore.error;
   readonly hasHoldings = computed(() => this.holdingsStore.holdings().length > 0);
 
   readonly sortedHoldings = computed(() =>
@@ -57,6 +58,10 @@ export class HoldingsPage {
       const assetIds = this.transactionsStore.transactions().map((tx) => tx.assetId);
       untracked(() => this.pricesStore.subscribeToAssets(assetIds));
     });
+  }
+
+  retryLoad(): void {
+    void this.transactionsStore.load();
   }
 
   onSortChange(key: HoldingsSortKey): void {

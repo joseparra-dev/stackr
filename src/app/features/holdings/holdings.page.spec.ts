@@ -9,6 +9,7 @@ import type { PriceMap } from '@features/prices/coingecko.types';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
 
+import { AppError } from '@core/errors/app-error';
 import { bitcoinAsset, makeTransaction } from '@shared/utils/__fixtures__/transactions';
 
 import { HoldingsPage } from './holdings.page';
@@ -18,10 +19,12 @@ describe('HoldingsPage', () => {
   let router: Router;
   let mocks: {
     transactions: ReturnType<typeof signal<TransactionWithAsset[]>>;
+    error: ReturnType<typeof signal<AppError | null>>;
     prices: ReturnType<typeof signal<PriceMap>>;
     transactionsStore: {
       transactions: ReturnType<typeof signal<TransactionWithAsset[]>>['asReadonly'];
       loading: ReturnType<typeof signal<boolean>>['asReadonly'];
+      error: ReturnType<typeof signal<AppError | null>>['asReadonly'];
       load: ReturnType<typeof vi.fn>;
     };
     pricesStore: { subscribeToAssets: ReturnType<typeof vi.fn> };
@@ -30,14 +33,17 @@ describe('HoldingsPage', () => {
   beforeEach(async () => {
     const transactions = signal<TransactionWithAsset[]>([]);
     const loading = signal(false);
+    const error = signal<AppError | null>(null);
     const prices = signal<PriceMap>({});
 
     mocks = {
       transactions,
+      error,
       prices,
       transactionsStore: {
         transactions: transactions.asReadonly(),
         loading: loading.asReadonly(),
+        error: error.asReadonly(),
         load: vi.fn().mockResolvedValue(undefined),
       },
       pricesStore: {
@@ -65,6 +71,15 @@ describe('HoldingsPage', () => {
     fixture = TestBed.createComponent(HoldingsPage);
     fixture.detectChanges();
     await fixture.whenStable();
+  });
+
+  it('shows error state when transactions fail to load', async () => {
+    mocks.error.set(new AppError('network/offline', 'offline'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.textContent).toContain('No internet connection');
+    expect(fixture.nativeElement.textContent).toContain('Try again');
   });
 
   it('shows empty state when there are no open holdings', () => {
