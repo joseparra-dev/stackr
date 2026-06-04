@@ -1,0 +1,62 @@
+<section
+  class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+  aria-labelledby="portfolio-history-heading"
+>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <h2 id="portfolio-history-heading" class="text-sm font-medium text-(--color-text-muted)">
+      Portfolio value
+    </h2>
+
+    <div
+      class="inline-flex rounded-lg border border-(--color-border) bg-(--color-surface-2) p-1"
+      role="tablist"
+      aria-label="History range"
+    >
+      @for (option of rangeOptions; track option.days) {
+      <button
+        type="button"
+        role="tab"
+        class="cursor-pointer rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+        [class.bg-(--color-surface)]="selectedRange() === option.days"
+        [class.text-(--color-text)]="selectedRange() === option.days"
+        [class.shadow-sm]="selectedRange() === option.days"
+        [class.text-(--color-text-muted)]="selectedRange() !== option.days"
+        [attr.aria-selected]="selectedRange() === option.days"
+        (click)="selectRange(option.days)"
+      >
+        {{ option.label }}
+      </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+  <div class="mt-4 h-64 animate-pulse rounded-lg bg-(--color-surface-2)" role="status" aria-busy="true"></div>
+  } @else if (!hasEnoughData()) {
+  <p class="mt-4 text-sm text-(--color-text-muted)">
+    Not enough history yet. Add transactions on more days to see portfolio value over time.
+  </p>
+  } @else {
+  <div class="mt-4" role="img" [attr.aria-label]="ariaSummary()">
+    <apx-chart
+      [series]="series()"
+      [colors]="chartColors"
+      [chart]="chart()"
+      [xaxis]="xaxis()"
+      [yaxis]="yaxis()"
+      [stroke]="stroke()"
+      [fill]="fill()"
+      [grid]="grid()"
+      [tooltip]="tooltip()"
+      [dataLabels]="dataLabels"
+      [theme]="apexTheme()"
+    />
+  </div>
+
+  <ul class="sr-only">
+    @for (point of points(); track point.date) {
+    <li>{{ point.date }}: {{ formatUsd(point.valueUsd) }}</li>
+    }
+  </ul>
+  }
+</section>

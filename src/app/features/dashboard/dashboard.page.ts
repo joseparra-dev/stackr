@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 
 import { AllocationChart } from './allocation-chart';
+import { PortfolioHistoryStore } from './portfolio-history.store';
+import { PortfolioValueChart } from './portfolio-value-chart';
 import { HoldingsStore } from '@features/holdings/holdings.store';
 import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
@@ -16,7 +18,7 @@ import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AllocationChart],
+  imports: [AllocationChart, PortfolioValueChart],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -24,6 +26,7 @@ export class DashboardPage {
   private readonly transactionsStore = inject(TransactionsStore);
   private readonly pricesStore = inject(PricesStore);
   private readonly holdingsStore = inject(HoldingsStore);
+  private readonly portfolioHistoryStore = inject(PortfolioHistoryStore);
 
   readonly loading = this.transactionsStore.loading;
   readonly hasTransactions = this.transactionsStore.hasTransactions;
@@ -35,6 +38,11 @@ export class DashboardPage {
   readonly showAllocation = computed(
     () => this.hasTransactions() && this.totalValueUSD() > 0,
   );
+
+  readonly historyPoints = this.portfolioHistoryStore.points;
+  readonly historyLoading = this.portfolioHistoryStore.loading;
+  readonly historyRangeDays = this.portfolioHistoryStore.rangeDays;
+  readonly historyHasEnoughData = this.portfolioHistoryStore.hasEnoughData;
 
   readonly topHolding = computed((): Holding | null => {
     const holdings = this.holdingsStore.holdings();
@@ -70,5 +78,20 @@ export class DashboardPage {
       const assetIds = this.transactionsStore.transactions().map((tx) => tx.assetId);
       untracked(() => this.pricesStore.subscribeToAssets(assetIds));
     });
+
+    effect(() => {
+      const transactions = this.transactionsStore.transactions();
+      this.portfolioHistoryStore.rangeDays();
+      if (!this.hasTransactions()) return;
+
+      const assetIds = [...new Set(transactions.map((tx) => tx.assetId))];
+      untracked(() => {
+        void this.portfolioHistoryStore.load(transactions, assetIds);
+      });
+    });
+  }
+
+  onHistoryRangeChange(days: 7 | 30 | 90): void {
+    this.portfolioHistoryStore.setRange(days);
   }
 }
