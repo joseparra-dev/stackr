@@ -14,15 +14,16 @@
     <p class="mt-1 text-sm text-(--color-text-muted)">
       {{ 'settings.language.description' | translate }}
     </p>
-    <label class="sr-only" for="settings-locale">{{ 'settings.language.heading' | translate }}</label>
+    <label class="sr-only" for="settings-locale"
+      >{{ 'settings.language.heading' | translate }}</label
+    >
     <select
       id="settings-locale"
       class="stackr-select mt-4 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-text)"
-      [value]="locale()"
       (change)="onLocaleChange($event)"
     >
       @for (code of locales; track code) {
-      <option [value]="code">{{ localeLabel(code) }}</option>
+      <option [value]="code" [selected]="locale() === code">{{ localeLabel(code) }}</option>
       }
     </select>
   </section>
