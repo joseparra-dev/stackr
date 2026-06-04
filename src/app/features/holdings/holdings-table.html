@@ -1,0 +1,118 @@
+<div class="hidden overflow-x-auto rounded-xl border border-(--color-border) md:block">
+  <table class="w-full min-w-[880px] text-left text-sm" aria-label="Holdings">
+    <thead
+      class="border-b border-(--color-border) bg-(--color-surface-2) text-xs font-medium text-(--color-text-muted)"
+    >
+      <tr>
+        @for (column of columns; track column.key) {
+        <th scope="col" class="px-4 py-3" [class.text-right]="column.align === 'right'">
+          <button
+            type="button"
+            class="inline-flex cursor-pointer items-center gap-1 hover:text-(--color-text)"
+            [class.ml-auto]="column.align === 'right'"
+            [attr.aria-sort]="ariaSort(column.key)"
+            (click)="toggleSort(column.key)"
+          >
+            {{ column.label }}
+          </button>
+        </th>
+        }
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-(--color-border) bg-(--color-surface)">
+      @for (holding of holdings(); track holding.assetId) {
+      <tr
+        class="cursor-pointer text-(--color-text) hover:bg-(--color-surface-2)"
+        tabindex="0"
+        (click)="selectRow(holding)"
+        (keydown.enter)="selectRow(holding)"
+      >
+        <td class="px-4 py-3">
+          <div class="flex items-center gap-3">
+            @if (holding.thumbUrl) {
+            <img
+              [src]="holding.thumbUrl"
+              [alt]=""
+              width="32"
+              height="32"
+              class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
+            />
+            }
+            <div class="min-w-0">
+              <p class="font-semibold">{{ holding.symbol }}</p>
+              <p class="truncate text-xs text-(--color-text-muted)">{{ holding.name }}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatQuantity(holding.quantity) }}</td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatUsd(holding.avgCostUsd) }}</td>
+        <td class="px-4 py-3 text-right tabular-nums">
+          {{ formatPrice(holding.currentPriceUsd) }}
+        </td>
+        <td class="px-4 py-3 text-right tabular-nums">{{ formatUsd(holding.currentValueUsd) }}</td>
+        <td class="px-4 py-3 text-right tabular-nums">
+          <span [class]="pnlToneClass(holding.pnlTotalUsd)">
+            {{ formatSignedUsd(holding.pnlTotalUsd) }}
+            <span class="block text-xs font-medium">({{ formatPercent(holding.pnlPercent) }})</span>
+          </span>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="flex flex-col gap-3 md:hidden" aria-label="Holdings">
+  @for (holding of holdings(); track holding.assetId) {
+  <article
+    class="cursor-pointer rounded-xl border border-(--color-border) bg-(--color-surface) p-4 hover:bg-(--color-surface-2)"
+    tabindex="0"
+    [attr.aria-label]="holding.symbol + ' holding details'"
+    (click)="selectRow(holding)"
+    (keydown.enter)="selectRow(holding)"
+  >
+    <div class="flex items-center gap-3">
+      @if (holding.thumbUrl) {
+      <img
+        [src]="holding.thumbUrl"
+        [alt]=""
+        width="32"
+        height="32"
+        class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
+      />
+      }
+      <div class="min-w-0">
+        <p class="font-semibold text-(--color-text)">{{ holding.symbol }}</p>
+        <p class="truncate text-xs text-(--color-text-muted)">{{ holding.name }}</p>
+      </div>
+    </div>
+
+    <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Quantity</dt>
+        <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatQuantity(holding.quantity) }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Avg cost</dt>
+        <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatUsd(holding.avgCostUsd) }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Current price</dt>
+        <dd class="mt-0.5 tabular-nums text-(--color-text)">
+          {{ formatPrice(holding.currentPriceUsd) }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs text-(--color-text-muted)">Current value</dt>
+        <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatUsd(holding.currentValueUsd) }}</dd>
+      </div>
+      <div class="col-span-2">
+        <dt class="text-xs text-(--color-text-muted)">P&amp;L</dt>
+        <dd class="mt-0.5 tabular-nums font-medium" [class]="pnlToneClass(holding.pnlTotalUsd)">
+          {{ formatSignedUsd(holding.pnlTotalUsd) }} ({{ formatPercent(holding.pnlPercent) }})
+        </dd>
+      </div>
+    </dl>
+  </article>
+  }
+</div>
