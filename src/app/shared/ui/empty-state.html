@@ -1,0 +1,49 @@
+<section
+  [class]="sectionClass()"
+  role="region"
+  [attr.aria-labelledby]="headingId()"
+  [attr.aria-live]="live() === 'polite' ? 'polite' : null"
+>
+  @if (icon(); as iconName) {
+  <div class="mb-4 flex justify-center text-(--color-text-muted)" aria-hidden="true">
+    @switch (iconName) {
+    @case ('arrow-left-right') {
+    <svg lucideArrowLeftRight [size]="iconSize()"></svg>
+    }
+    @case ('filter-x') {
+    <svg lucideFilterX [size]="iconSize()"></svg>
+    }
+    @case ('wallet') {
+    <svg lucideWallet [size]="iconSize()"></svg>
+    }
+    @case ('layout-dashboard') {
+    <svg lucideLayoutDashboard [size]="iconSize()"></svg>
+    }
+    @case ('pie-chart') {
+    <svg lucidePieChart [size]="iconSize()"></svg>
+    }
+    @case ('line-chart') {
+    <svg lucideLineChart [size]="iconSize()"></svg>
+    }
+    }
+  </div>
+  }
+
+  <h2 [id]="headingId()" class="text-lg font-semibold text-(--color-text)">{{ title() }}</h2>
+  <p
+    class="mt-2 text-sm text-(--color-text-muted)"
+    [class.max-w-sm]="variant() !== 'bordered'"
+    [class.max-w-md]="variant() === 'bordered'"
+  >
+    {{ message() }}
+  </p>
+
+  @if (ctaLabel(); as label) {
+  <button type="button" [class]="ctaClass()" (click)="ctaClick.emit()">
+    @if (ctaLeadingIcon() === 'plus') {
+    <svg lucidePlus [size]="16" aria-hidden="true"></svg>
+    }
+    {{ label }}
+  </button>
+  }
+</section>
