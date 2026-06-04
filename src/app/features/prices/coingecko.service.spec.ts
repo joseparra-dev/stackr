@@ -251,4 +251,18 @@ describe('CoinGeckoService', () => {
       await Promise.resolve();
     });
   });
+
+  it('maps market chart prices to a daily UTC price map', async () => {
+    const day = Date.UTC(2026, 5, 10, 8, 0, 0);
+    const later = Date.UTC(2026, 5, 10, 20, 0, 0);
+    const promise = service.getDailyPrices('bitcoin', 7);
+
+    const req = httpMock.expectOne(
+      `${environment.coingecko.baseUrl}/coins/bitcoin/market_chart?vs_currency=usd&days=7`,
+    );
+    req.flush({ prices: [[day, 50_000], [later, 55_000]] });
+
+    const map = await promise;
+    expect(map.get('2026-06-10')).toBe(55_000);
+  });
 });

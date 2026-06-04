@@ -80,5 +80,13 @@
   @if (showAllocation()) {
   <app-allocation-chart [holdings]="holdings()" [totalValueUsd]="totalValueUSD()" />
   }
+
+  <app-portfolio-value-chart
+    [points]="historyPoints()"
+    [loading]="historyLoading()"
+    [hasEnoughData]="historyHasEnoughData()"
+    [selectedRange]="historyRangeDays()"
+    (rangeChange)="onHistoryRangeChange($event)"
+  />
   }
 </div>
