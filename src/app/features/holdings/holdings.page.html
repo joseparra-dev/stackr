@@ -20,18 +20,13 @@
     </div>
   </div>
   } @else if (!hasHoldings()) {
-  <section
-    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-    aria-labelledby="holdings-empty-heading"
-  >
-    <h2 id="holdings-empty-heading" class="text-lg font-semibold text-(--color-text)">
-      No holdings yet
-    </h2>
-    <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-      Per-asset quantity, average cost, and P&amp;L will appear here after you log your first
-      transactions.
-    </p>
-  </section>
+  <app-empty-state
+    headingId="holdings-empty-heading"
+    title="No holdings yet"
+    message="Per-asset quantity, average cost, and P&amp;L will appear here after you log your first transactions."
+    icon="wallet"
+    variant="dashed"
+  />
   } @else {
   <app-holdings-table
     [holdings]="sortedHoldings()"
