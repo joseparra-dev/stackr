@@ -1,0 +1,41 @@
+@switch (variant()) {
+@case ('summary-cards') {
+<div
+  class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  aria-label="Loading summary"
+>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    @for (card of [1, 2, 3]; track card) {
+    <div class="h-24 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
+    }
+  </div>
+</div>
+}
+@case ('table') {
+<div
+  class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  aria-label="Loading table"
+>
+  <div class="flex flex-col gap-3">
+    @for (row of rowIndices(); track row) {
+    <div class="h-10 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
+    }
+  </div>
+</div>
+}
+@case ('chart') {
+<div
+  class="mt-4 h-64 animate-pulse rounded-lg bg-(--color-surface-2)"
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  aria-label="Loading chart"
+></div>
+}
+}

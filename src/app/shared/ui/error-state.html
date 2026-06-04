@@ -1,0 +1,16 @@
+<div
+  role="alert"
+  aria-live="polite"
+  class="border-danger/30 bg-danger/10 flex flex-col gap-3 rounded-xl border px-4 py-4 text-sm"
+>
+  <p class="text-danger">{{ message() }}</p>
+  @if (showRetry()) {
+  <button
+    type="button"
+    class="text-brand-600 hover:text-brand-700 w-fit cursor-pointer font-medium"
+    (click)="retry.emit()"
+  >
+    Try again
+  </button>
+  }
+</div>
