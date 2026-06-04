@@ -1,7 +1,14 @@
 import type { ApplicationConfig } from '@angular/core';
-import { inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ErrorHandler,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
+import { initSentry } from '@core/analytics/sentry';
+import { SentryErrorHandler } from '@core/analytics/sentry-error-handler';
 import { AuthStore } from '@core/auth/auth.store';
 import { PageTitleService } from '@core/page-title/page-title.service';
 import { provideSupabase } from '@core/supabase/supabase.client';
@@ -18,7 +25,9 @@ export const appConfig: ApplicationConfig = {
     // before the first protected route activates. Without this, a guard
     // could run while `user` is still `null` and wrongly redirect to
     // /login on a page refresh.
+    { provide: ErrorHandler, useClass: SentryErrorHandler },
     provideAppInitializer(() => {
+      initSentry();
       inject(AuthStore);
       inject(PageTitleService);
     }),

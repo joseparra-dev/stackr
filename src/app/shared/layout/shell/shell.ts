@@ -5,12 +5,13 @@ import { filter } from 'rxjs';
 
 import { Toast } from '@shared/ui';
 
+import { OfflineBanner } from '../offline-banner';
 import { Sidebar } from '../sidebar/sidebar';
 import { TopBar } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Sidebar, TopBar, Toast],
+  imports: [OfflineBanner, RouterOutlet, Sidebar, TopBar, Toast],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './shell.html',
 })
