@@ -191,12 +191,37 @@
   },
   "settings": {
     "heading": "Settings",
-    "subtitle": "Customize how Stackr looks and reads.",
+    "subtitle": "Manage your account, appearance, and language.",
+    "account": {
+      "heading": "Account",
+      "description": "Signed in with Google.",
+      "name": "Name",
+      "email": "Email",
+      "signOut": "Sign out"
+    },
+    "appearance": {
+      "heading": "Appearance",
+      "description": "Choose how Stackr looks on this device.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
     "language": {
       "heading": "Language",
       "description": "Choose the language for menus, labels, and messages.",
       "en": "English",
       "es": "Spanish"
+    },
+    "danger": {
+      "heading": "Danger zone",
+      "description": "Permanently delete your account and all portfolio data. This cannot be undone.",
+      "deleteAccount": "Delete account",
+      "deleteDialog": {
+        "title": "Delete your account?",
+        "body": "All transactions, holdings, and profile data will be permanently removed.",
+        "cancel": "Cancel",
+        "confirm": "Delete account"
+      }
     }
   },
   "shared": {

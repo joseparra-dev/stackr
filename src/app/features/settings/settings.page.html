@@ -6,6 +6,62 @@
 
   <section
     class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    aria-labelledby="settings-account-heading"
+  >
+    <h2 id="settings-account-heading" class="text-sm font-medium text-(--color-text)">
+      {{ 'settings.account.heading' | translate }}
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      {{ 'settings.account.description' | translate }}
+    </p>
+    <dl class="mt-4 grid gap-2 text-sm">
+      @if (userName(); as name) {
+      <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+        <dt class="text-(--color-text-muted)">{{ 'settings.account.name' | translate }}</dt>
+        <dd class="truncate font-medium text-(--color-text)">{{ name }}</dd>
+      </div>
+      }
+      <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+        <dt class="text-(--color-text-muted)">{{ 'settings.account.email' | translate }}</dt>
+        <dd class="truncate font-medium text-(--color-text)">{{ userEmail() }}</dd>
+      </div>
+    </dl>
+    <button
+      type="button"
+      class="focus-visible:outline-brand-500 mt-4 cursor-pointer rounded-lg border border-(--color-border) bg-(--color-surface) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-surface-2) focus-visible:outline-2 focus-visible:outline-offset-2"
+      [disabled]="auth.loading()"
+      (click)="signOut()"
+    >
+      {{ 'settings.account.signOut' | translate }}
+    </button>
+  </section>
+
+  <section
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    aria-labelledby="settings-appearance-heading"
+  >
+    <h2 id="settings-appearance-heading" class="text-sm font-medium text-(--color-text)">
+      {{ 'settings.appearance.heading' | translate }}
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      {{ 'settings.appearance.description' | translate }}
+    </p>
+    <label class="sr-only" for="settings-theme"
+      >{{ 'settings.appearance.heading' | translate }}</label
+    >
+    <select
+      id="settings-theme"
+      class="stackr-select mt-4 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-text)"
+      (change)="onThemeChange($event)"
+    >
+      @for (code of themePreferences; track code) {
+      <option [value]="code" [selected]="preference() === code">{{ themeLabel(code) }}</option>
+      }
+    </select>
+  </section>
+
+  <section
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
     aria-labelledby="settings-language-heading"
   >
     <h2 id="settings-language-heading" class="text-sm font-medium text-(--color-text)">
@@ -26,5 +82,26 @@
       <option [value]="code" [selected]="locale() === code">{{ localeLabel(code) }}</option>
       }
     </select>
+  </section>
+
+  <section
+    class="border-danger/40 rounded-xl border bg-(--color-surface) p-5"
+    aria-labelledby="settings-danger-heading"
+  >
+    <h2 id="settings-danger-heading" class="text-danger text-sm font-medium">
+      {{ 'settings.danger.heading' | translate }}
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      {{ 'settings.danger.description' | translate }}
+    </p>
+    <button
+      type="button"
+      class="bg-danger hover:bg-danger/90 focus-visible:outline-brand-500 mt-4 cursor-pointer rounded-lg px-4 py-2.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="deleting()"
+      [attr.aria-busy]="deleting() ? 'true' : null"
+      (click)="openDeleteAccountDialog()"
+    >
+      {{ 'settings.danger.deleteAccount' | translate }}
+    </button>
   </section>
 </div>
