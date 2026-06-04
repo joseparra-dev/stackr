@@ -1,3 +1,4 @@
+<a href="#main-content" class="sr-only sr-only-focusable">{{ 'nav.aria.skipToContent' | translate }}</a>
 <div class="flex min-h-dvh bg-(--color-bg)">
   <app-sidebar
     class="hidden w-64 shrink-0 flex-col border-r border-(--color-border) bg-(--color-surface) md:flex"
@@ -11,6 +12,8 @@
     (click)="closeDrawer()"
   ></button>
   <app-sidebar
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
     class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-(--color-border) bg-(--color-surface) md:hidden"
   />
   }
@@ -18,7 +21,7 @@
   <div class="flex min-w-0 flex-1 flex-col">
     <app-offline-banner />
     <app-top-bar (menuToggle)="openDrawer()" />
-    <main class="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+    <main id="main-content" tabindex="-1" class="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
       <router-outlet />
     </main>
   </div>

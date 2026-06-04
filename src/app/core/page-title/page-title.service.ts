@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Injectable, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
@@ -11,6 +12,7 @@ export class PageTitleService {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly documentTitle = inject(Title);
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
   private readonly i18n = inject(I18nService);
 
   private readonly _title = signal('');
@@ -35,6 +37,10 @@ export class PageTitleService {
       : this.i18n.translate('nav.pageTitle.default');
     this._title.set(pageTitle);
     this.documentTitle.setTitle(formatDocumentTitle(pageTitle, this.i18n));
+    void this.liveAnnouncer.announce(
+      this.i18n.translate('nav.aria.navigatedTo', { page: pageTitle }),
+      150,
+    );
   }
 }
 

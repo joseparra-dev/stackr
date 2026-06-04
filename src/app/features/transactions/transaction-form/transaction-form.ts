@@ -119,6 +119,14 @@ export class TransactionForm {
     return this.fieldError(name) !== null;
   }
 
+  protected fieldErrorId(name: keyof TransactionFormControls): string {
+    return `transaction-form-error-${name}`;
+  }
+
+  protected fieldDescribedBy(name: keyof TransactionFormControls): string | null {
+    return this.hasFieldError(name) ? this.fieldErrorId(name) : null;
+  }
+
   protected onCancel(): void {
     this.dialogRef?.close(false);
   }
