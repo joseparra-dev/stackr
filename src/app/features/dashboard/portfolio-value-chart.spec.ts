@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ThemeService } from '@core/theme/theme.service';
+import { EmptyState } from '@shared/ui';
 
 import { PortfolioValueChart } from './portfolio-value-chart';
 
@@ -15,7 +16,7 @@ describe('PortfolioValueChart', () => {
       providers: [ThemeService],
     })
       .overrideComponent(PortfolioValueChart, {
-        set: { imports: [], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
+        set: { imports: [EmptyState], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
       })
       .compileComponents();
 

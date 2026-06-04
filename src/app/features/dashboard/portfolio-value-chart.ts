@@ -19,6 +19,7 @@ import {
 } from 'ng-apexcharts';
 
 import { ThemeService } from '@core/theme/theme.service';
+import { EmptyState } from '@shared/ui';
 import { formatUsd } from '@shared/utils/format-usd';
 import type { DailyPortfolioPoint, HistoryRangeDays } from '@shared/utils/portfolio-history';
 
@@ -34,7 +35,7 @@ const AREA_COLOR = '#3b82f6';
 
 @Component({
   selector: 'app-portfolio-value-chart',
-  imports: [ChartComponent],
+  imports: [ChartComponent, EmptyState],
   templateUrl: './portfolio-value-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

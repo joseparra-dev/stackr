@@ -9,6 +9,7 @@ import type { PriceMap } from '@features/prices/coingecko.types';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
 
+import { EmptyState } from '@shared/ui';
 import { bitcoinAsset, makeTransaction } from '@shared/utils/__fixtures__/transactions';
 
 import { DashboardPage } from './dashboard.page';
@@ -88,7 +89,7 @@ describe('DashboardPage', () => {
       ],
     })
       .overrideComponent(DashboardPage, {
-        set: { imports: [AllocationChartStub, PortfolioValueChartStub] },
+        set: { imports: [AllocationChartStub, EmptyState, PortfolioValueChartStub] },
       })
       .compileComponents();
 
