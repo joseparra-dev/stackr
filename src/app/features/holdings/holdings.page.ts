@@ -14,7 +14,7 @@ import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { Holding } from '@shared/utils/holdings.types';
 
-import { TRANSACTIONS_ASSET_FILTER_PARAM } from '@features/transactions/transactions-filter';
+import { TRANSACTIONS_ASSETS_FILTER_PARAM } from '@features/transactions/transactions-filter';
 
 import { HoldingsTable } from './holdings-table';
 import { nextSortState, sortHoldings, type HoldingsSortKey, type SortDirection } from './holdings-sort';
@@ -65,7 +65,7 @@ export class HoldingsPage {
 
   onHoldingSelect(holding: Holding): void {
     void this.router.navigate(['/transactions'], {
-      queryParams: { [TRANSACTIONS_ASSET_FILTER_PARAM]: holding.assetId },
+      queryParams: { [TRANSACTIONS_ASSETS_FILTER_PARAM]: holding.assetId },
     });
   }
 }
