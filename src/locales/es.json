@@ -191,12 +191,37 @@
   },
   "settings": {
     "heading": "Ajustes",
-    "subtitle": "Personaliza cómo se ve y se lee Stackr.",
+    "subtitle": "Administra tu cuenta, apariencia e idioma.",
+    "account": {
+      "heading": "Cuenta",
+      "description": "Sesión iniciada con Google.",
+      "name": "Nombre",
+      "email": "Correo",
+      "signOut": "Cerrar sesión"
+    },
+    "appearance": {
+      "heading": "Apariencia",
+      "description": "Elige cómo se ve Stackr en este dispositivo.",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema"
+    },
     "language": {
       "heading": "Idioma",
       "description": "Elige el idioma de menús, etiquetas y mensajes.",
       "en": "Inglés",
       "es": "Español"
+    },
+    "danger": {
+      "heading": "Acciones irreversibles",
+      "description": "Elimina tu cuenta y todos los datos del portafolio de forma permanente. No se puede deshacer.",
+      "deleteAccount": "Eliminar cuenta",
+      "deleteDialog": {
+        "title": "¿Eliminar tu cuenta?",
+        "body": "Se eliminarán de forma permanente todas las transacciones, posiciones y datos del perfil.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar cuenta"
+      }
     }
   },
   "shared": {
