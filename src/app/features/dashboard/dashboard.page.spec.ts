@@ -9,7 +9,7 @@ import type { PriceMap } from '@features/prices/coingecko.types';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
 
-import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, TranslatePipe } from '@shared/ui';
 import { bitcoinAsset, makeTransaction } from '@shared/utils/__fixtures__/transactions';
 
 import { DashboardPage } from './dashboard.page';
@@ -90,7 +90,14 @@ describe('DashboardPage', () => {
     })
       .overrideComponent(DashboardPage, {
         set: {
-          imports: [AllocationChartStub, EmptyState, ErrorState, PortfolioValueChartStub, Skeleton],
+          imports: [
+            AllocationChartStub,
+            EmptyState,
+            ErrorState,
+            PortfolioValueChartStub,
+            Skeleton,
+            TranslatePipe,
+          ],
         },
       })
       .compileComponents();

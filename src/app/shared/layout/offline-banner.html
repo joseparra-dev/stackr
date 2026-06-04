@@ -1,0 +1,9 @@
+@if (!connectivity.isOnline()) {
+<div
+  role="alert"
+  aria-live="polite"
+  class="border-warning/40 bg-warning/15 text-warning shrink-0 border-b px-4 py-2.5 text-center text-sm font-medium"
+>
+  {{ 'shared.offline.message' | translate }}
+</div>
+}

@@ -4,7 +4,7 @@
   <button
     type="button"
     class="rounded-lg p-2 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text) md:hidden"
-    aria-label="Open navigation menu"
+    [attr.aria-label]="'nav.aria.openMenu' | translate"
     (click)="menuToggle.emit()"
   >
     <svg lucideMenu [size]="20" aria-hidden="true"></svg>
@@ -13,7 +13,7 @@
   <a
     routerLink="/"
     class="flex shrink-0 items-center rounded-lg p-1 hover:bg-(--color-surface-2) md:hidden"
-    aria-label="Stackr home"
+    [attr.aria-label]="'nav.aria.home' | translate"
   >
     <img src="/logo-icon.svg" alt="" width="24" height="24" aria-hidden="true" class="size-6" />
   </a>
@@ -28,7 +28,7 @@
     <button
       type="button"
       class="cursor-pointer rounded-lg p-2 text-(--color-text-muted) hover:bg-(--color-surface-2) hover:text-(--color-text)"
-      [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+      [attr.aria-label]="themeToggleAria() | translate"
       (click)="theme.toggle()"
     >
       @if (theme.isDark()) {
@@ -44,7 +44,7 @@
         class="flex cursor-pointer items-center gap-2 rounded-lg py-1.5 pr-2 pl-1.5 hover:bg-(--color-surface-2)"
         [attr.aria-expanded]="userMenuOpen()"
         aria-haspopup="menu"
-        aria-label="User menu"
+        [attr.aria-label]="'nav.aria.userMenu' | translate"
         (click)="toggleUserMenu()"
       >
         @if (auth.user()?.avatarUrl; as avatarUrl) {
@@ -81,7 +81,7 @@
           (click)="signOut()"
         >
           <svg lucideLogOut [size]="16" aria-hidden="true"></svg>
-          <span>Sign out</span>
+          <span>{{ 'nav.signOut' | translate }}</span>
         </button>
       </div>
       }

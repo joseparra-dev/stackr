@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
-import { AuthStore } from '@core/auth/auth.store';
 import { Router } from '@angular/router';
+
+import { AuthStore } from '@core/auth/auth.store';
+import { TranslatePipe } from '@shared/ui';
 
 @Component({
   selector: 'app-callback',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './callback.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

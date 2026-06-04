@@ -1,9 +1,7 @@
 <div class="mx-auto flex max-w-5xl flex-col gap-6">
   <div>
-    <h1 class="text-xl font-semibold text-(--color-text)">Holdings</h1>
-    <p class="mt-1 text-sm text-(--color-text-muted)">
-      Open positions with cost basis, live value, and P&amp;L per asset.
-    </p>
+    <h1 class="text-xl font-semibold text-(--color-text)">{{ 'holdings.heading' | translate }}</h1>
+    <p class="mt-1 text-sm text-(--color-text-muted)">{{ 'holdings.subtitle' | translate }}</p>
   </div>
 
   @if (loading()) {
@@ -13,8 +11,8 @@
   } @else if (!hasHoldings()) {
   <app-empty-state
     headingId="holdings-empty-heading"
-    title="No holdings yet"
-    message="Per-asset quantity, average cost, and P&amp;L will appear here after you log your first transactions."
+    [title]="'holdings.empty.title' | translate"
+    [message]="'holdings.empty.message' | translate"
     icon="wallet"
     variant="dashed"
   />

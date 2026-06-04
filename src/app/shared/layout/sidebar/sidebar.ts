@@ -7,8 +7,10 @@ import {
   LucideWallet,
 } from '@lucide/angular';
 
+import { TranslatePipe } from '@shared/ui';
+
 interface SidebarItem {
-  readonly label: string;
+  readonly labelKey: string;
   readonly path: string;
   readonly icon: 'dashboard' | 'transactions' | 'holdings' | 'settings';
   readonly exact?: boolean;
@@ -19,6 +21,7 @@ interface SidebarItem {
   imports: [
     RouterLink,
     RouterLinkActive,
+    TranslatePipe,
     LucideLayoutDashboard,
     LucideArrowLeftRight,
     LucideWallet,
@@ -29,9 +32,9 @@ interface SidebarItem {
 })
 export class Sidebar {
   readonly sidebarItems: readonly SidebarItem[] = [
-    { label: 'Dashboard', path: '/', icon: 'dashboard', exact: true },
-    { label: 'Transactions', path: '/transactions', icon: 'transactions' },
-    { label: 'Holdings', path: '/holdings', icon: 'holdings' },
-    { label: 'Settings', path: '/settings', icon: 'settings' },
+    { labelKey: 'nav.items.dashboard', path: '/', icon: 'dashboard', exact: true },
+    { labelKey: 'nav.items.transactions', path: '/transactions', icon: 'transactions' },
+    { labelKey: 'nav.items.holdings', path: '/holdings', icon: 'holdings' },
+    { labelKey: 'nav.items.settings', path: '/settings', icon: 'settings' },
   ];
 }

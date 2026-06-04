@@ -36,7 +36,7 @@
         (click)="onEdit()"
       >
         <svg lucidePencil [size]="14" aria-hidden="true" />
-        Edit
+        {{ 'transactions.rowActions.edit' | translate }}
       </button>
       <button
         type="button"
@@ -45,7 +45,7 @@
         (click)="onDelete()"
       >
         <svg lucideTrash2 [size]="14" aria-hidden="true" />
-        Delete
+        {{ 'transactions.rowActions.delete' | translate }}
       </button>
     </div>
   </ng-template>

@@ -12,10 +12,11 @@ import { LucideLogOut, LucideMenu, LucideMoon, LucideSun } from '@lucide/angular
 import { AuthStore } from '@core/auth/auth.store';
 import { PageTitleService } from '@core/page-title/page-title.service';
 import { ThemeService } from '@core/theme/theme.service';
+import { TranslatePipe } from '@shared/ui';
 
 @Component({
   selector: 'app-top-bar',
-  imports: [RouterLink, LucideLogOut, LucideMenu, LucideMoon, LucideSun],
+  imports: [RouterLink, TranslatePipe, LucideLogOut, LucideMenu, LucideMoon, LucideSun],
   templateUrl: './top-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -27,6 +28,10 @@ export class TopBar {
   readonly pageTitle = inject(PageTitleService).title;
 
   readonly userMenuOpen = signal(false);
+
+  readonly themeToggleAria = computed(() =>
+    this.theme.isDark() ? 'nav.aria.switchToLightMode' : 'nav.aria.switchToDarkMode',
+  );
 
   readonly userInitial = computed(() => {
     const user = this.auth.user();

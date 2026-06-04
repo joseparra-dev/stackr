@@ -1,4 +1,5 @@
 import { convertToParamMap } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -6,6 +7,8 @@ import {
   ethereumAsset,
   makeTransaction,
 } from '@shared/utils/__fixtures__/transactions';
+
+import { I18nService } from '@core/i18n/i18n.service';
 
 import {
   applyTransactionFilters,
@@ -17,6 +20,10 @@ import {
 } from './transactions-filter';
 
 describe('transactions-filter', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+  });
+
   const btcTx = makeTransaction({
     asset: bitcoinAsset,
     type: 'buy',
@@ -96,13 +103,18 @@ describe('transactions-filter', () => {
   });
 
   it('should describe active filters for empty state copy', () => {
-    const description = describeActiveFilters([btcTx, ethTx], {
-      assetIds: ['bitcoin'],
-      type: 'buy',
-      fromDate: '2026-06-01',
-      toDate: null,
-    });
+    const i18n = TestBed.inject(I18nService);
+    const description = describeActiveFilters(
+      [btcTx, ethTx],
+      {
+        assetIds: ['bitcoin'],
+        type: 'buy',
+        fromDate: '2026-06-01',
+        toDate: null,
+      },
+      i18n.translate.bind(i18n),
+    );
     expect(description).toContain('BTC');
-    expect(description).toContain('type: buy');
+    expect(description).toContain('type: Buy');
   });
 });

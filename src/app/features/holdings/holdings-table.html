@@ -1,10 +1,13 @@
 <div class="hidden overflow-x-auto rounded-xl border border-(--color-border) md:block">
-  <table class="w-full min-w-[880px] text-left text-sm" aria-label="Holdings">
+  <table
+    class="w-full min-w-[880px] text-left text-sm"
+    [attr.aria-label]="'holdings.table.ariaLabel' | translate"
+  >
     <thead
       class="border-b border-(--color-border) bg-(--color-surface-2) text-xs font-medium text-(--color-text-muted)"
     >
       <tr>
-        @for (column of columns; track column.key) {
+        @for (column of columns(); track column.key) {
         <th scope="col" class="px-4 py-3" [class.text-right]="column.align === 'right'">
           <button
             type="button"
@@ -13,7 +16,7 @@
             [attr.aria-sort]="ariaSort(column.key)"
             (click)="toggleSort(column.key)"
           >
-            {{ column.label }}
+            {{ column.labelKey | translate }}
           </button>
         </th>
         }
@@ -62,12 +65,15 @@
   </table>
 </div>
 
-<div class="flex flex-col gap-3 md:hidden" aria-label="Holdings">
+<div
+  class="flex flex-col gap-3 md:hidden"
+  [attr.aria-label]="'holdings.table.ariaLabel' | translate"
+>
   @for (holding of holdings(); track holding.assetId) {
   <article
     class="cursor-pointer rounded-xl border border-(--color-border) bg-(--color-surface) p-4 hover:bg-(--color-surface-2)"
     tabindex="0"
-    [attr.aria-label]="holding.symbol + ' holding details'"
+    [attr.aria-label]="cardAriaLabel(holding.symbol)"
     (click)="selectRow(holding)"
     (keydown.enter)="selectRow(holding)"
   >
@@ -89,25 +95,35 @@
 
     <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Quantity</dt>
+        <dt class="text-xs text-(--color-text-muted)">
+          {{ 'holdings.table.columns.quantity' | translate }}
+        </dt>
         <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatQuantity(holding.quantity) }}</dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Avg cost</dt>
+        <dt class="text-xs text-(--color-text-muted)">
+          {{ 'holdings.table.columns.avgCost' | translate }}
+        </dt>
         <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatUsd(holding.avgCostUsd) }}</dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Current price</dt>
+        <dt class="text-xs text-(--color-text-muted)">
+          {{ 'holdings.table.columns.currentPrice' | translate }}
+        </dt>
         <dd class="mt-0.5 tabular-nums text-(--color-text)">
           {{ formatPrice(holding.currentPriceUsd) }}
         </dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Current value</dt>
+        <dt class="text-xs text-(--color-text-muted)">
+          {{ 'holdings.table.columns.currentValue' | translate }}
+        </dt>
         <dd class="mt-0.5 tabular-nums text-(--color-text)">{{ formatUsd(holding.currentValueUsd) }}</dd>
       </div>
       <div class="col-span-2">
-        <dt class="text-xs text-(--color-text-muted)">P&amp;L</dt>
+        <dt class="text-xs text-(--color-text-muted)">
+          {{ 'holdings.table.columns.pnl' | translate }}
+        </dt>
         <dd class="mt-0.5 tabular-nums font-medium" [class]="pnlToneClass(holding.pnlTotalUsd)">
           {{ formatSignedUsd(holding.pnlTotalUsd) }} ({{ formatPercent(holding.pnlPercent) }})
         </dd>

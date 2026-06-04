@@ -56,6 +56,7 @@ function configure(authServiceMock: ReturnType<typeof makeAuthServiceMock>['mock
   const router = { navigateByUrl: vi.fn().mockResolvedValue(true) } as unknown as Router;
   TestBed.configureTestingModule({
     providers: [
+      AuthStore,
       { provide: AuthService, useValue: authServiceMock },
       { provide: Router, useValue: router },
     ],

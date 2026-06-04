@@ -2,13 +2,15 @@
   class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
   aria-labelledby="allocation-heading"
 >
-  <h2 id="allocation-heading" class="text-sm font-medium text-(--color-text-muted)">Allocation</h2>
+  <h2 id="allocation-heading" class="text-sm font-medium text-(--color-text-muted)">
+    {{ 'dashboard.allocation.heading' | translate }}
+  </h2>
 
   @if (slices().length === 0) {
   <app-empty-state
     headingId="allocation-empty-heading"
-    title="No allocation data"
-    message="Allocation appears once assets have a live price."
+    [title]="'dashboard.allocation.emptyTitle' | translate"
+    [message]="'dashboard.allocation.emptyMessage' | translate"
     icon="pie-chart"
     variant="compact"
   />
@@ -30,10 +32,7 @@
 
   <ul class="sr-only">
     @for (slice of slices(); track slice.assetId) {
-    <li>
-      {{ slice.name }} ({{ slice.symbol }}): {{ formatUsd(slice.valueUsd) }},
-      {{ formatAllocationPercent(slice.percent) }} of portfolio
-    </li>
+    <li>{{ sliceAriaText(slice) }}</li>
     }
   </ul>
   }

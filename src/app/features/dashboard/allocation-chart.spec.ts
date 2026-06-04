@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { ThemeService } from '@core/theme/theme.service';
-import { EmptyState } from '@shared/ui';
+import { EmptyState, TranslatePipe } from '@shared/ui';
 import type { Holding } from '@shared/utils/holdings.types';
 
 import { AllocationChart } from './allocation-chart';
@@ -34,7 +34,7 @@ describe('AllocationChart', () => {
       providers: [ThemeService],
     })
       .overrideComponent(AllocationChart, {
-        set: { imports: [EmptyState], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
+        set: { imports: [EmptyState, TranslatePipe], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
       })
       .compileComponents();
 

@@ -1,5 +1,6 @@
 import type { ParamMap } from '@angular/router';
 
+import type { TranslationParams } from '@core/i18n/translate';
 import type { AssetSearchResult } from '@features/assets/assets.types';
 
 import type { TransactionType, TransactionWithAsset } from './transactions.types';
@@ -89,6 +90,7 @@ export function uniqueAssetsFromTransactions(
 export function describeActiveFilters(
   transactions: readonly TransactionWithAsset[],
   filters: TransactionFilters,
+  translate: (key: string, params?: TranslationParams) => string,
 ): string {
   const parts: string[] = [];
 
@@ -97,22 +99,23 @@ export function describeActiveFilters(
       const asset = transactions.find((tx) => tx.assetId === id)?.asset;
       return asset?.symbol ?? id;
     });
-    parts.push(`assets: ${labels.join(', ')}`);
+    parts.push(translate('transactions.filters.describeAssets', { list: labels.join(', ') }));
   }
 
   if (filters.type !== 'all') {
-    parts.push(`type: ${filters.type}`);
+    const type = translate(`transactions.list.type.${filters.type}`);
+    parts.push(translate('transactions.filters.describeType', { type }));
   }
 
   if (filters.fromDate) {
-    parts.push(`from: ${filters.fromDate}`);
+    parts.push(translate('transactions.filters.describeFrom', { date: filters.fromDate }));
   }
 
   if (filters.toDate) {
-    parts.push(`to: ${filters.toDate}`);
+    parts.push(translate('transactions.filters.describeTo', { date: filters.toDate }));
   }
 
-  return parts.join(' · ');
+  return parts.join(translate('transactions.filters.separator'));
 }
 
 function matchesFilters(tx: TransactionWithAsset, filters: TransactionFilters): boolean {

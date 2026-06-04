@@ -1,10 +1,10 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5" novalidate>
   <header>
     <h2 id="transaction-form-title" class="text-lg font-semibold text-(--color-text)">
-      {{ title() }}
+      {{ titleKey() | translate }}
     </h2>
     <p class="mt-1 text-sm text-(--color-text-muted)">
-      Record a buy or sell. All amounts are in USD.
+      {{ 'transactions.form.subtitle' | translate }}
     </p>
   </header>
 
@@ -14,18 +14,18 @@
     aria-live="polite"
     class="border-danger/30 bg-danger/10 text-danger rounded-lg border px-4 py-3 text-sm"
   >
-    {{ errorMessage(err.code) }}
+    {{ translateError(err.code) }}
   </div>
   }
 
   <div>
     <label class="mb-1.5 block text-sm font-medium text-(--color-text)" for="transaction-asset">
-      Asset
+      {{ 'transactions.form.asset' | translate }}
     </label>
     <app-asset-combobox
       id="transaction-asset"
       formControlName="asset"
-      placeholder="Search by name or symbol…"
+      [placeholder]="'transactions.form.assetPlaceholder' | translate"
     />
     @if (fieldError('asset'); as message) {
     <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
@@ -33,7 +33,9 @@
   </div>
 
   <fieldset>
-    <legend class="mb-2 text-sm font-medium text-(--color-text)">Type</legend>
+    <legend class="mb-2 text-sm font-medium text-(--color-text)">
+      {{ 'transactions.form.type' | translate }}
+    </legend>
     <div class="flex gap-4">
       <label
         class="flex cursor-pointer items-center gap-2 text-sm text-(--color-text)"
@@ -46,7 +48,7 @@
           value="buy"
           class="accent-brand-600 size-4"
         />
-        Buy
+        {{ 'transactions.form.buy' | translate }}
       </label>
       <label
         class="flex cursor-pointer items-center gap-2 text-sm text-(--color-text)"
@@ -59,7 +61,7 @@
           value="sell"
           class="accent-brand-600 size-4"
         />
-        Sell
+        {{ 'transactions.form.sell' | translate }}
       </label>
     </div>
     @if (fieldError('type'); as message) {
@@ -69,7 +71,9 @@
 
   <div class="grid gap-4 sm:grid-cols-3">
     <div>
-      <label class="{{ labelClass }}" for="transaction-quantity">Quantity</label>
+      <label class="{{ labelClass }}" for="transaction-quantity">
+        {{ 'transactions.form.quantity' | translate }}
+      </label>
       <input
         id="transaction-quantity"
         type="number"
@@ -77,7 +81,7 @@
         min="0"
         step="any"
         inputmode="decimal"
-        placeholder="0.00"
+        [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('quantity')"
       />
@@ -87,7 +91,9 @@
     </div>
 
     <div>
-      <label class="{{ labelClass }}" for="transaction-price">Price per unit (USD)</label>
+      <label class="{{ labelClass }}" for="transaction-price">
+        {{ 'transactions.form.pricePerUnit' | translate }}
+      </label>
       <input
         id="transaction-price"
         type="number"
@@ -95,7 +101,7 @@
         min="0"
         step="any"
         inputmode="decimal"
-        placeholder="0.00"
+        [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('pricePerUnitUsd')"
       />
@@ -106,8 +112,10 @@
 
     <div>
       <label class="{{ labelClass }}" for="transaction-fee">
-        Fee (USD)
-        <span class="font-normal text-(--color-text-muted)">optional</span>
+        {{ 'transactions.form.fee' | translate }}
+        <span class="font-normal text-(--color-text-muted)">
+          {{ 'transactions.form.feeOptional' | translate }}
+        </span>
       </label>
       <input
         id="transaction-fee"
@@ -116,7 +124,7 @@
         min="0"
         step="any"
         inputmode="decimal"
-        placeholder="0.00"
+        [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('feeUsd')"
       />
@@ -127,7 +135,9 @@
   </div>
 
   <div>
-    <label class="{{ labelClass }}" for="transaction-executed-at">Executed at</label>
+    <label class="{{ labelClass }}" for="transaction-executed-at">
+      {{ 'transactions.form.executedAt' | translate }}
+    </label>
     <app-datetime-input
       id="transaction-executed-at"
       formControlName="executedAt"
@@ -141,7 +151,9 @@
 
   <div>
     <div class="mb-1.5 flex items-baseline justify-between gap-2">
-      <label class="text-sm font-medium text-(--color-text)" for="transaction-notes">Notes</label>
+      <label class="text-sm font-medium text-(--color-text)" for="transaction-notes">
+        {{ 'transactions.form.notes' | translate }}
+      </label>
       <span class="text-xs text-(--color-text-muted)" aria-live="polite">
         {{ notesCount() }}/500
       </span>
@@ -151,7 +163,7 @@
       formControlName="notes"
       rows="3"
       maxlength="500"
-      placeholder="Optional context for this trade"
+      [placeholder]="'transactions.form.notesPlaceholder' | translate"
       class="{{ inputClass }} resize-y min-h-20"
       [class.border-danger]="hasFieldError('notes')"
     ></textarea>
@@ -166,7 +178,7 @@
       (click)="onCancel()"
       class="focus-visible:outline-brand-500 cursor-pointer rounded-lg border border-(--color-border) bg-(--color-surface) px-4 py-2.5 text-sm font-medium text-(--color-text) hover:bg-(--color-surface-2) focus-visible:outline-2 focus-visible:outline-offset-2"
     >
-      Cancel
+      {{ 'transactions.form.cancel' | translate }}
     </button>
     <button
       type="submit"
@@ -179,9 +191,9 @@
         aria-hidden="true"
         class="inline-block size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
       ></span>
-      <span>Saving…</span>
+      <span>{{ 'transactions.form.saving' | translate }}</span>
       } @else {
-      <span>{{ submitLabel() }}</span>
+      <span>{{ submitLabelKey() | translate }}</span>
       }
     </button>
   </div>

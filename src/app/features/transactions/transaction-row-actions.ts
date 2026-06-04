@@ -7,6 +7,8 @@ import {
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { LucideMoreHorizontal, LucidePencil, LucideTrash2 } from '@lucide/angular';
 
+import { TranslatePipe } from '@shared/ui';
+
 const MENU_POSITIONS: ConnectedPosition[] = [
   {
     originX: 'end',
@@ -29,6 +31,7 @@ const MENU_POSITIONS: ConnectedPosition[] = [
   imports: [
     CdkConnectedOverlay,
     CdkOverlayOrigin,
+    TranslatePipe,
     LucideMoreHorizontal,
     LucidePencil,
     LucideTrash2,

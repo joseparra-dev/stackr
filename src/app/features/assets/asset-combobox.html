@@ -1,5 +1,7 @@
 <div class="relative w-full max-w-md">
-  <label class="sr-only" for="asset-combobox-input">Search asset</label>
+  <label class="sr-only" for="asset-combobox-input">
+    {{ 'shared.assetCombobox.searchAria' | translate }}
+  </label>
   <div class="relative">
     <input
       #queryInput
@@ -9,7 +11,7 @@
       autocomplete="off"
       class="focus-visible:outline-brand-500 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 pr-10 text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       [value]="searchQuery()"
-      [placeholder]="placeholder()"
+      [placeholder]="resolvedPlaceholder()"
       [disabled]="isDisabled()"
       [attr.aria-expanded]="panelOpen()"
       [attr.aria-busy]="loading() ? 'true' : null"
@@ -37,9 +39,11 @@
     class="absolute z-50 mt-1 max-h-72 w-full overflow-auto rounded-xl border border-(--color-border) bg-(--color-surface) py-1 shadow-lg"
   >
     @if (error(); as err) {
-    <li class="text-danger px-3 py-2.5 text-sm" role="status">{{ errorMessage(err.code) }}</li>
+    <li class="text-danger px-3 py-2.5 text-sm" role="status">{{ translateError(err.code) }}</li>
     } @else if (searched() && results().length === 0) {
-    <li class="px-3 py-2.5 text-sm text-(--color-text-muted)" role="status">No assets found</li>
+    <li class="px-3 py-2.5 text-sm text-(--color-text-muted)" role="status">
+      {{ 'shared.assetCombobox.noResults' | translate }}
+    </li>
     } @else { @for (result of results(); track result.id; let i = $index) {
     <li role="presentation">
       <button

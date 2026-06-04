@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import { TranslatePipe } from '../pipes/translate.pipe';
+
 export type SkeletonVariant = 'summary-cards' | 'table' | 'chart';
 
 @Component({
   selector: 'app-skeleton',
+  imports: [TranslatePipe],
   templateUrl: './skeleton.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

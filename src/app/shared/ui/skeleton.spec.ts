@@ -19,7 +19,7 @@ describe('Skeleton', () => {
     fixture.componentRef.setInput('rows', 2);
     fixture.detectChanges();
 
-    const rows = fixture.nativeElement.querySelectorAll('.h-10');
+    const rows = fixture.nativeElement.querySelectorAll('.animate-pulse.rounded-xl');
     expect(rows.length).toBe(2);
     expect(fixture.nativeElement.querySelector('[aria-busy="true"]')).toBeTruthy();
   });
@@ -28,6 +28,6 @@ describe('Skeleton', () => {
     fixture.componentRef.setInput('variant', 'chart');
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.h-64')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.h-48')).toBeTruthy();
   });
 });

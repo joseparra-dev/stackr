@@ -1,6 +1,10 @@
-<nav aria-label="Main" class="flex h-full flex-col">
+<nav [attr.aria-label]="'nav.aria.main' | translate" class="flex h-full flex-col">
   <header class="border-b border-(--color-border) px-4 py-5">
-    <a routerLink="/" class="flex items-center gap-2.5 rounded-lg" aria-label="Stackr home">
+    <a
+      routerLink="/"
+      class="flex items-center gap-2.5 rounded-lg"
+      [attr.aria-label]="'nav.aria.home' | translate"
+    >
       <img
         src="/logo-icon.svg"
         alt=""
@@ -10,8 +14,10 @@
         class="size-7 shrink-0"
       />
       <div class="min-w-0">
-        <p class="text-lg font-bold tracking-tight text-(--color-text)">Stackr</p>
-        <p class="mt-0.5 text-xs text-(--color-text-muted)">Portfolio tracker</p>
+        <p class="text-lg font-bold tracking-tight text-(--color-text)">
+          {{ 'nav.brand.name' | translate }}
+        </p>
+        <p class="mt-0.5 text-xs text-(--color-text-muted)">{{ 'nav.brand.tagline' | translate }}</p>
       </div>
     </a>
   </header>
@@ -33,7 +39,7 @@
         } @case ('settings') {
         <svg lucideSettings [size]="18" aria-hidden="true"></svg>
         } }
-        <span>{{ item.label }}</span>
+        <span>{{ item.labelKey | translate }}</span>
       </a>
     </li>
     }

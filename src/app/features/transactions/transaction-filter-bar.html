@@ -1,6 +1,6 @@
 <section
   class="rounded-xl border border-(--color-border) bg-(--color-surface) p-4"
-  aria-label="Transaction filters"
+  [attr.aria-label]="'transactions.filters.ariaLabel' | translate"
 >
   <div class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-end">
     <app-transaction-asset-filter
@@ -11,25 +11,25 @@
     />
 
     <div class="flex min-w-[8rem] flex-col gap-1">
-      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-type-filter"
-        >Type</label
-      >
+      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-type-filter">
+        {{ 'transactions.filters.type' | translate }}
+      </label>
       <select
         id="transaction-type-filter"
         class="stackr-select w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-text)"
         [value]="filters().type"
         (change)="onTypeChange($event)"
       >
-        @for (option of typeOptions; track option.value) {
+        @for (option of typeOptions(); track option.value) {
         <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
     </div>
 
     <div class="flex min-w-[9rem] flex-col gap-1">
-      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-from-filter"
-        >From</label
-      >
+      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-from-filter">
+        {{ 'transactions.filters.from' | translate }}
+      </label>
       <input
         id="transaction-from-filter"
         type="date"
@@ -40,9 +40,9 @@
     </div>
 
     <div class="flex min-w-[9rem] flex-col gap-1">
-      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-to-filter"
-        >To</label
-      >
+      <label class="text-xs font-medium text-(--color-text-muted)" for="transaction-to-filter">
+        {{ 'transactions.filters.to' | translate }}
+      </label>
       <input
         id="transaction-to-filter"
         type="date"
@@ -58,7 +58,7 @@
       class="text-brand-600 hover:text-brand-700 cursor-pointer self-end px-1 py-2.5 text-sm font-medium"
       (click)="clearFilters.emit()"
     >
-      Clear filters
+      {{ 'transactions.filters.clear' | translate }}
     </button>
     }
   </div>
