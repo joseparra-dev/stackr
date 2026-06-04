@@ -19,24 +19,24 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        data: { title: 'Dashboard' },
+        data: { titleKey: 'nav.pageTitle.dashboard' },
         loadComponent: () =>
           import('@features/dashboard/dashboard.page').then((m) => m.DashboardPage),
       },
       {
         path: 'transactions',
-        data: { title: 'Transactions' },
+        data: { titleKey: 'nav.pageTitle.transactions' },
         loadComponent: () =>
           import('@features/transactions/transactions.page').then((m) => m.TransactionsPage),
       },
       {
         path: 'holdings',
-        data: { title: 'Holdings' },
+        data: { titleKey: 'nav.pageTitle.holdings' },
         loadComponent: () => import('@features/holdings/holdings.page').then((m) => m.HoldingsPage),
       },
       {
         path: 'settings',
-        data: { title: 'Settings' },
+        data: { titleKey: 'nav.pageTitle.settings' },
         loadComponent: () => import('@features/settings/settings.page').then((m) => m.SettingsPage),
       },
     ],

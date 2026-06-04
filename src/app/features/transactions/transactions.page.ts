@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LucidePlus } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
 
+import { I18nService } from '@core/i18n/i18n.service';
 import { DeleteTransactionDialog } from '@features/transactions/delete-transaction-dialog';
 import type { DeleteTransactionDialogData } from '@features/transactions/delete-transaction-dialog';
 import { TransactionForm } from '@features/transactions/transaction-form/transaction-form';
@@ -23,7 +24,7 @@ import {
 } from '@features/transactions/transactions-filter';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
-import { EmptyState, ErrorState, Skeleton, ToastService } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, ToastService, TranslatePipe } from '@shared/ui';
 
 const DIALOG_OPTIONS = {
   width: '100%',
@@ -34,7 +35,15 @@ const DIALOG_OPTIONS = {
 
 @Component({
   selector: 'app-transactions-page',
-  imports: [EmptyState, ErrorState, LucidePlus, Skeleton, TransactionFilterBar, TransactionList],
+  imports: [
+    EmptyState,
+    ErrorState,
+    LucidePlus,
+    Skeleton,
+    TransactionFilterBar,
+    TransactionList,
+    TranslatePipe,
+  ],
   templateUrl: './transactions.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,6 +53,9 @@ export class TransactionsPage {
   private readonly router = inject(Router);
   private readonly store = inject(TransactionsStore);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
+
+  protected readonly translateError = this.i18n.translateError.bind(this.i18n);
 
   private readonly queryParamMap = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
@@ -65,9 +77,21 @@ export class TransactionsPage {
 
   readonly hasFilteredTransactions = computed(() => this.transactions().length > 0);
 
-  readonly filtersDescription = computed(() =>
-    describeActiveFilters(this.store.transactions(), this.filters()),
-  );
+  readonly filtersDescription = computed(() => {
+    this.i18n.locale();
+    return describeActiveFilters(
+      this.store.transactions(),
+      this.filters(),
+      this.i18n.translate.bind(this.i18n),
+    );
+  });
+
+  readonly filteredEmptyMessage = computed(() => {
+    this.i18n.locale();
+    return this.i18n.translate('transactions.filteredEmpty.message', {
+      filters: this.filtersDescription(),
+    });
+  });
 
   constructor() {
     void this.store.load();
@@ -118,7 +142,7 @@ export class TransactionsPage {
 
     try {
       await this.store.remove(tx.id);
-      this.toast.success('Transaction deleted.');
+      this.toast.success(this.i18n.translate('transactions.toast.deleted'));
     } catch {
       const code = this.store.error()?.code ?? 'unknown';
       this.toast.error(code);

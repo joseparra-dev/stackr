@@ -4,15 +4,15 @@
 >
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <h2 id="portfolio-history-heading" class="text-sm font-medium text-(--color-text-muted)">
-      Portfolio value
+      {{ 'dashboard.history.heading' | translate }}
     </h2>
 
     <div
       class="inline-flex rounded-lg border border-(--color-border) bg-(--color-surface-2) p-1"
       role="tablist"
-      aria-label="History range"
+      [attr.aria-label]="'dashboard.history.rangeAria' | translate"
     >
-      @for (option of rangeOptions; track option.days) {
+      @for (option of rangeOptions(); track option.days) {
       <button
         type="button"
         role="tab"
@@ -37,8 +37,8 @@
   } @else if (!hasEnoughData()) {
   <app-empty-state
     headingId="portfolio-history-empty-heading"
-    title="Not enough history yet"
-    message="Add transactions on more days to see portfolio value over time."
+    [title]="'dashboard.history.emptyTitle' | translate"
+    [message]="'dashboard.history.emptyMessage' | translate"
     icon="line-chart"
     variant="compact"
   />

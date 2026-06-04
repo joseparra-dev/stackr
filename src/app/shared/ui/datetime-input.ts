@@ -19,6 +19,7 @@ import {
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideCalendar, LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 
+import { I18nService } from '@core/i18n/i18n.service';
 import {
   formatDatetimeDisplay,
   getCalendarDays,
@@ -30,7 +31,9 @@ import {
   toDatetimeLocalValue,
 } from '@shared/utils/datetime-local';
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+import { TranslatePipe } from '../pipes/translate.pipe';
+
+const WEEKDAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 
 const OVERLAY_POSITIONS: ConnectedPosition[] = [
   {
@@ -61,6 +64,7 @@ const OVERLAY_POSITIONS: ConnectedPosition[] = [
   imports: [
     CdkConnectedOverlay,
     CdkOverlayOrigin,
+    TranslatePipe,
     LucideCalendar,
     LucideChevronLeft,
     LucideChevronRight,
@@ -78,9 +82,10 @@ const OVERLAY_POSITIONS: ConnectedPosition[] = [
 export class DatetimeInput implements ControlValueAccessor {
   readonly disabled = input(false);
   readonly disableFuture = input(false);
-  readonly placeholder = input('Select date and time');
+  readonly placeholder = input('');
   readonly invalid = input(false);
 
+  private readonly i18n = inject(I18nService);
   private readonly overlay = inject(Overlay);
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
@@ -105,7 +110,16 @@ export class DatetimeInput implements ControlValueAccessor {
   readonly selectedDate = computed(() => parseDatetimeLocal(this.value()));
   readonly hours = HOURS;
   readonly minutes = MINUTES;
-  readonly weekdays = WEEKDAYS;
+
+  readonly resolvedPlaceholder = computed(() => {
+    this.i18n.locale();
+    return this.placeholder() || this.i18n.translate('shared.datetime.placeholder');
+  });
+
+  readonly weekdays = computed(() => {
+    this.i18n.locale();
+    return WEEKDAY_KEYS.map((key) => this.i18n.translate(`shared.datetime.weekdays.${key}`));
+  });
 
   readonly selectedHour = computed(() => {
     const date = this.selectedDate();

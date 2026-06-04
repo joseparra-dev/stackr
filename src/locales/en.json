@@ -1,0 +1,260 @@
+{
+  "nav": {
+    "brand": {
+      "name": "Stackr",
+      "tagline": "Portfolio tracker"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "transactions": "Transactions",
+      "holdings": "Holdings",
+      "settings": "Settings"
+    },
+    "pageTitle": {
+      "default": "Stackr",
+      "documentTagline": "Crypto Portfolio Tracker",
+      "documentDefault": "Stackr — Crypto Portfolio Tracker",
+      "documentWithPage": "{page} — Stackr",
+      "dashboard": "Dashboard",
+      "transactions": "Transactions",
+      "holdings": "Holdings",
+      "settings": "Settings"
+    },
+    "aria": {
+      "main": "Main",
+      "home": "Stackr home",
+      "openMenu": "Open navigation menu",
+      "closeNavigation": "Close navigation",
+      "switchToLightMode": "Switch to light mode",
+      "switchToDarkMode": "Switch to dark mode",
+      "userMenu": "User menu"
+    },
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "tagline": "Track every coin. Know your real P&L.",
+    "signInWithGoogle": "Sign in with Google",
+    "signingIn": "Signing in…",
+    "googleLogoAlt": "Google"
+  },
+  "transactions": {
+    "heading": "Transactions",
+    "subtitle": "Buy and sell history for your portfolio.",
+    "addTransaction": "Add transaction",
+    "empty": {
+      "title": "No transactions yet",
+      "message": "Add your first buy or sell to start tracking holdings and P&L.",
+      "cta": "Add your first transaction"
+    },
+    "filteredEmpty": {
+      "title": "No matching transactions",
+      "message": "Nothing matches your current filters ({filters}).",
+      "cta": "Clear filters"
+    },
+    "filters": {
+      "ariaLabel": "Transaction filters",
+      "type": "Type",
+      "typeAll": "All",
+      "typeBuy": "Buy",
+      "typeSell": "Sell",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear filters",
+      "describeAssets": "assets: {list}",
+      "describeType": "type: {type}",
+      "describeFrom": "from: {date}",
+      "describeTo": "to: {date}",
+      "separator": " · "
+    },
+    "assetFilter": {
+      "searchAria": "Filter by asset",
+      "panelAria": "Asset filter",
+      "searchPlaceholder": "Search assets…",
+      "allAssets": "All assets",
+      "oneAsset": "1 asset",
+      "nAssets": "{count} assets",
+      "noResults": "No assets found"
+    },
+    "list": {
+      "ariaLabel": "Transactions",
+      "columns": {
+        "date": "Date",
+        "asset": "Asset",
+        "type": "Type",
+        "quantity": "Quantity",
+        "price": "Price",
+        "fee": "Fee",
+        "total": "Total",
+        "actions": "Actions"
+      },
+      "type": {
+        "buy": "Buy",
+        "sell": "Sell"
+      },
+      "actionsAria": "Actions for {symbol} {type}",
+      "actionsAriaShort": "Actions for {symbol}",
+      "cardAria": "{symbol} {type}"
+    },
+    "rowActions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "addTitle": "Add transaction",
+      "editTitle": "Edit transaction",
+      "subtitle": "Record a buy or sell. All amounts are in USD.",
+      "asset": "Asset",
+      "assetPlaceholder": "Search by name or symbol…",
+      "type": "Type",
+      "buy": "Buy",
+      "sell": "Sell",
+      "quantity": "Quantity",
+      "pricePerUnit": "Price per unit (USD)",
+      "fee": "Fee (USD)",
+      "feeOptional": "optional",
+      "executedAt": "Executed at",
+      "notes": "Notes",
+      "notesPlaceholder": "Optional context for this trade",
+      "numberPlaceholder": "0.00",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save transaction",
+      "saveChanges": "Save changes"
+    },
+    "deleteDialog": {
+      "title": "Delete transaction",
+      "body": "This will permanently remove your {type} of {symbol}. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "deleted": "Transaction deleted.",
+      "saved": "Transaction saved.",
+      "updated": "Transaction updated."
+    }
+  },
+  "holdings": {
+    "heading": "Holdings",
+    "subtitle": "Open positions with cost basis, live value, and P&L per asset.",
+    "empty": {
+      "title": "No holdings yet",
+      "message": "Per-asset quantity, average cost, and P&L will appear here after you log your first transactions."
+    },
+    "table": {
+      "ariaLabel": "Holdings",
+      "columns": {
+        "asset": "Asset",
+        "quantity": "Quantity",
+        "avgCost": "Avg cost",
+        "currentPrice": "Current price",
+        "currentValue": "Current value",
+        "pnl": "P&L"
+      },
+      "cardAria": "{symbol} holding details"
+    }
+  },
+  "dashboard": {
+    "heading": "Dashboard",
+    "subtitle": "Portfolio value and performance at a glance.",
+    "empty": {
+      "title": "Your portfolio at a glance",
+      "message": "Summary cards will show up here once you add your first transaction."
+    },
+    "summary": {
+      "ariaLabel": "Portfolio summary",
+      "totalValue": "Total value",
+      "totalPnl": "Total P&L",
+      "topHolding": "Top holding",
+      "noOpenPositions": "No open positions"
+    },
+    "allocation": {
+      "heading": "Allocation",
+      "emptyTitle": "No allocation data",
+      "emptyMessage": "Allocation appears once assets have a live price.",
+      "ariaSummary": "Portfolio allocation by asset: {parts}",
+      "ariaSlice": "{name} ({symbol}): {value}, {percent} of portfolio",
+      "chartTotal": "Total"
+    },
+    "history": {
+      "heading": "Portfolio value",
+      "rangeAria": "History range",
+      "range7d": "7d",
+      "range30d": "30d",
+      "range90d": "90d",
+      "seriesName": "Portfolio value",
+      "emptyTitle": "Not enough history yet",
+      "emptyMessage": "Add transactions on more days to see portfolio value over time.",
+      "ariaSummary": "Portfolio value from {startDate} {startValue} to {endDate} {endValue}"
+    }
+  },
+  "settings": {
+    "heading": "Settings",
+    "subtitle": "Customize how Stackr looks and reads.",
+    "language": {
+      "heading": "Language",
+      "description": "Choose the language for menus, labels, and messages.",
+      "en": "English",
+      "es": "Spanish"
+    }
+  },
+  "shared": {
+    "offline": {
+      "message": "You are offline. Reconnect to load portfolio data."
+    },
+    "errorState": {
+      "tryAgain": "Try again"
+    },
+    "assetCombobox": {
+      "searchAria": "Search asset",
+      "defaultPlaceholder": "Search by name or symbol…",
+      "noResults": "No assets found"
+    },
+    "datetime": {
+      "placeholder": "Select date and time",
+      "dialogAria": "Choose date and time",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "hour": "Hour",
+      "minute": "Minute",
+      "today": "Today",
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+    },
+    "skeleton": {
+      "loadingSummary": "Loading summary",
+      "loadingTable": "Loading table",
+      "loadingChart": "Loading chart"
+    }
+  },
+  "errors": {
+    "auth": {
+      "unauthorized": "Sign-in failed. Please try again.",
+      "sessionExpired": "Your session has expired. Please sign in again."
+    },
+    "network": {
+      "offline": "No internet connection. Check your network and try again.",
+      "timeout": "The request took too long. Please try again."
+    },
+    "api": {
+      "rateLimit": "Too many attempts. Please wait a moment and try again.",
+      "serverError": "Something went wrong on our side. Please try again later."
+    },
+    "validation": {
+      "invalidInput": "Some of the information provided is invalid.",
+      "required": "This field is required.",
+      "minZero": "Value must be zero or greater.",
+      "maxLength500": "Maximum 500 characters.",
+      "quantityPositive": "Quantity must be greater than zero.",
+      "futureDate": "Date cannot be in the future.",
+      "invalidValue": "Invalid value."
+    },
+    "unknown": "Something went wrong. Please try again."
+  }
+}

@@ -15,12 +15,13 @@ import {
   type ApexTooltip,
 } from 'ng-apexcharts';
 
+import { I18nService } from '@core/i18n/i18n.service';
 import { ThemeService } from '@core/theme/theme.service';
 import type { Holding } from '@shared/utils/holdings.types';
-import { EmptyState } from '@shared/ui';
+import { EmptyState, TranslatePipe } from '@shared/ui';
 import { formatUsd } from '@shared/utils/format-usd';
 
-import { buildAllocationSlices } from './allocation-slices';
+import { buildAllocationSlices, type AllocationSlice } from './allocation-slices';
 import {
   ALLOCATION_CHART_COLORS,
   getChartThemeTokens,
@@ -29,12 +30,13 @@ import {
 
 @Component({
   selector: 'app-allocation-chart',
-  imports: [ChartComponent, EmptyState],
+  imports: [ChartComponent, EmptyState, TranslatePipe],
   templateUrl: './allocation-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllocationChart {
   private readonly themeService = inject(ThemeService);
+  private readonly i18n = inject(I18nService);
 
   readonly holdings = input.required<readonly Holding[]>();
   readonly totalValueUsd = input.required<number>();
@@ -60,12 +62,15 @@ export class AllocationChart {
   });
 
   readonly ariaSummary = computed(() => {
+    this.i18n.locale();
     const slices = this.slices();
-    if (slices.length === 0) return 'No allocation data';
+    if (slices.length === 0) {
+      return this.i18n.translate('dashboard.allocation.emptyTitle');
+    }
     const parts = slices.map(
       (slice) => `${slice.symbol} ${formatAllocationPercent(slice.percent)}`,
     );
-    return `Portfolio allocation by asset: ${parts.join(', ')}`;
+    return this.i18n.translate('dashboard.allocation.ariaSummary', { parts: parts.join(', ') });
   });
 
   readonly chart = computed(
@@ -100,27 +105,30 @@ export class AllocationChart {
   );
 
   readonly plotOptions = computed(
-    (): ApexPlotOptions => ({
-      pie: {
-        donut: {
-          size: '68%',
-          labels: {
-            show: true,
-            name: { color: this.themeTokens().legendColor },
-            value: {
-              color: this.themeTokens().legendColor,
-              formatter: (value) => formatUsd(Number(value)),
-            },
-            total: {
+    (): ApexPlotOptions => {
+      this.i18n.locale();
+      return {
+        pie: {
+          donut: {
+            size: '68%',
+            labels: {
               show: true,
-              label: 'Total',
-              color: this.themeTokens().foreColor,
-              formatter: () => formatUsd(this.totalValueUsd()),
+              name: { color: this.themeTokens().legendColor },
+              value: {
+                color: this.themeTokens().legendColor,
+                formatter: (value) => formatUsd(Number(value)),
+              },
+              total: {
+                show: true,
+                label: this.i18n.translate('dashboard.allocation.chartTotal'),
+                color: this.themeTokens().foreColor,
+                formatter: () => formatUsd(this.totalValueUsd()),
+              },
             },
           },
         },
-      },
-    }),
+      };
+    },
   );
 
   readonly tooltip = computed(
@@ -142,6 +150,15 @@ export class AllocationChart {
     }),
   );
 
+  sliceAriaText(slice: AllocationSlice): string {
+    this.i18n.locale();
+    return this.i18n.translate('dashboard.allocation.ariaSlice', {
+      name: slice.name,
+      symbol: slice.symbol,
+      value: formatUsd(slice.valueUsd),
+      percent: formatAllocationPercent(slice.percent),
+    });
+  }
 }
 
 function formatAllocationPercent(value: number): string {

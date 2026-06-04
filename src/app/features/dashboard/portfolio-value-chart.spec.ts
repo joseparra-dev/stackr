@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ThemeService } from '@core/theme/theme.service';
 import { AppError } from '@core/errors/app-error';
-import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, TranslatePipe } from '@shared/ui';
 
 import { PortfolioValueChart } from './portfolio-value-chart';
 
@@ -17,7 +17,10 @@ describe('PortfolioValueChart', () => {
       providers: [ThemeService],
     })
       .overrideComponent(PortfolioValueChart, {
-        set: { imports: [EmptyState, ErrorState, Skeleton], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
+        set: {
+          imports: [EmptyState, ErrorState, Skeleton, TranslatePipe],
+          schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        },
       })
       .compileComponents();
 

@@ -1,25 +1,25 @@
 import type { ValidationErrors } from '@angular/forms';
 
-export function controlErrorMessage(errors: ValidationErrors): string {
+export function controlErrorKey(errors: ValidationErrors): string {
   if (errors['required']) {
-    return 'This field is required.';
+    return 'errors.validation.required';
   }
 
   if (errors['min']) {
-    return 'Value must be zero or greater.';
+    return 'errors.validation.minZero';
   }
 
   if (errors['maxlength']) {
-    return 'Maximum 500 characters.';
+    return 'errors.validation.maxLength500';
   }
 
   if (errors['quantityPositive']) {
-    return 'Quantity must be greater than zero.';
+    return 'errors.validation.quantityPositive';
   }
 
   if (errors['futureDate']) {
-    return 'Date cannot be in the future.';
+    return 'errors.validation.futureDate';
   }
 
-  return 'Invalid value.';
+  return 'errors.validation.invalidValue';
 }

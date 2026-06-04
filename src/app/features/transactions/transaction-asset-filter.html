@@ -1,5 +1,7 @@
 <div class="relative min-w-0 flex-1">
-  <label class="sr-only" for="transaction-asset-filter-search">Filter by asset</label>
+  <label class="sr-only" for="transaction-asset-filter-search">
+    {{ 'transactions.assetFilter.searchAria' | translate }}
+  </label>
   <button
     type="button"
     id="transaction-asset-filter-search"
@@ -17,12 +19,12 @@
     id="transaction-asset-filter-panel"
     class="absolute z-50 mt-1 w-full min-w-[16rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-3 shadow-lg"
     role="group"
-    aria-label="Asset filter"
+    [attr.aria-label]="'transactions.assetFilter.panelAria' | translate"
   >
     <input
       type="search"
       class="focus-visible:outline-brand-500 w-full rounded-lg border border-(--color-border) bg-(--color-surface-2) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-2"
-      placeholder="Search assets…"
+      [placeholder]="'transactions.assetFilter.searchPlaceholder' | translate"
       [value]="searchQuery()"
       (input)="onSearchInput($event)"
     />
@@ -55,7 +57,9 @@
         </label>
       </li>
       } @empty {
-      <li class="px-2 py-2 text-sm text-(--color-text-muted)" role="status">No assets found</li>
+      <li class="px-2 py-2 text-sm text-(--color-text-muted)" role="status">
+        {{ 'transactions.assetFilter.noResults' | translate }}
+      </li>
       }
     </ul>
   </div>

@@ -1,0 +1,260 @@
+{
+  "nav": {
+    "brand": {
+      "name": "Stackr",
+      "tagline": "Rastreador de portafolio"
+    },
+    "items": {
+      "dashboard": "Panel",
+      "transactions": "Transacciones",
+      "holdings": "Posiciones",
+      "settings": "Ajustes"
+    },
+    "pageTitle": {
+      "default": "Stackr",
+      "documentTagline": "Rastreador de portafolio cripto",
+      "documentDefault": "Stackr — Rastreador de portafolio cripto",
+      "documentWithPage": "{page} — Stackr",
+      "dashboard": "Panel",
+      "transactions": "Transacciones",
+      "holdings": "Posiciones",
+      "settings": "Ajustes"
+    },
+    "aria": {
+      "main": "Principal",
+      "home": "Inicio de Stackr",
+      "openMenu": "Abrir menú de navegación",
+      "closeNavigation": "Cerrar navegación",
+      "switchToLightMode": "Cambiar a modo claro",
+      "switchToDarkMode": "Cambiar a modo oscuro",
+      "userMenu": "Menú de usuario"
+    },
+    "signOut": "Cerrar sesión"
+  },
+  "auth": {
+    "tagline": "Rastrea cada moneda. Conoce tu P&L real.",
+    "signInWithGoogle": "Iniciar sesión con Google",
+    "signingIn": "Iniciando sesión…",
+    "googleLogoAlt": "Google"
+  },
+  "transactions": {
+    "heading": "Transacciones",
+    "subtitle": "Historial de compras y ventas de tu portafolio.",
+    "addTransaction": "Agregar transacción",
+    "empty": {
+      "title": "Aún no hay transacciones",
+      "message": "Agrega tu primera compra o venta para empezar a rastrear posiciones y P&L.",
+      "cta": "Agregar tu primera transacción"
+    },
+    "filteredEmpty": {
+      "title": "No hay transacciones que coincidan",
+      "message": "Nada coincide con tus filtros actuales ({filters}).",
+      "cta": "Limpiar filtros"
+    },
+    "filters": {
+      "ariaLabel": "Filtros de transacciones",
+      "type": "Tipo",
+      "typeAll": "Todos",
+      "typeBuy": "Compra",
+      "typeSell": "Venta",
+      "from": "Desde",
+      "to": "Hasta",
+      "clear": "Limpiar filtros",
+      "describeAssets": "activos: {list}",
+      "describeType": "tipo: {type}",
+      "describeFrom": "desde: {date}",
+      "describeTo": "hasta: {date}",
+      "separator": " · "
+    },
+    "assetFilter": {
+      "searchAria": "Filtrar por activo",
+      "panelAria": "Filtro de activos",
+      "searchPlaceholder": "Buscar activos…",
+      "allAssets": "Todos los activos",
+      "oneAsset": "1 activo",
+      "nAssets": "{count} activos",
+      "noResults": "No se encontraron activos"
+    },
+    "list": {
+      "ariaLabel": "Transacciones",
+      "columns": {
+        "date": "Fecha",
+        "asset": "Activo",
+        "type": "Tipo",
+        "quantity": "Cantidad",
+        "price": "Precio",
+        "fee": "Comisión",
+        "total": "Total",
+        "actions": "Acciones"
+      },
+      "type": {
+        "buy": "Compra",
+        "sell": "Venta"
+      },
+      "actionsAria": "Acciones para {symbol} {type}",
+      "actionsAriaShort": "Acciones para {symbol}",
+      "cardAria": "{symbol} {type}"
+    },
+    "rowActions": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "addTitle": "Agregar transacción",
+      "editTitle": "Editar transacción",
+      "subtitle": "Registra una compra o venta. Todos los montos están en USD.",
+      "asset": "Activo",
+      "assetPlaceholder": "Buscar por nombre o símbolo…",
+      "type": "Tipo",
+      "buy": "Compra",
+      "sell": "Venta",
+      "quantity": "Cantidad",
+      "pricePerUnit": "Precio por unidad (USD)",
+      "fee": "Comisión (USD)",
+      "feeOptional": "opcional",
+      "executedAt": "Ejecutada el",
+      "notes": "Notas",
+      "notesPlaceholder": "Contexto opcional para esta operación",
+      "numberPlaceholder": "0.00",
+      "cancel": "Cancelar",
+      "saving": "Guardando…",
+      "save": "Guardar transacción",
+      "saveChanges": "Guardar cambios"
+    },
+    "deleteDialog": {
+      "title": "Eliminar transacción",
+      "body": "Esto eliminará permanentemente tu {type} de {symbol}. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "toast": {
+      "deleted": "Transacción eliminada.",
+      "saved": "Transacción guardada.",
+      "updated": "Transacción actualizada."
+    }
+  },
+  "holdings": {
+    "heading": "Posiciones",
+    "subtitle": "Posiciones abiertas con costo base, valor en vivo y P&L por activo.",
+    "empty": {
+      "title": "Aún no hay posiciones",
+      "message": "La cantidad, costo promedio y P&L por activo aparecerán aquí después de registrar tus primeras transacciones."
+    },
+    "table": {
+      "ariaLabel": "Posiciones",
+      "columns": {
+        "asset": "Activo",
+        "quantity": "Cantidad",
+        "avgCost": "Costo prom.",
+        "currentPrice": "Precio actual",
+        "currentValue": "Valor actual",
+        "pnl": "P&L"
+      },
+      "cardAria": "Detalles de la posición {symbol}"
+    }
+  },
+  "dashboard": {
+    "heading": "Panel",
+    "subtitle": "Valor del portafolio y rendimiento de un vistazo.",
+    "empty": {
+      "title": "Tu portafolio de un vistazo",
+      "message": "Las tarjetas de resumen aparecerán aquí cuando agregues tu primera transacción."
+    },
+    "summary": {
+      "ariaLabel": "Resumen del portafolio",
+      "totalValue": "Valor total",
+      "totalPnl": "P&L total",
+      "topHolding": "Mayor posición",
+      "noOpenPositions": "Sin posiciones abiertas"
+    },
+    "allocation": {
+      "heading": "Asignación",
+      "emptyTitle": "Sin datos de asignación",
+      "emptyMessage": "La asignación aparece cuando los activos tienen precio en vivo.",
+      "ariaSummary": "Asignación del portafolio por activo: {parts}",
+      "ariaSlice": "{name} ({symbol}): {value}, {percent} del portafolio",
+      "chartTotal": "Total"
+    },
+    "history": {
+      "heading": "Valor del portafolio",
+      "rangeAria": "Rango histórico",
+      "range7d": "7d",
+      "range30d": "30d",
+      "range90d": "90d",
+      "seriesName": "Valor del portafolio",
+      "emptyTitle": "Aún no hay suficiente historial",
+      "emptyMessage": "Agrega transacciones en más días para ver el valor del portafolio en el tiempo.",
+      "ariaSummary": "Valor del portafolio desde {startDate} {startValue} hasta {endDate} {endValue}"
+    }
+  },
+  "settings": {
+    "heading": "Ajustes",
+    "subtitle": "Personaliza cómo se ve y se lee Stackr.",
+    "language": {
+      "heading": "Idioma",
+      "description": "Elige el idioma de menús, etiquetas y mensajes.",
+      "en": "Inglés",
+      "es": "Español"
+    }
+  },
+  "shared": {
+    "offline": {
+      "message": "Estás sin conexión. Vuelve a conectarte para cargar datos del portafolio."
+    },
+    "errorState": {
+      "tryAgain": "Reintentar"
+    },
+    "assetCombobox": {
+      "searchAria": "Buscar activo",
+      "defaultPlaceholder": "Buscar por nombre o símbolo…",
+      "noResults": "No se encontraron activos"
+    },
+    "datetime": {
+      "placeholder": "Seleccionar fecha y hora",
+      "dialogAria": "Elegir fecha y hora",
+      "previousMonth": "Mes anterior",
+      "nextMonth": "Mes siguiente",
+      "hour": "Hora",
+      "minute": "Minuto",
+      "today": "Hoy",
+      "weekdays": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb",
+        "sun": "Dom"
+      }
+    },
+    "skeleton": {
+      "loadingSummary": "Cargando resumen",
+      "loadingTable": "Cargando tabla",
+      "loadingChart": "Cargando gráfico"
+    }
+  },
+  "errors": {
+    "auth": {
+      "unauthorized": "Error al iniciar sesión. Inténtalo de nuevo.",
+      "sessionExpired": "Tu sesión expiró. Vuelve a iniciar sesión."
+    },
+    "network": {
+      "offline": "Sin conexión a internet. Revisa tu red e inténtalo de nuevo.",
+      "timeout": "La solicitud tardó demasiado. Inténtalo de nuevo."
+    },
+    "api": {
+      "rateLimit": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+      "serverError": "Algo salió mal de nuestro lado. Inténtalo más tarde."
+    },
+    "validation": {
+      "invalidInput": "Parte de la información no es válida.",
+      "required": "Este campo es obligatorio.",
+      "minZero": "El valor debe ser cero o mayor.",
+      "maxLength500": "Máximo 500 caracteres.",
+      "quantityPositive": "La cantidad debe ser mayor que cero.",
+      "futureDate": "La fecha no puede ser en el futuro.",
+      "invalidValue": "Valor no válido."
+    },
+    "unknown": "Algo salió mal. Inténtalo de nuevo."
+  }
+}

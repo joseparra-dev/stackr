@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
-import { Toast } from '@shared/ui';
+import { Toast, TranslatePipe } from '@shared/ui';
 
 import { OfflineBanner } from '../offline-banner';
 import { Sidebar } from '../sidebar/sidebar';
@@ -11,7 +11,7 @@ import { TopBar } from '../top-bar/top-bar';
 
 @Component({
   selector: 'app-shell',
-  imports: [OfflineBanner, RouterOutlet, Sidebar, TopBar, Toast],
+  imports: [OfflineBanner, RouterOutlet, Sidebar, TopBar, Toast, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './shell.html',
 })

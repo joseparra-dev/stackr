@@ -34,6 +34,7 @@
           "builder": "@ngx-env/builder:application",
           "options": {
             "browser": "src/main.ts",
+            "polyfills": ["@angular/localize/init", "zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {

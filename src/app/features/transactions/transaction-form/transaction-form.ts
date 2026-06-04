@@ -10,11 +10,12 @@ import {
 } from '@angular/forms';
 import { startWith } from 'rxjs';
 
-import { AppError, errorMessage } from '@core/errors/app-error';
+import { AppError } from '@core/errors/app-error';
+import { I18nService } from '@core/i18n/i18n.service';
 import { AssetCombobox } from '@features/assets/asset-combobox';
 import type { AssetSearchResult } from '@features/assets/assets.types';
 import type { TransactionFormDialogData } from '@features/transactions/transaction-form/transaction-form.dialog.types';
-import { controlErrorMessage } from '@features/transactions/transaction-form/transaction-form.field-errors';
+import { controlErrorKey } from '@features/transactions/transaction-form/transaction-form.field-errors';
 import {
   toDatetimeLocalValue,
   toFormValue,
@@ -26,7 +27,7 @@ import {
 } from '@features/transactions/transaction-form/transaction-form.validator';
 import { TRANSACTION_SAVE_PORT } from '@features/transactions/transaction-save.port';
 import type { TransactionType } from '@features/transactions/transactions.types';
-import { DatetimeInput, ToastService } from '@shared/ui';
+import { DatetimeInput, ToastService, TranslatePipe } from '@shared/ui';
 
 interface TransactionFormControls {
   readonly id: FormControl<string>;
@@ -41,7 +42,7 @@ interface TransactionFormControls {
 
 @Component({
   selector: 'app-transaction-form',
-  imports: [ReactiveFormsModule, AssetCombobox, DatetimeInput],
+  imports: [ReactiveFormsModule, AssetCombobox, DatetimeInput, TranslatePipe],
   templateUrl: './transaction-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -53,9 +54,12 @@ export class TransactionForm {
   });
   private readonly savePort = inject(TRANSACTION_SAVE_PORT);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
 
   readonly submitting = signal(false);
   readonly submitError = signal<AppError | null>(null);
+
+  protected readonly translateError = this.i18n.translateError.bind(this.i18n);
 
   protected readonly form: FormGroup<TransactionFormControls> =
     this.fb.group<TransactionFormControls>({
@@ -78,11 +82,13 @@ export class TransactionForm {
       notes: this.fb.control('', Validators.maxLength(500)),
     });
 
-  protected readonly title = computed(() =>
-    this.dialogData?.mode === 'edit' ? 'Edit transaction' : 'Add transaction',
+  protected readonly titleKey = computed(() =>
+    this.dialogData?.mode === 'edit' ? 'transactions.form.editTitle' : 'transactions.form.addTitle',
   );
-  protected readonly submitLabel = computed(() =>
-    this.dialogData?.mode === 'edit' ? 'Save changes' : 'Save transaction',
+  protected readonly submitLabelKey = computed(() =>
+    this.dialogData?.mode === 'edit'
+      ? 'transactions.form.saveChanges'
+      : 'transactions.form.save',
   );
 
   protected readonly inputClass =
@@ -95,8 +101,6 @@ export class TransactionForm {
   );
   protected readonly notesCount = computed(() => this.notesValue().length);
 
-  protected readonly errorMessage = errorMessage;
-
   constructor() {
     this.applyDialogData();
   }
@@ -107,7 +111,8 @@ export class TransactionForm {
       return null;
     }
 
-    return controlErrorMessage(control.errors);
+    this.i18n.locale();
+    return this.i18n.translate(controlErrorKey(control.errors));
   }
 
   protected hasFieldError(name: keyof TransactionFormControls): boolean {
@@ -131,7 +136,11 @@ export class TransactionForm {
     try {
       await this.savePort.save(this.form.getRawValue() as TransactionFormValue);
       this.toast.success(
-        this.dialogData?.mode === 'edit' ? 'Transaction updated.' : 'Transaction saved.',
+        this.i18n.translate(
+          this.dialogData?.mode === 'edit'
+            ? 'transactions.toast.updated'
+            : 'transactions.toast.saved',
+        ),
       );
       this.dialogRef?.close(true);
     } catch (cause) {

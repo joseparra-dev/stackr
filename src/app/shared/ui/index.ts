@@ -1,3 +1,4 @@
+export { TranslatePipe } from '../pipes/translate.pipe';
 export { DatetimeInput } from './datetime-input';
 export { EmptyState } from './empty-state';
 export { ErrorState } from './error-state';

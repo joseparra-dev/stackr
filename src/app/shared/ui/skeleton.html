@@ -1,41 +1,41 @@
-@switch (variant()) {
-@case ('summary-cards') {
+@if (variant() === 'summary-cards') {
 <div
-  class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
-  role="status"
-  aria-live="polite"
+  class="grid grid-cols-1 gap-4 md:grid-cols-3"
+  [attr.aria-label]="'shared.skeleton.loadingSummary' | translate"
   aria-busy="true"
-  aria-label="Loading summary"
 >
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    @for (card of [1, 2, 3]; track card) {
-    <div class="h-24 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
-    }
+  @for (i of [0, 1, 2]; track i) {
+  <div class="animate-pulse rounded-xl border border-(--color-border) bg-(--color-surface) p-5">
+    <div class="h-4 w-24 rounded bg-(--color-surface-2)"></div>
+    <div class="mt-3 h-8 w-32 rounded bg-(--color-surface-2)"></div>
   </div>
+  }
 </div>
-}
-@case ('table') {
+} @else if (variant() === 'table') {
 <div
-  class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
-  role="status"
-  aria-live="polite"
+  class="flex flex-col gap-3"
+  [attr.aria-label]="'shared.skeleton.loadingTable' | translate"
   aria-busy="true"
-  aria-label="Loading table"
 >
-  <div class="flex flex-col gap-3">
-    @for (row of rowIndices(); track row) {
-    <div class="h-10 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
-    }
+  @for (row of rowIndices(); track row) {
+  <div class="animate-pulse rounded-xl border border-(--color-border) bg-(--color-surface) p-4">
+    <div class="flex items-center gap-3">
+      <div class="size-8 shrink-0 rounded-full bg-(--color-surface-2)"></div>
+      <div class="flex-1 space-y-2">
+        <div class="h-4 w-24 rounded bg-(--color-surface-2)"></div>
+        <div class="h-3 w-40 rounded bg-(--color-surface-2)"></div>
+      </div>
+    </div>
   </div>
+  }
 </div>
-}
-@case ('chart') {
+} @else if (variant() === 'chart') {
 <div
-  class="mt-4 h-64 animate-pulse rounded-lg bg-(--color-surface-2)"
-  role="status"
-  aria-live="polite"
+  class="animate-pulse rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+  [attr.aria-label]="'shared.skeleton.loadingChart' | translate"
   aria-busy="true"
-  aria-label="Loading chart"
-></div>
-}
+>
+  <div class="h-4 w-32 rounded bg-(--color-surface-2)"></div>
+  <div class="mt-6 h-48 rounded bg-(--color-surface-2)"></div>
+</div>
 }

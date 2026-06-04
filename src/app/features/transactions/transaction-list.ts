@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+
+import { I18nService } from '@core/i18n/i18n.service';
+import { TranslatePipe } from '@shared/ui';
 
 import {
   formatQuantity,
   formatTransactionDate,
-  formatTypeLabel,
   formatUsd,
 } from './transaction-format';
 import { TransactionRowActions } from './transaction-row-actions';
@@ -12,11 +14,13 @@ import type { TransactionWithAsset } from './transactions.types';
 
 @Component({
   selector: 'app-transaction-list',
-  imports: [TransactionRowActions],
+  imports: [TransactionRowActions, TranslatePipe],
   templateUrl: './transaction-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionList {
+  private readonly i18n = inject(I18nService);
+
   readonly transactions = input.required<readonly TransactionWithAsset[]>();
 
   readonly edit = output<TransactionWithAsset>();
@@ -25,8 +29,18 @@ export class TransactionList {
   protected readonly formatQuantity = formatQuantity;
   protected readonly formatUsd = formatUsd;
   protected readonly formatTransactionDate = formatTransactionDate;
-  protected readonly formatTypeLabel = formatTypeLabel;
   protected readonly transactionTotal = transactionTotal;
+
+  protected readonly columnKeys = {
+    date: 'transactions.list.columns.date',
+    asset: 'transactions.list.columns.asset',
+    type: 'transactions.list.columns.type',
+    quantity: 'transactions.list.columns.quantity',
+    price: 'transactions.list.columns.price',
+    fee: 'transactions.list.columns.fee',
+    total: 'transactions.list.columns.total',
+    actions: 'transactions.list.columns.actions',
+  } as const;
 
   protected onEdit(tx: TransactionWithAsset): void {
     this.edit.emit(tx);
@@ -36,8 +50,30 @@ export class TransactionList {
     this.delete.emit(tx);
   }
 
+  protected typeLabel(type: TransactionWithAsset['type']): string {
+    this.i18n.locale();
+    return this.i18n.translate(`transactions.list.type.${type}`);
+  }
+
   protected actionsLabel(tx: TransactionWithAsset): string {
-    return `Actions for ${tx.asset.symbol} ${formatTypeLabel(tx.type)}`;
+    this.i18n.locale();
+    return this.i18n.translate('transactions.list.actionsAria', {
+      symbol: tx.asset.symbol,
+      type: this.typeLabel(tx.type),
+    });
+  }
+
+  protected cardAriaLabel(tx: TransactionWithAsset): string {
+    this.i18n.locale();
+    return this.i18n.translate('transactions.list.cardAria', {
+      symbol: tx.asset.symbol,
+      type: this.typeLabel(tx.type),
+    });
+  }
+
+  protected actionsLabelShort(symbol: string): string {
+    this.i18n.locale();
+    return this.i18n.translate('transactions.list.actionsAriaShort', { symbol });
   }
 
   protected typeClass(type: TransactionWithAsset['type']): string {

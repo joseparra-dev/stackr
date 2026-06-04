@@ -1,17 +1,22 @@
 <div class="hidden overflow-x-auto rounded-xl border border-(--color-border) md:block">
-  <table class="w-full min-w-[720px] text-left text-sm" aria-label="Transactions">
+  <table
+    class="w-full min-w-[720px] text-left text-sm"
+    [attr.aria-label]="'transactions.list.ariaLabel' | translate"
+  >
     <thead
       class="border-b border-(--color-border) bg-(--color-surface-2) text-xs font-medium text-(--color-text-muted)"
     >
       <tr>
-        <th scope="col" class="px-4 py-3">Date</th>
-        <th scope="col" class="px-4 py-3">Asset</th>
-        <th scope="col" class="px-4 py-3">Type</th>
-        <th scope="col" class="px-4 py-3 text-right">Quantity</th>
-        <th scope="col" class="px-4 py-3 text-right">Price</th>
-        <th scope="col" class="px-4 py-3 text-right">Fee</th>
-        <th scope="col" class="px-4 py-3 text-right">Total</th>
-        <th scope="col" class="px-4 py-3"><span class="sr-only">Actions</span></th>
+        <th scope="col" class="px-4 py-3">{{ columnKeys.date | translate }}</th>
+        <th scope="col" class="px-4 py-3">{{ columnKeys.asset | translate }}</th>
+        <th scope="col" class="px-4 py-3">{{ columnKeys.type | translate }}</th>
+        <th scope="col" class="px-4 py-3 text-right">{{ columnKeys.quantity | translate }}</th>
+        <th scope="col" class="px-4 py-3 text-right">{{ columnKeys.price | translate }}</th>
+        <th scope="col" class="px-4 py-3 text-right">{{ columnKeys.fee | translate }}</th>
+        <th scope="col" class="px-4 py-3 text-right">{{ columnKeys.total | translate }}</th>
+        <th scope="col" class="px-4 py-3">
+          <span class="sr-only">{{ columnKeys.actions | translate }}</span>
+        </th>
       </tr>
     </thead>
     <tbody class="divide-y divide-(--color-border) bg-(--color-surface)">
@@ -34,7 +39,7 @@
         </td>
         <td class="px-4 py-3">
           <span class="rounded-md px-2 py-0.5 text-xs font-medium" [class]="typeClass(tx.type)">
-            {{ formatTypeLabel(tx.type) }}
+            {{ typeLabel(tx.type) }}
           </span>
         </td>
         <td class="px-4 py-3 text-right tabular-nums">{{ formatQuantity(tx.quantity) }}</td>
@@ -57,11 +62,14 @@
   </table>
 </div>
 
-<div class="flex flex-col gap-3 md:hidden" aria-label="Transactions">
+<div
+  class="flex flex-col gap-3 md:hidden"
+  [attr.aria-label]="'transactions.list.ariaLabel' | translate"
+>
   @for (tx of transactions(); track tx.id) {
   <article
     class="rounded-xl border border-(--color-border) bg-(--color-surface) p-4"
-    [attr.aria-label]="tx.asset.symbol + ' ' + formatTypeLabel(tx.type)"
+    [attr.aria-label]="cardAriaLabel(tx)"
   >
     <div class="flex items-start justify-between gap-3">
       <div class="flex items-center gap-3">
@@ -78,7 +86,7 @@
           <div class="flex items-center gap-2">
             <span class="font-semibold text-(--color-text)">{{ tx.asset.symbol }}</span>
             <span class="rounded-md px-2 py-0.5 text-xs font-medium" [class]="typeClass(tx.type)">
-              {{ formatTypeLabel(tx.type) }}
+              {{ typeLabel(tx.type) }}
             </span>
           </div>
           <p class="mt-0.5 text-xs text-(--color-text-muted)">
@@ -88,7 +96,7 @@
       </div>
       <app-transaction-row-actions
         [menuId]="'tx-card-menu-' + tx.id"
-        [ariaLabel]="'Actions for ' + tx.asset.symbol"
+        [ariaLabel]="actionsLabelShort(tx.asset.symbol)"
         (edit)="onEdit(tx)"
         (delete)="onDelete(tx)"
       />
@@ -96,19 +104,19 @@
 
     <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Quantity</dt>
+        <dt class="text-xs text-(--color-text-muted)">{{ columnKeys.quantity | translate }}</dt>
         <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatQuantity(tx.quantity) }}</dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Price</dt>
+        <dt class="text-xs text-(--color-text-muted)">{{ columnKeys.price | translate }}</dt>
         <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatUsd(tx.pricePerUnitUsd) }}</dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Fee</dt>
+        <dt class="text-xs text-(--color-text-muted)">{{ columnKeys.fee | translate }}</dt>
         <dd class="mt-0.5 text-(--color-text) tabular-nums">{{ formatUsd(tx.feeUsd) }}</dd>
       </div>
       <div>
-        <dt class="text-xs text-(--color-text-muted)">Total</dt>
+        <dt class="text-xs text-(--color-text-muted)">{{ columnKeys.total | translate }}</dt>
         <dd class="mt-0.5 font-medium text-(--color-text) tabular-nums">
           {{ formatUsd(transactionTotal(tx)) }}
         </dd>

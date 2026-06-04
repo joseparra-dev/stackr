@@ -4,17 +4,16 @@ import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, type ActivatedRouteSnapshot } from '@angular/router';
 import { filter } from 'rxjs';
 
-export const APP_NAME = 'Stackr';
-export const DEFAULT_PAGE_TITLE = APP_NAME;
-const DOCUMENT_TAGLINE = 'Crypto Portfolio Tracker';
+import { I18nService } from '@core/i18n/i18n.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageTitleService {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly documentTitle = inject(Title);
+  private readonly i18n = inject(I18nService);
 
-  private readonly _title = signal(DEFAULT_PAGE_TITLE);
+  private readonly _title = signal('');
   readonly title = this._title.asReadonly();
 
   constructor() {
@@ -29,33 +28,34 @@ export class PageTitleService {
   }
 
   private sync(): void {
-    const pageTitle = resolvePageTitle(this.router.routerState.snapshot.root);
+    this.i18n.locale();
+    const titleKey = resolvePageTitleKey(this.router.routerState.snapshot.root);
+    const pageTitle = titleKey
+      ? this.i18n.translate(titleKey)
+      : this.i18n.translate('nav.pageTitle.default');
     this._title.set(pageTitle);
-    this.documentTitle.setTitle(formatDocumentTitle(pageTitle));
+    this.documentTitle.setTitle(formatDocumentTitle(pageTitle, this.i18n));
   }
 }
 
-function resolvePageTitle(snapshot: ActivatedRouteSnapshot): string {
+function resolvePageTitleKey(snapshot: ActivatedRouteSnapshot): string | null {
   let current = snapshot;
   while (current.firstChild) {
     current = current.firstChild;
   }
 
-  if (typeof current.title === 'string' && current.title.length > 0) {
-    return current.title;
-  }
-
-  const fromData = current.data['title'];
+  const fromData = current.data['titleKey'];
   if (typeof fromData === 'string' && fromData.length > 0) {
     return fromData;
   }
 
-  return DEFAULT_PAGE_TITLE;
+  return null;
 }
 
-function formatDocumentTitle(pageTitle: string): string {
-  if (pageTitle === DEFAULT_PAGE_TITLE) {
-    return `${APP_NAME} — ${DOCUMENT_TAGLINE}`;
+function formatDocumentTitle(pageTitle: string, i18n: I18nService): string {
+  const defaultTitle = i18n.translate('nav.pageTitle.default');
+  if (pageTitle === defaultTitle) {
+    return i18n.translate('nav.pageTitle.documentDefault');
   }
-  return `${pageTitle} — ${APP_NAME}`;
+  return i18n.translate('nav.pageTitle.documentWithPage', { page: pageTitle });
 }

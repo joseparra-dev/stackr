@@ -15,7 +15,9 @@ import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, from, of } from 'rxjs';
 
-import { AppError, errorMessage } from '@core/errors/app-error';
+import { AppError } from '@core/errors/app-error';
+import { I18nService } from '@core/i18n/i18n.service';
+import { TranslatePipe } from '@shared/ui';
 
 import { AssetsService } from './assets.service';
 import type { AssetSearchResult } from './assets.types';
@@ -25,7 +27,7 @@ const MIN_QUERY_LENGTH = 2;
 
 @Component({
   selector: 'app-asset-combobox',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './asset-combobox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -38,12 +40,13 @@ const MIN_QUERY_LENGTH = 2;
 })
 export class AssetCombobox implements ControlValueAccessor {
   readonly disabled = input(false);
-  readonly placeholder = input('Search by name or symbol…');
+  readonly placeholder = input('');
 
   readonly assetSelected = output<AssetSearchResult>();
   readonly assetCleared = output<void>();
 
   private readonly assetsService = inject(AssetsService);
+  private readonly i18n = inject(I18nService);
   private readonly queryInput = viewChild<ElementRef<HTMLInputElement>>('queryInput');
 
   private readonly disabledByCva = signal(false);
@@ -111,7 +114,12 @@ export class AssetCombobox implements ControlValueAccessor {
     return active ? this.optionId(active.id) : null;
   });
 
-  readonly errorMessage = errorMessage;
+  readonly resolvedPlaceholder = computed(() => {
+    this.i18n.locale();
+    return this.placeholder() || this.i18n.translate('shared.assetCombobox.defaultPlaceholder');
+  });
+
+  protected translateError = this.i18n.translateError.bind(this.i18n);
 
   writeValue(value: AssetSearchResult | null): void {
     if (value) {

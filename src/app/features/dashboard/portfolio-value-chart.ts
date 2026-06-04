@@ -19,29 +19,33 @@ import {
 } from 'ng-apexcharts';
 
 import type { AppError } from '@core/errors/app-error';
+import { I18nService } from '@core/i18n/i18n.service';
 import { ThemeService } from '@core/theme/theme.service';
-import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, TranslatePipe } from '@shared/ui';
 import { formatUsd } from '@shared/utils/format-usd';
 import type { DailyPortfolioPoint, HistoryRangeDays } from '@shared/utils/portfolio-history';
 
 import { getChartThemeTokens, type ChartThemeTokens } from './chart-theme';
 
-const RANGE_OPTIONS = [
-  { days: 7 as const, label: '7d' },
-  { days: 30 as const, label: '30d' },
-  { days: 90 as const, label: '90d' },
-] as const;
+const RANGE_DAYS = [7, 30, 90] as const satisfies readonly HistoryRangeDays[];
+
+const RANGE_LABEL_KEYS: Record<HistoryRangeDays, string> = {
+  7: 'dashboard.history.range7d',
+  30: 'dashboard.history.range30d',
+  90: 'dashboard.history.range90d',
+};
 
 const AREA_COLOR = '#3b82f6';
 
 @Component({
   selector: 'app-portfolio-value-chart',
-  imports: [ChartComponent, EmptyState, ErrorState, Skeleton],
+  imports: [ChartComponent, EmptyState, ErrorState, Skeleton, TranslatePipe],
   templateUrl: './portfolio-value-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioValueChart {
   private readonly themeService = inject(ThemeService);
+  private readonly i18n = inject(I18nService);
 
   readonly points = input.required<readonly DailyPortfolioPoint[]>();
   readonly loading = input(false);
@@ -52,7 +56,13 @@ export class PortfolioValueChart {
   readonly rangeChange = output<HistoryRangeDays>();
   readonly retry = output<void>();
 
-  protected readonly rangeOptions = RANGE_OPTIONS;
+  protected readonly rangeOptions = computed(() => {
+    this.i18n.locale();
+    return RANGE_DAYS.map((days) => ({
+      days,
+      label: this.i18n.translate(RANGE_LABEL_KEYS[days]),
+    }));
+  });
   protected readonly chartColors = [AREA_COLOR];
   protected readonly formatUsd = formatUsd;
   protected readonly dataLabels = { enabled: false } as const;
@@ -62,22 +72,35 @@ export class PortfolioValueChart {
     return getChartThemeTokens(this.themeService.isDark());
   });
 
-  readonly series = computed(() => [
-    {
-      name: 'Portfolio value',
-      data: this.points().map((point) => point.valueUsd),
-    },
-  ]);
+  readonly series = computed(() => {
+    this.i18n.locale();
+    return [
+      {
+        name: this.i18n.translate('dashboard.history.seriesName'),
+        data: this.points().map((point) => point.valueUsd),
+      },
+    ];
+  });
 
   readonly categories = computed(() => this.points().map((point) => formatChartDate(point.date)));
 
   readonly ariaSummary = computed(() => {
+    this.i18n.locale();
     const points = this.points();
-    if (points.length === 0) return 'No portfolio history';
+    if (points.length === 0) {
+      return this.i18n.translate('dashboard.history.emptyTitle');
+    }
     const first = points[0];
     const last = points[points.length - 1];
-    if (!first || !last) return 'No portfolio history';
-    return `Portfolio value from ${formatChartDate(first.date)} ${formatUsd(first.valueUsd)} to ${formatChartDate(last.date)} ${formatUsd(last.valueUsd)}`;
+    if (!first || !last) {
+      return this.i18n.translate('dashboard.history.emptyTitle');
+    }
+    return this.i18n.translate('dashboard.history.ariaSummary', {
+      startDate: formatChartDate(first.date),
+      startValue: formatUsd(first.valueUsd),
+      endDate: formatChartDate(last.date),
+      endValue: formatUsd(last.valueUsd),
+    });
   });
 
   readonly chart = computed(

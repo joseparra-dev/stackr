@@ -7,7 +7,7 @@
   <button
     type="button"
     class="fixed inset-0 z-40 bg-black/50 md:hidden"
-    aria-label="Close navigation"
+    [attr.aria-label]="'nav.aria.closeNavigation' | translate"
     (click)="closeDrawer()"
   ></button>
   <app-sidebar

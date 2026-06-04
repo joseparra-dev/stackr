@@ -10,15 +10,20 @@ import {
   signal,
 } from '@angular/core';
 
+import { I18nService } from '@core/i18n/i18n.service';
 import type { AssetSearchResult } from '@features/assets/assets.types';
+import { TranslatePipe } from '@shared/ui';
 
 @Component({
   selector: 'app-transaction-asset-filter',
+  imports: [TranslatePipe],
   templateUrl: './transaction-asset-filter.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionAssetFilter {
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly i18n = inject(I18nService);
+
   readonly options = input.required<readonly AssetSearchResult[]>();
   readonly selectedIds = input.required<readonly string[]>();
 
@@ -39,13 +44,14 @@ export class TransactionAssetFilter {
   });
 
   readonly triggerLabel = computed(() => {
+    this.i18n.locale();
     const count = this.selectedIds().length;
-    if (count === 0) return 'All assets';
+    if (count === 0) return this.i18n.translate('transactions.assetFilter.allAssets');
     if (count === 1) {
       const asset = this.options().find((item) => item.id === this.selectedIds()[0]);
-      return asset ? `${asset.symbol}` : '1 asset';
+      return asset?.symbol ?? this.i18n.translate('transactions.assetFilter.oneAsset');
     }
-    return `${count} assets`;
+    return this.i18n.translate('transactions.assetFilter.nAssets', { count: String(count) });
   });
 
   togglePanel(): void {

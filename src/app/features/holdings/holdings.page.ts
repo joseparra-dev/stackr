@@ -16,14 +16,14 @@ import type { Holding } from '@shared/utils/holdings.types';
 
 import { TRANSACTIONS_ASSETS_FILTER_PARAM } from '@features/transactions/transactions-filter';
 
-import { EmptyState, ErrorState, Skeleton } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, TranslatePipe } from '@shared/ui';
 
 import { HoldingsTable } from './holdings-table';
 import { nextSortState, sortHoldings, type HoldingsSortKey, type SortDirection } from './holdings-sort';
 
 @Component({
   selector: 'app-holdings-page',
-  imports: [EmptyState, ErrorState, HoldingsTable, Skeleton],
+  imports: [EmptyState, ErrorState, HoldingsTable, Skeleton, TranslatePipe],
   templateUrl: './holdings.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
