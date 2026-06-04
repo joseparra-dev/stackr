@@ -33,9 +33,13 @@
   @if (loading()) {
   <div class="mt-4 h-64 animate-pulse rounded-lg bg-(--color-surface-2)" role="status" aria-busy="true"></div>
   } @else if (!hasEnoughData()) {
-  <p class="mt-4 text-sm text-(--color-text-muted)">
-    Not enough history yet. Add transactions on more days to see portfolio value over time.
-  </p>
+  <app-empty-state
+    headingId="portfolio-history-empty-heading"
+    title="Not enough history yet"
+    message="Add transactions on more days to see portfolio value over time."
+    icon="line-chart"
+    variant="compact"
+  />
   } @else {
   <div class="mt-4" role="img" [attr.aria-label]="ariaSummary()">
     <apx-chart

@@ -18,17 +18,13 @@
     </div>
   </div>
   } @else if (!hasTransactions()) {
-  <section
-    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-    aria-labelledby="dashboard-empty-heading"
-  >
-    <h2 id="dashboard-empty-heading" class="text-lg font-semibold text-(--color-text)">
-      Your portfolio at a glance
-    </h2>
-    <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-      Summary cards will show up here once you add your first transaction.
-    </p>
-  </section>
+  <app-empty-state
+    headingId="dashboard-empty-heading"
+    title="Your portfolio at a glance"
+    message="Summary cards will show up here once you add your first transaction."
+    icon="layout-dashboard"
+    variant="dashed"
+  />
   } @else {
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3" aria-label="Portfolio summary">
     <article class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5">

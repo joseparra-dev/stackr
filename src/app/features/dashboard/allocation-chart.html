@@ -5,7 +5,13 @@
   <h2 id="allocation-heading" class="text-sm font-medium text-(--color-text-muted)">Allocation</h2>
 
   @if (slices().length === 0) {
-  <p class="mt-4 text-sm text-(--color-text-muted)">Allocation appears once assets have a live price.</p>
+  <app-empty-state
+    headingId="allocation-empty-heading"
+    title="No allocation data"
+    message="Allocation appears once assets have a live price."
+    icon="pie-chart"
+    variant="compact"
+  />
   } @else {
   <div class="mt-4" role="img" [attr.aria-label]="ariaSummary()">
     <apx-chart

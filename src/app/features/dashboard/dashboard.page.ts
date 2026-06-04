@@ -14,11 +14,12 @@ import { HoldingsStore } from '@features/holdings/holdings.store';
 import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { Holding } from '@shared/utils/holdings.types';
+import { EmptyState } from '@shared/ui';
 import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-usd';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AllocationChart, PortfolioValueChart],
+  imports: [AllocationChart, EmptyState, PortfolioValueChart],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

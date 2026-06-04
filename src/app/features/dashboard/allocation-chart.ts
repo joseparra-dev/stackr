@@ -17,6 +17,7 @@ import {
 
 import { ThemeService } from '@core/theme/theme.service';
 import type { Holding } from '@shared/utils/holdings.types';
+import { EmptyState } from '@shared/ui';
 import { formatUsd } from '@shared/utils/format-usd';
 
 import { buildAllocationSlices } from './allocation-slices';
@@ -28,7 +29,7 @@ import {
 
 @Component({
   selector: 'app-allocation-chart',
-  imports: [ChartComponent],
+  imports: [ChartComponent, EmptyState],
   templateUrl: './allocation-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -16,12 +16,14 @@ import type { Holding } from '@shared/utils/holdings.types';
 
 import { TRANSACTIONS_ASSETS_FILTER_PARAM } from '@features/transactions/transactions-filter';
 
+import { EmptyState } from '@shared/ui';
+
 import { HoldingsTable } from './holdings-table';
 import { nextSortState, sortHoldings, type HoldingsSortKey, type SortDirection } from './holdings-sort';
 
 @Component({
   selector: 'app-holdings-page',
-  imports: [HoldingsTable],
+  imports: [EmptyState, HoldingsTable],
   templateUrl: './holdings.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

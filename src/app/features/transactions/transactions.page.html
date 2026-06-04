@@ -35,25 +35,16 @@
     {{ errorMessage(err.code) }}
   </div>
   } @else if (!hasTransactions()) {
-  <section
-    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-    aria-labelledby="transactions-empty-heading"
-  >
-    <h2 id="transactions-empty-heading" class="text-lg font-semibold text-(--color-text)">
-      No transactions yet
-    </h2>
-    <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-      Add your first buy or sell to start tracking holdings and P&amp;L.
-    </p>
-    <button
-      type="button"
-      (click)="openCreateDialog()"
-      class="bg-brand-600 hover:bg-brand-700 focus-visible:outline-brand-500 mt-6 inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2"
-    >
-      <svg lucidePlus [size]="16" aria-hidden="true"></svg>
-      Add your first transaction
-    </button>
-  </section>
+  <app-empty-state
+    headingId="transactions-empty-heading"
+    title="No transactions yet"
+    message="Add your first buy or sell to start tracking holdings and P&amp;L."
+    icon="arrow-left-right"
+    variant="dashed"
+    ctaLabel="Add your first transaction"
+    ctaLeadingIcon="plus"
+    (ctaClick)="openCreateDialog()"
+  />
   } @else {
   <app-transaction-filter-bar
     [filters]="filters()"
@@ -64,22 +55,17 @@
   />
 
   @if (hasActiveFilters() && !hasFilteredTransactions()) {
-  <section
-    class="flex flex-col items-center justify-center rounded-xl border border-(--color-border) bg-(--color-surface) px-6 py-12 text-center"
-    aria-live="polite"
-  >
-    <h2 class="text-lg font-semibold text-(--color-text)">No matching transactions</h2>
-    <p class="mt-2 max-w-md text-sm text-(--color-text-muted)">
-      Nothing matches your current filters ({{ filtersDescription() }}).
-    </p>
-    <button
-      type="button"
-      class="text-brand-600 hover:text-brand-700 mt-4 cursor-pointer text-sm font-medium"
-      (click)="clearFilters()"
-    >
-      Clear filters
-    </button>
-  </section>
+  <app-empty-state
+    headingId="transactions-filtered-empty-heading"
+    title="No matching transactions"
+    [message]="'Nothing matches your current filters (' + filtersDescription() + ').'"
+    icon="filter-x"
+    variant="bordered"
+    live="polite"
+    ctaLabel="Clear filters"
+    ctaVariant="link"
+    (ctaClick)="clearFilters()"
+  />
   } @else {
   <app-transaction-list
     [transactions]="transactions()"
