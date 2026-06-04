@@ -15,25 +15,9 @@
   </div>
 
   @if (loading()) {
-  <div
-    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
-    role="status"
-    aria-live="polite"
-    aria-busy="true"
-  >
-    <div class="flex flex-col gap-3">
-      @for (row of [1, 2, 3]; track row) {
-      <div class="h-10 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
-      }
-    </div>
-  </div>
+  <app-skeleton variant="table" [rows]="3" />
   } @else if (error(); as err) {
-  <div
-    role="alert"
-    class="border-danger/30 bg-danger/10 text-danger rounded-lg border px-4 py-3 text-sm"
-  >
-    {{ errorMessage(err.code) }}
-  </div>
+  <app-error-state [error]="err" (retry)="retryLoad()" />
   } @else if (!hasTransactions()) {
   <app-empty-state
     headingId="transactions-empty-heading"

@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LucidePlus } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
 
-import { errorMessage } from '@core/errors/app-error';
 import { DeleteTransactionDialog } from '@features/transactions/delete-transaction-dialog';
 import type { DeleteTransactionDialogData } from '@features/transactions/delete-transaction-dialog';
 import { TransactionForm } from '@features/transactions/transaction-form/transaction-form';
@@ -24,7 +23,7 @@ import {
 } from '@features/transactions/transactions-filter';
 import { TransactionsStore } from '@features/transactions/transactions.store';
 import type { TransactionWithAsset } from '@features/transactions/transactions.types';
-import { EmptyState, ToastService } from '@shared/ui';
+import { EmptyState, ErrorState, Skeleton, ToastService } from '@shared/ui';
 
 const DIALOG_OPTIONS = {
   width: '100%',
@@ -35,7 +34,7 @@ const DIALOG_OPTIONS = {
 
 @Component({
   selector: 'app-transactions-page',
-  imports: [EmptyState, LucidePlus, TransactionFilterBar, TransactionList],
+  imports: [EmptyState, ErrorState, LucidePlus, Skeleton, TransactionFilterBar, TransactionList],
   templateUrl: './transactions.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -70,9 +69,11 @@ export class TransactionsPage {
     describeActiveFilters(this.store.transactions(), this.filters()),
   );
 
-  protected readonly errorMessage = errorMessage;
-
   constructor() {
+    void this.store.load();
+  }
+
+  retryLoad(): void {
     void this.store.load();
   }
 
