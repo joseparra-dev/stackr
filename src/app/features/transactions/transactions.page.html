@@ -54,43 +54,38 @@
       Add your first transaction
     </button>
   </section>
-  } @else if (assetFilter() && !hasFilteredTransactions()) {
+  } @else {
+  <app-transaction-filter-bar
+    [filters]="filters()"
+    [assetOptions]="assetOptions()"
+    [showClear]="hasActiveFilters()"
+    (filtersChange)="onFiltersChange($event)"
+    (clearFilters)="clearFilters()"
+  />
+
+  @if (hasActiveFilters() && !hasFilteredTransactions()) {
   <section
-    class="rounded-xl border border-(--color-border) bg-(--color-surface) px-6 py-10 text-center"
+    class="flex flex-col items-center justify-center rounded-xl border border-(--color-border) bg-(--color-surface) px-6 py-12 text-center"
     aria-live="polite"
   >
-    <p class="text-sm text-(--color-text-muted)">
-      No transactions for {{ assetFilterSymbol() ?? 'this asset' }}.
+    <h2 class="text-lg font-semibold text-(--color-text)">No matching transactions</h2>
+    <p class="mt-2 max-w-md text-sm text-(--color-text-muted)">
+      Nothing matches your current filters ({{ filtersDescription() }}).
     </p>
-    <a
-      routerLink="/transactions"
-      class="text-brand-600 hover:text-brand-700 mt-4 inline-block text-sm font-medium"
+    <button
+      type="button"
+      class="text-brand-600 hover:text-brand-700 mt-4 cursor-pointer text-sm font-medium"
+      (click)="clearFilters()"
     >
-      Clear filter
-    </a>
+      Clear filters
+    </button>
   </section>
   } @else {
-  @if (assetFilter(); as filterId) {
-  <div
-    class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-(--color-border) bg-(--color-surface-2) px-4 py-3 text-sm"
-  >
-    <p class="text-(--color-text)">
-      Showing transactions for
-      <span class="font-semibold">{{ assetFilterSymbol() ?? filterId }}</span>
-    </p>
-    <a
-      routerLink="/transactions"
-      class="text-brand-600 hover:text-brand-700 font-medium"
-    >
-      Clear filter
-    </a>
-  </div>
-  }
-
   <app-transaction-list
     [transactions]="transactions()"
     (edit)="openEditDialog($event)"
     (delete)="confirmDelete($event)"
   />
+  }
   }
 </div>
