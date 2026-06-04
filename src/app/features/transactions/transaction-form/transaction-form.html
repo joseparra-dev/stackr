@@ -26,9 +26,18 @@
       id="transaction-asset"
       formControlName="asset"
       [placeholder]="'transactions.form.assetPlaceholder' | translate"
+      [attr.aria-invalid]="hasFieldError('asset')"
+      [attr.aria-describedby]="fieldDescribedBy('asset')"
     />
     @if (fieldError('asset'); as message) {
-    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    <p
+      [id]="fieldErrorId('asset')"
+      class="text-danger mt-1.5 text-xs"
+      role="alert"
+      aria-live="polite"
+    >
+      {{ message }}
+    </p>
     }
   </div>
 
@@ -65,7 +74,14 @@
       </label>
     </div>
     @if (fieldError('type'); as message) {
-    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    <p
+      [id]="fieldErrorId('type')"
+      class="text-danger mt-1.5 text-xs"
+      role="alert"
+      aria-live="polite"
+    >
+      {{ message }}
+    </p>
     }
   </fieldset>
 
@@ -84,9 +100,18 @@
         [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('quantity')"
+        [attr.aria-invalid]="hasFieldError('quantity')"
+        [attr.aria-describedby]="fieldDescribedBy('quantity')"
       />
       @if (fieldError('quantity'); as message) {
-      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      <p
+        [id]="fieldErrorId('quantity')"
+        class="text-danger mt-1.5 text-xs"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ message }}
+      </p>
       }
     </div>
 
@@ -104,9 +129,18 @@
         [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('pricePerUnitUsd')"
+        [attr.aria-invalid]="hasFieldError('pricePerUnitUsd')"
+        [attr.aria-describedby]="fieldDescribedBy('pricePerUnitUsd')"
       />
       @if (fieldError('pricePerUnitUsd'); as message) {
-      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      <p
+        [id]="fieldErrorId('pricePerUnitUsd')"
+        class="text-danger mt-1.5 text-xs"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ message }}
+      </p>
       }
     </div>
 
@@ -127,9 +161,18 @@
         [placeholder]="'transactions.form.numberPlaceholder' | translate"
         [class]="inputClass"
         [class.border-danger]="hasFieldError('feeUsd')"
+        [attr.aria-invalid]="hasFieldError('feeUsd')"
+        [attr.aria-describedby]="fieldDescribedBy('feeUsd')"
       />
       @if (fieldError('feeUsd'); as message) {
-      <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+      <p
+        [id]="fieldErrorId('feeUsd')"
+        class="text-danger mt-1.5 text-xs"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ message }}
+      </p>
       }
     </div>
   </div>
@@ -143,9 +186,17 @@
       formControlName="executedAt"
       [disableFuture]="true"
       [invalid]="hasFieldError('executedAt')"
+      [attr.aria-describedby]="fieldDescribedBy('executedAt')"
     />
     @if (fieldError('executedAt'); as message) {
-    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    <p
+      [id]="fieldErrorId('executedAt')"
+      class="text-danger mt-1.5 text-xs"
+      role="alert"
+      aria-live="polite"
+    >
+      {{ message }}
+    </p>
     }
   </div>
 
@@ -166,9 +217,18 @@
       [placeholder]="'transactions.form.notesPlaceholder' | translate"
       class="{{ inputClass }} resize-y min-h-20"
       [class.border-danger]="hasFieldError('notes')"
+      [attr.aria-invalid]="hasFieldError('notes')"
+      [attr.aria-describedby]="fieldDescribedBy('notes')"
     ></textarea>
     @if (fieldError('notes'); as message) {
-    <p class="text-danger mt-1.5 text-xs" role="alert">{{ message }}</p>
+    <p
+      [id]="fieldErrorId('notes')"
+      class="text-danger mt-1.5 text-xs"
+      role="alert"
+      aria-live="polite"
+    >
+      {{ message }}
+    </p>
     }
   </div>
 

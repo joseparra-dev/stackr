@@ -47,8 +47,14 @@
         [attr.aria-label]="'nav.aria.userMenu' | translate"
         (click)="toggleUserMenu()"
       >
-        @if (auth.user()?.avatarUrl; as avatarUrl) {
-        <img [src]="avatarUrl" alt="" class="size-8 rounded-full object-cover" />
+        @if (showAvatarImage()) {
+        <img
+          [src]="auth.user()!.avatarUrl!"
+          alt=""
+          referrerpolicy="no-referrer"
+          class="size-8 rounded-full object-cover"
+          (error)="onAvatarError()"
+        />
         } @else {
         <span
           class="bg-brand-600/15 text-brand-600 flex size-8 items-center justify-center rounded-full text-sm font-semibold"

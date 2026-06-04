@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
+  HostListener,
   inject,
   output,
   signal,
@@ -21,6 +23,8 @@ import { TranslatePipe } from '@shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopBar {
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   readonly menuToggle = output<void>();
 
   readonly theme = inject(ThemeService);
@@ -28,6 +32,7 @@ export class TopBar {
   readonly pageTitle = inject(PageTitleService).title;
 
   readonly userMenuOpen = signal(false);
+  readonly avatarBroken = signal(false);
 
   readonly themeToggleAria = computed(() =>
     this.theme.isDark() ? 'nav.aria.switchToLightMode' : 'nav.aria.switchToDarkMode',
@@ -45,6 +50,10 @@ export class TopBar {
     return user?.name ?? user?.email ?? '';
   });
 
+  readonly showAvatarImage = computed(
+    () => Boolean(this.auth.user()?.avatarUrl) && !this.avatarBroken(),
+  );
+
   toggleUserMenu(): void {
     this.userMenuOpen.update((open) => !open);
   }
@@ -53,8 +62,25 @@ export class TopBar {
     this.userMenuOpen.set(false);
   }
 
+  onAvatarError(): void {
+    this.avatarBroken.set(true);
+  }
+
   signOut(): void {
     this.closeUserMenu();
     void this.auth.signOut();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeUserMenu();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.userMenuOpen()) return;
+    const target = event.target;
+    if (target instanceof Node && this.host.nativeElement.contains(target)) return;
+    this.closeUserMenu();
   }
 }
