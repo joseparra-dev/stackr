@@ -16,7 +16,7 @@ describe('PageTitleService', () => {
         provideRouter([
           {
             path: '',
-            data: { title: 'Dashboard' },
+            data: { titleKey: 'nav.pageTitle.dashboard' },
             component: BlankPage,
           },
           {
@@ -28,7 +28,7 @@ describe('PageTitleService', () => {
     });
   });
 
-  it('reads the deepest route data.title after navigation', async () => {
+  it('reads the deepest route data.titleKey after navigation', async () => {
     const router = TestBed.inject(Router);
     const service = TestBed.inject(PageTitleService);
 

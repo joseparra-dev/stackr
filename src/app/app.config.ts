@@ -10,6 +10,7 @@ import { provideRouter } from '@angular/router';
 import { initSentry } from '@core/analytics/sentry';
 import { SentryErrorHandler } from '@core/analytics/sentry-error-handler';
 import { AuthStore } from '@core/auth/auth.store';
+import { I18nService } from '@core/i18n/i18n.service';
 import { PageTitleService } from '@core/page-title/page-title.service';
 import { provideSupabase } from '@core/supabase/supabase.client';
 
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: SentryErrorHandler },
     provideAppInitializer(() => {
       initSentry();
+      inject(I18nService);
       inject(AuthStore);
       inject(PageTitleService);
     }),
