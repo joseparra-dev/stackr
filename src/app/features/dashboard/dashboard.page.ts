@@ -7,6 +7,7 @@ import {
   untracked,
 } from '@angular/core';
 
+import { AllocationChart } from './allocation-chart';
 import { HoldingsStore } from '@features/holdings/holdings.store';
 import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
@@ -15,7 +16,7 @@ import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [AllocationChart],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,9 +27,14 @@ export class DashboardPage {
 
   readonly loading = this.transactionsStore.loading;
   readonly hasTransactions = this.transactionsStore.hasTransactions;
+  readonly holdings = this.holdingsStore.holdings;
   readonly totalValueUSD = this.holdingsStore.totalValueUSD;
   readonly totalPnLUSD = this.holdingsStore.totalPnLUSD;
   readonly totalPnLPercent = this.holdingsStore.totalPnLPercent;
+
+  readonly showAllocation = computed(
+    () => this.hasTransactions() && this.totalValueUSD() > 0,
+  );
 
   readonly topHolding = computed((): Holding | null => {
     const holdings = this.holdingsStore.holdings();

@@ -76,5 +76,9 @@
       }
     </article>
   </div>
+
+  @if (showAllocation()) {
+  <app-allocation-chart [holdings]="holdings()" [totalValueUsd]="totalValueUSD()" />
+  }
   }
 </div>

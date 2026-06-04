@@ -1,4 +1,4 @@
-import { computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -11,6 +11,13 @@ import type { TransactionWithAsset } from '@features/transactions/transactions.t
 import { bitcoinAsset, makeTransaction } from '@shared/utils/__fixtures__/transactions';
 
 import { DashboardPage } from './dashboard.page';
+
+@Component({
+  selector: 'app-allocation-chart',
+  template: '<div data-testid="allocation-chart-stub"></div>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class AllocationChartStub {}
 
 function makeStoreMocks() {
   const transactions = signal<TransactionWithAsset[]>([]);
@@ -57,7 +64,11 @@ describe('DashboardPage', () => {
         { provide: TransactionsStore, useValue: mocks.transactionsStore },
         { provide: PricesStore, useValue: mocks.pricesStore },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(DashboardPage, {
+        set: { imports: [AllocationChartStub] },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DashboardPage);
     fixture.detectChanges();
@@ -110,6 +121,30 @@ describe('DashboardPage', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.querySelector('.text-success')).toBeTruthy();
+  });
+
+  it('shows allocation chart when portfolio has value', async () => {
+    const tx = makeTransaction({ asset: bitcoinAsset, quantity: 1, pricePerUnitUsd: 50_000 });
+
+    mocks.transactions.set([tx]);
+    mocks.prices.set({ bitcoin: 60_000 });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeTruthy();
+  });
+
+  it('hides allocation chart when portfolio value is zero', async () => {
+    const tx = makeTransaction({ asset: bitcoinAsset, quantity: 1, pricePerUnitUsd: 50_000 });
+
+    mocks.transactions.set([tx]);
+    mocks.prices.set({});
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeNull();
   });
 
   it('applies danger tone for negative PnL', async () => {
