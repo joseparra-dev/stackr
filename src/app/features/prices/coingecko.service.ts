@@ -6,7 +6,14 @@ import { AppError } from '@core/errors/app-error';
 import { mapCoinGeckoError } from '@core/errors/map-coingecko-error';
 import { environment } from '@env/environment';
 
-import type { CoinGeckoSimplePriceResponse, PriceMap } from './coingecko.types';
+import type { HistoryRangeDays } from '@shared/utils/portfolio-history';
+import { marketChartPricesToDailyMap } from '@shared/utils/portfolio-history';
+
+import type {
+  CoinGeckoMarketChartResponse,
+  CoinGeckoSimplePriceResponse,
+  PriceMap,
+} from './coingecko.types';
 import { POLL_INTERVAL_MS } from './coingecko.types';
 import { withExponentialBackoff } from './fetch-with-backoff';
 import { getStaleIds, mergePrices, pricesForIds, type CacheEntry } from './price-cache';
@@ -20,6 +27,20 @@ export class CoinGeckoService {
   private boundVisibilityHandler: (() => void) | null = null;
   private onUpdate: ((prices: PriceMap) => void) | null = null;
   private onError: ((error: AppError) => void) | null = null;
+
+  async getDailyPrices(assetId: string, days: HistoryRangeDays): Promise<ReadonlyMap<string, number>> {
+    const url = `${environment.coingecko.baseUrl}/coins/${assetId}/market_chart?vs_currency=usd&days=${days}`;
+
+    const response = await withExponentialBackoff(async () => {
+      try {
+        return await firstValueFrom(this.http.get<CoinGeckoMarketChartResponse>(url));
+      } catch (cause) {
+        throw mapCoinGeckoError(cause);
+      }
+    });
+
+    return marketChartPricesToDailyMap(response.prices);
+  }
 
   async getPrices(assetIds: readonly string[]): Promise<PriceMap> {
     const unique = [...new Set(assetIds)];
