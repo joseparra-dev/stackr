@@ -1,12 +1,44 @@
-<section
-  class="mx-auto flex max-w-lg flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-  aria-labelledby="holdings-empty-heading"
->
-  <h2 id="holdings-empty-heading" class="text-lg font-semibold text-(--color-text)">
-    No holdings yet
-  </h2>
-  <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-    Per-asset quantity, average cost, and P&amp;L will appear here after you log your first
-    transactions.
-  </p>
-</section>
+<div class="mx-auto flex max-w-5xl flex-col gap-6">
+  <div>
+    <h1 class="text-xl font-semibold text-(--color-text)">Holdings</h1>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      Open positions with cost basis, live value, and P&amp;L per asset.
+    </p>
+  </div>
+
+  @if (loading()) {
+  <div
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6"
+    role="status"
+    aria-live="polite"
+    aria-busy="true"
+  >
+    <div class="flex flex-col gap-3">
+      @for (row of [1, 2, 3]; track row) {
+      <div class="h-10 animate-pulse rounded-lg bg-(--color-surface-2)"></div>
+      }
+    </div>
+  </div>
+  } @else if (!hasHoldings()) {
+  <section
+    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
+    aria-labelledby="holdings-empty-heading"
+  >
+    <h2 id="holdings-empty-heading" class="text-lg font-semibold text-(--color-text)">
+      No holdings yet
+    </h2>
+    <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
+      Per-asset quantity, average cost, and P&amp;L will appear here after you log your first
+      transactions.
+    </p>
+  </section>
+  } @else {
+  <app-holdings-table
+    [holdings]="sortedHoldings()"
+    [sortKey]="tableSortKey()"
+    [sortDirection]="tableSortDirection()"
+    (sortChange)="onSortChange($event)"
+    (rowSelect)="onHoldingSelect($event)"
+  />
+  }
+</div>
