@@ -1,11 +1,29 @@
-<section
-  class="mx-auto flex max-w-lg flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-16 text-center"
-  aria-labelledby="settings-empty-heading"
->
-  <h2 id="settings-empty-heading" class="text-lg font-semibold text-(--color-text)">
-    Settings coming soon
-  </h2>
-  <p class="mt-2 max-w-sm text-sm text-(--color-text-muted)">
-    Theme, language, and account preferences will be configurable here in a future release.
-  </p>
-</section>
+<div class="mx-auto flex max-w-lg flex-col gap-6">
+  <div>
+    <h1 class="text-xl font-semibold text-(--color-text)">{{ 'settings.heading' | translate }}</h1>
+    <p class="mt-1 text-sm text-(--color-text-muted)">{{ 'settings.subtitle' | translate }}</p>
+  </div>
+
+  <section
+    class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    aria-labelledby="settings-language-heading"
+  >
+    <h2 id="settings-language-heading" class="text-sm font-medium text-(--color-text)">
+      {{ 'settings.language.heading' | translate }}
+    </h2>
+    <p class="mt-1 text-sm text-(--color-text-muted)">
+      {{ 'settings.language.description' | translate }}
+    </p>
+    <label class="sr-only" for="settings-locale">{{ 'settings.language.heading' | translate }}</label>
+    <select
+      id="settings-locale"
+      class="stackr-select mt-4 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-text)"
+      [value]="locale()"
+      (change)="onLocaleChange($event)"
+    >
+      @for (code of locales; track code) {
+      <option [value]="code">{{ localeLabel(code) }}</option>
+      }
+    </select>
+  </section>
+</div>
