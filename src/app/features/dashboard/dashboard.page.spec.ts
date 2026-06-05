@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { DeferBlockBehavior, DeferBlockState, type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PortfolioHistoryStore } from '@features/dashboard/portfolio-history.store';
@@ -22,11 +22,11 @@ import { DashboardPage } from './dashboard.page';
 class AllocationChartStub {}
 
 @Component({
-  selector: 'app-portfolio-value-chart',
+  selector: 'app-dashboard-portfolio-history',
   template: '<div data-testid="portfolio-value-chart-stub"></div>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class PortfolioValueChartStub {}
+class DashboardPortfolioHistoryStub {}
 
 function makeStoreMocks() {
   const transactions = signal<TransactionWithAsset[]>([]);
@@ -80,6 +80,7 @@ describe('DashboardPage', () => {
     historyStore = historyStoreState;
 
     await TestBed.configureTestingModule({
+      deferBlockBehavior: DeferBlockBehavior.Manual,
       imports: [DashboardPage],
       providers: [
         HoldingsStore,
@@ -94,7 +95,7 @@ describe('DashboardPage', () => {
             AllocationChartStub,
             EmptyState,
             ErrorState,
-            PortfolioValueChartStub,
+            DashboardPortfolioHistoryStub,
             Skeleton,
             TranslatePipe,
           ],
@@ -174,6 +175,10 @@ describe('DashboardPage', () => {
 
     fixture.detectChanges();
     await fixture.whenStable();
+
+    const deferBlocks = await fixture.getDeferBlocks();
+    await deferBlocks[0]?.render(DeferBlockState.Complete);
+    fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('[data-testid="portfolio-value-chart-stub"]')).toBeTruthy();
   });

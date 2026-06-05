@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 
 import { AllocationChart } from './allocation-chart';
+import { DashboardPortfolioHistory } from './dashboard-portfolio-history';
 import { PortfolioHistoryStore } from './portfolio-history.store';
-import { PortfolioValueChart } from './portfolio-value-chart';
 import { HoldingsStore } from '@features/holdings/holdings.store';
 import { PricesStore } from '@features/prices/prices.store';
 import { TransactionsStore } from '@features/transactions/transactions.store';
@@ -19,7 +19,7 @@ import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AllocationChart, EmptyState, ErrorState, PortfolioValueChart, Skeleton, TranslatePipe],
+  imports: [AllocationChart, DashboardPortfolioHistory, EmptyState, ErrorState, Skeleton, TranslatePipe],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
