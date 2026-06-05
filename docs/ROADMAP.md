@@ -64,8 +64,11 @@ Acceptance: Lighthouse Performance ≥ 90, A11y = 100, Best Practices ≥ 95. Al
 - [ ] HU-23 — Settings page (theme, language, account)
 - [ ] HU-24 — Sentry integration + Vercel deploy
 - [ ] HU-25 — README polish + production deploy
+- [ ] HU-26 — Zoneless change detection migration
 
-Acceptance: Live at `stackr.joseparra.dev` (or domain of choice). README has architecture, screenshots, decisions linked. LinkedIn post drafted.
+Acceptance (HU-25): Live at `stackr.joseparra.dev` (or domain of choice). README has architecture, screenshots, decisions linked. LinkedIn post drafted.
+
+Acceptance (HU-26): `provideZonelessChangeDetection()`, no `zone.js` polyfill, tests green (`pnpm test`, `pnpm build`). No `NavigatorLockAcquireTimeoutError` in dev console.
 
 ---
 
@@ -86,4 +89,3 @@ If you have new feature ideas during the build, add them here. Do not implement 
 - CSV import from exchanges
 - Reorganize `features/transactions/` into subfolders (`transaction-list/`, `utils/`) before holdings/filters add more files
 - AI-powered investment insights
-- Zoneless change detection migration
