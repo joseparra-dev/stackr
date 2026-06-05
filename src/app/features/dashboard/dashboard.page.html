@@ -79,7 +79,8 @@
   <app-allocation-chart [holdings]="holdings()" [totalValueUsd]="totalValueUSD()" />
   }
 
-  <app-portfolio-value-chart
+  @defer (on viewport) {
+  <app-dashboard-portfolio-history
     [points]="historyPoints()"
     [loading]="historyLoading()"
     [error]="historyError()"
@@ -88,5 +89,8 @@
     (rangeChange)="onHistoryRangeChange($event)"
     (retry)="retryHistory()"
   />
+  } @placeholder {
+  <app-skeleton variant="chart" />
+  }
   }
 </div>
