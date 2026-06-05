@@ -36,7 +36,14 @@ function main() {
     process.exit(1);
   }
 
-  const env = { ...process.env, SENTRY_ORG: org, SENTRY_PROJECT: project };
+  const env = {
+    ...process.env,
+    SENTRY_ORG: org,
+    SENTRY_PROJECT: project,
+    ...(process.env['SENTRY_URL'] ? { SENTRY_URL: process.env['SENTRY_URL'] } : {}),
+  };
+
+  console.log(`[sentry] Uploading for org=${org} project=${project}`);
 
   console.log('[sentry] Injecting debug IDs…');
   execSync(`pnpm exec sentry-cli sourcemaps inject "${DIST_DIR}"`, {
