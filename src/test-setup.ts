@@ -1,5 +1,4 @@
 import '@angular/compiler';
-import '@analogjs/vitest-angular/setup-zone';
 
 import { TestBed } from '@angular/core/testing';
 import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
@@ -14,9 +13,8 @@ import { provideI18nTestDeps } from '@core/i18n/i18n-testing';
 // idempotent `initTestEnvironment` via `Symbol.for('testbed-setup')`,
 // which makes the setup safe when Vitest workers reuse the same context.
 //
-// `zoneless: false` matches the production app, which relies on zone.js
-// (loaded above via `setup-zone`).
-setupTestBed({ zoneless: false });
+// Matches production: `provideZonelessChangeDetection()` in app.config.ts.
+setupTestBed({ zoneless: true });
 
 beforeEach(() => {
   TestBed.configureTestingModule({

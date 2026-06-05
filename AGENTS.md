@@ -96,7 +96,7 @@ Vercel production build uses `pnpm build:prod:sentry` (see `vercel.json`). Set i
 
 1. **`pnpm dlx ng` does NOT work.** Use `pnpm exec ng` or `pnpm ng`. The `ng` binary belongs to `@angular/cli`, not a standalone package.
 2. **Vitest needs `@angular/compiler` imported FIRST** in `src/test-setup.ts` before any other Angular import.
-3. **`zone.js` must be installed explicitly** in some Angular 21 setups. If tests fail with "Cannot find package 'zone.js'", run `pnpm add zone.js`.
+3. **Stackr runs zoneless** (`provideZonelessChangeDetection()`; no `zone.js` polyfill). Vitest uses `setupTestBed({ zoneless: true })`. Prefer `await fixture.whenStable()` over `detectChanges()` in component tests.
 4. **`src/env.d.ts` is auto-generated** by `@ngx-env/builder`. It's ignored from ESLint. Do not modify by hand.
 5. **`@analogjs/vite-plugin-angular` (NOT `@analogjs/vitest-angular/plugin`)** is the correct import in `vitest.config.ts`.
 6. **`@angular/platform-browser-dynamic/testing` no longer exists** in Angular 21. Use `@angular/platform-browser/testing`.
