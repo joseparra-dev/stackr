@@ -1,8 +1,6 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { ThemeService } from '@core/theme/theme.service';
 import { EmptyState, TranslatePipe } from '@shared/ui';
 import type { Holding } from '@shared/utils/holdings.types';
 
@@ -30,13 +28,8 @@ describe('AllocationChart', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AllocationChart],
-      providers: [ThemeService],
-    })
-      .overrideComponent(AllocationChart, {
-        set: { imports: [EmptyState, TranslatePipe], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
-      })
-      .compileComponents();
+      imports: [AllocationChart, EmptyState, TranslatePipe],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AllocationChart);
   });
@@ -48,11 +41,13 @@ describe('AllocationChart', () => {
     fixture.componentRef.setInput('totalValueUsd', 0);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Allocation appears once assets have a live price');
-    expect(fixture.nativeElement.querySelector('apx-chart')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain(
+      'Allocation appears once assets have a live price',
+    );
+    expect(fixture.nativeElement.querySelector('[role="presentation"]')).toBeNull();
   });
 
-  it('should render chart and accessible summary when slices exist', () => {
+  it('should render horizontal bars and accessible summary when slices exist', () => {
     fixture.componentRef.setInput('holdings', [
       makeHolding({ assetId: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', currentValueUsd: 600 }),
       makeHolding({ assetId: 'ethereum', symbol: 'ETH', name: 'Ethereum', currentValueUsd: 400 }),
@@ -60,10 +55,11 @@ describe('AllocationChart', () => {
     fixture.componentRef.setInput('totalValueUsd', 1000);
     fixture.detectChanges();
 
-    const img = fixture.nativeElement.querySelector('[role="img"]');
-    expect(img?.getAttribute('aria-label')).toContain('BTC 60.0%');
-    expect(img?.getAttribute('aria-label')).toContain('ETH 40.0%');
-    expect(fixture.nativeElement.querySelector('apx-chart')).toBeTruthy();
+    const region = fixture.nativeElement.querySelector('[role="img"]');
+    expect(region?.getAttribute('aria-label')).toContain('BTC 60.0%');
+    expect(region?.getAttribute('aria-label')).toContain('ETH 40.0%');
+    expect(fixture.nativeElement.querySelectorAll('[role="presentation"]').length).toBe(2);
+    expect(fixture.nativeElement.textContent).toContain('Total');
 
     const srOnly = fixture.nativeElement.querySelector('.sr-only');
     expect(srOnly?.textContent).toContain('Bitcoin (BTC)');

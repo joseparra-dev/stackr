@@ -175,7 +175,8 @@
       "emptyMessage": "La asignación aparece cuando los activos tienen precio en vivo.",
       "ariaSummary": "Asignación del portafolio por activo: {parts}",
       "ariaSlice": "{name} ({symbol}): {value}, {percent} del portafolio",
-      "chartTotal": "Total"
+      "chartTotal": "Total",
+      "listAria": "Desglose de asignación por activo"
     },
     "history": {
       "heading": "Valor del portafolio",
