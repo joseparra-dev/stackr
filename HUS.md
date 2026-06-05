@@ -491,3 +491,65 @@ Supabase Auth uses `navigator.locks` by default when `zone.js` patches native `P
 
 - Not part of HU-24 (Sentry/Vercel); that HU is already in production.
 - Branch: `52-chorecore-zoneless-change-detection-migration`.
+
+---
+
+## HU-27 — perf(core): Lighthouse quick wins — SEO, fonts, deferred chart
+
+**Size:** M | **Sprint:** Post-MVP / Performance polish
+
+### User Story
+
+As a user visiting Stackr on mobile, I want the app to load faster and pass core Lighthouse audits, so that first paint feels snappy and SEO basics are correct.
+
+### Acceptance Criteria
+
+- [x] `public/robots.txt` exists and is valid
+- [x] Oversized `favicon.ico` removed; SVG favicon remains
+- [x] No render-blocking Google Fonts in `index.html`
+- [x] Self-hosted fonts via `@fontsource` in `styles.css`
+- [x] `@defer (on viewport)` on portfolio history chart with skeleton placeholder
+- [x] `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build` pass
+
+### Notes
+
+- Branch: `54-perfcore-lighthouse-quick-wins-seo-fonts-deferred-chart`.
+- Findings doc: Lighthouse validated on authenticated dashboard (Perf 83 incognito post-merge).
+
+---
+
+## HU-28 — perf(core): Lighthouse wave 2 — investigate first, clean fixes only
+
+**Size:** L | **Sprint:** Post-MVP / Performance polish
+
+### User Story
+
+As a user on the authenticated dashboard, I want faster loads and stable layout without hacky code, so that Lighthouse mobile reaches 90+ using maintainable fixes.
+
+### Context
+
+HU-27 post-merge dashboard baseline (incognito): Perf 83, LCP 3.9s, CLS 0.114, unused JS ~212 KiB. Investigation findings in `docs/perf-wave-2-findings.md`.
+
+### Acceptance Criteria
+
+**Investigation**
+
+- [x] Apex duplicate chunks root-caused (`ng-apexcharts` FESM + multiple dynamic imports)
+- [x] Findings documented before implementation
+
+**Implementation**
+
+- [x] `ChartCoreComponent` + `apexcharts/line` (tree-shakeable chart path)
+- [x] `scheduleSentryInit()` via dynamic import on `requestIdleCallback`
+- [x] `es.json` lazy-loaded; `en.json` eager as fallback tree
+- [x] `.map` files always stripped from deploy output after `build:prod:sentry`
+- [x] `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build` pass
+
+**Performance (dashboard, incognito)**
+
+- [ ] Performance ≥ 88; LCP ≤ 3.0s; CLS ≤ 0.1 (validate post-deploy)
+
+### Notes
+
+- Branch: `56-perfcore-lighthouse-wave-2-investigate-first-clean-fixes-only`.
+- No bundler aliases or Apex fork unless investigation proves necessary.

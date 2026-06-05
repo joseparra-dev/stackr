@@ -70,6 +70,13 @@ Acceptance (HU-25): Live at `stackr.joseparra.dev` (or domain of choice). README
 
 Acceptance (HU-26): `provideZonelessChangeDetection()`, no `zone.js` polyfill, tests green (`pnpm test`, `pnpm build`). No `NavigatorLockAcquireTimeoutError` in dev console.
 
+### Post-launch — Performance (HU-27 / HU-28)
+
+- [ ] HU-27 — Lighthouse quick wins (robots.txt, self-hosted fonts, deferred chart)
+- [ ] HU-28 — Lighthouse wave 2 (investigate + ChartCore, lazy Sentry, lazy i18n, strip deploy maps)
+
+Acceptance (HU-28): Dashboard Lighthouse mobile ≥ 88 incognito; findings in `docs/perf-wave-2-findings.md`.
+
 ---
 
 ## Future considerations (NOT in v1)

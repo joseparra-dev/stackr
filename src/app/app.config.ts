@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { initSentry } from '@core/analytics/sentry';
+import { scheduleSentryInit } from '@core/analytics/schedule-sentry-init';
 import { SentryErrorHandler } from '@core/analytics/sentry-error-handler';
 import { AuthStore } from '@core/auth/auth.store';
 import { I18nService } from '@core/i18n/i18n.service';
@@ -30,10 +30,10 @@ export const appConfig: ApplicationConfig = {
     // /login on a page refresh.
     { provide: ErrorHandler, useClass: SentryErrorHandler },
     provideAppInitializer(() => {
-      initSentry();
-      inject(I18nService);
+      scheduleSentryInit();
       inject(AuthStore);
       inject(PageTitleService);
+      return inject(I18nService).bootstrap();
     }),
     provideHttpClient(withFetch()),
   ],
