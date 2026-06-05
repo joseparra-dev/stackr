@@ -68,7 +68,7 @@ describe('TopBar', () => {
 
   it('calls signOut when the menu sign-out action is clicked', () => {
     const userMenuButton = fixture.nativeElement.querySelector(
-      'button[aria-label="User menu"]',
+      'button[aria-label="Account menu, Jose Parra"]',
     ) as HTMLButtonElement;
     userMenuButton.click();
     fixture.detectChanges();

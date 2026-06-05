@@ -21,7 +21,9 @@
     class="grid grid-cols-1 gap-4 md:grid-cols-3"
     [attr.aria-label]="'dashboard.summary.ariaLabel' | translate"
   >
-    <article class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5">
+    <article
+      class="min-h-[9.5rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    >
       <h2 class="text-sm font-medium text-(--color-text-muted)">
         {{ 'dashboard.summary.totalValue' | translate }}
       </h2>
@@ -30,7 +32,9 @@
       </p>
     </article>
 
-    <article class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5">
+    <article
+      class="min-h-[9.5rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    >
       <h2 class="text-sm font-medium text-(--color-text-muted)">
         {{ 'dashboard.summary.totalPnl' | translate }}
       </h2>
@@ -40,7 +44,9 @@
       </p>
     </article>
 
-    <article class="rounded-xl border border-(--color-border) bg-(--color-surface) p-5">
+    <article
+      class="min-h-[9.5rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+    >
       <h2 class="text-sm font-medium text-(--color-text-muted)">
         {{ 'dashboard.summary.topHolding' | translate }}
       </h2>
@@ -49,9 +55,10 @@
         @if (top.thumbUrl) {
         <img
           [src]="top.thumbUrl"
-          [alt]=""
+          [attr.alt]="'shared.asset.logoAlt' | translate: { symbol: top.symbol }"
           width="32"
           height="32"
+          decoding="async"
           class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
         />
         }
@@ -75,9 +82,7 @@
     </article>
   </div>
 
-  @if (showAllocation()) {
   <app-allocation-chart [holdings]="holdings()" [totalValueUsd]="totalValueUSD()" />
-  }
 
   @defer (on viewport) {
   <app-dashboard-portfolio-history
@@ -90,7 +95,7 @@
     (retry)="retryHistory()"
   />
   } @placeholder {
-  <app-skeleton variant="chart" />
+  <app-skeleton variant="history-chart" />
   }
   }
 </div>

@@ -35,9 +35,11 @@
             @if (holding.thumbUrl) {
             <img
               [src]="holding.thumbUrl"
-              [alt]=""
+              [attr.alt]="'shared.asset.logoAlt' | translate: { symbol: holding.symbol }"
               width="32"
               height="32"
+              loading="lazy"
+              decoding="async"
               class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
             />
             }
@@ -81,9 +83,11 @@
       @if (holding.thumbUrl) {
       <img
         [src]="holding.thumbUrl"
-        [alt]=""
+        [attr.alt]="'shared.asset.logoAlt' | translate: { symbol: holding.symbol }"
         width="32"
         height="32"
+        loading="lazy"
+        decoding="async"
         class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
       />
       }

@@ -28,6 +28,6 @@ describe('Skeleton', () => {
     fixture.componentRef.setInput('variant', 'chart');
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.h-48')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.h-\\[280px\\]')).toBeTruthy();
   });
 });

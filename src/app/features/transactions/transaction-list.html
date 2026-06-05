@@ -28,9 +28,11 @@
             @if (tx.asset.thumbUrl) {
             <img
               [src]="tx.asset.thumbUrl"
-              [alt]=""
+              [attr.alt]="'shared.asset.logoAlt' | translate: { symbol: tx.asset.symbol }"
               width="24"
               height="24"
+              loading="lazy"
+              decoding="async"
               class="size-6 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
             />
             }
@@ -76,9 +78,11 @@
         @if (tx.asset.thumbUrl) {
         <img
           [src]="tx.asset.thumbUrl"
-          [alt]=""
+          [attr.alt]="'shared.asset.logoAlt' | translate: { symbol: tx.asset.symbol }"
           width="32"
           height="32"
+          loading="lazy"
+          decoding="async"
           class="size-8 shrink-0 rounded-full bg-(--color-surface-2) object-cover"
         />
         }

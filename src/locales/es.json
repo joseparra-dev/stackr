@@ -28,6 +28,7 @@
       "switchToLightMode": "Cambiar a modo claro",
       "switchToDarkMode": "Cambiar a modo oscuro",
       "userMenu": "Menú de usuario",
+      "userMenuNamed": "Menú de cuenta de {name}",
       "skipToContent": "Saltar al contenido principal",
       "navigatedTo": "Navegación a {page}"
     },
@@ -231,6 +232,9 @@
     },
     "errorState": {
       "tryAgain": "Reintentar"
+    },
+    "asset": {
+      "logoAlt": "Logo de {symbol}"
     },
     "assetCombobox": {
       "searchAria": "Buscar activo",
