@@ -6,8 +6,10 @@ import {
   input,
   output,
 } from '@angular/core';
+import 'apexcharts/line';
+
 import {
-  ChartComponent,
+  ChartCoreComponent,
   type ApexChart,
   type ApexFill,
   type ApexGrid,
@@ -39,7 +41,7 @@ const AREA_COLOR = '#3b82f6';
 
 @Component({
   selector: 'app-portfolio-value-chart',
-  imports: [ChartComponent, EmptyState, ErrorState, Skeleton, TranslatePipe],
+  imports: [ChartCoreComponent, EmptyState, ErrorState, Skeleton, TranslatePipe],
   templateUrl: './portfolio-value-chart.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

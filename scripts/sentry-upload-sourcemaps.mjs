@@ -19,8 +19,14 @@ function removeMapFiles(dir) {
 }
 
 function main() {
+  if (!existsSync(DIST_DIR)) {
+    console.error(`[sentry] Build output not found at ${DIST_DIR}. Run pnpm build:prod first.`);
+    process.exit(1);
+  }
+
   if (!process.env['SENTRY_AUTH_TOKEN']) {
     console.log('[sentry] Skipping source map upload (SENTRY_AUTH_TOKEN not set).');
+    stripDeploySourceMaps();
     return;
   }
 
@@ -28,11 +34,6 @@ function main() {
   const project = process.env['SENTRY_PROJECT'];
   if (!org || !project) {
     console.error('[sentry] SENTRY_ORG and SENTRY_PROJECT are required for upload.');
-    process.exit(1);
-  }
-
-  if (!existsSync(DIST_DIR)) {
-    console.error(`[sentry] Build output not found at ${DIST_DIR}. Run pnpm build:prod first.`);
     process.exit(1);
   }
 
@@ -57,10 +58,13 @@ function main() {
     env,
   });
 
+  stripDeploySourceMaps();
+  console.log('[sentry] Source maps uploaded successfully.');
+}
+
+function stripDeploySourceMaps() {
   console.log('[sentry] Removing .map files from deploy output…');
   removeMapFiles(DIST_DIR);
-
-  console.log('[sentry] Source maps uploaded successfully.');
 }
 
 main();

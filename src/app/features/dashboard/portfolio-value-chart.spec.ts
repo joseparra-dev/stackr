@@ -49,7 +49,7 @@ describe('PortfolioValueChart', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Not enough history yet');
-    expect(fixture.nativeElement.querySelector('apx-chart')).toBeNull();
+    expect(fixture.nativeElement.querySelector('apx-chart-core')).toBeNull();
   });
 
   it('emits rangeChange when a tab is selected', () => {

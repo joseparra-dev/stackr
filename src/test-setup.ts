@@ -5,7 +5,6 @@ import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
 import { beforeEach } from 'vitest';
 
 import { provideI18nTestDeps } from '@core/i18n/i18n-testing';
-
 // `setupTestBed` is the official @analogjs/vitest-angular helper. It
 // registers Angular's `ɵgetCleanupHook` as global `beforeEach`/`afterEach`
 // hooks — without them `destroyAfterEach: true` is a no-op and TestBed
