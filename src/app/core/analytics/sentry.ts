@@ -7,9 +7,12 @@ export function initSentry(): void {
   const dsn = environment.sentryDsn;
   if (!dsn) return;
 
+  const release = import.meta.env['NG_APP_SENTRY_RELEASE'];
+
   Sentry.init({
     dsn,
     environment: import.meta.env['NG_APP_ENV'] ?? 'development',
+    ...(typeof release === 'string' && release.length > 0 ? { release } : {}),
   });
 }
 

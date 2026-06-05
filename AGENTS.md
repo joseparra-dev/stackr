@@ -87,6 +87,11 @@ Required (see `.env.example`):
 - `NG_APP_SENTRY_DSN` (optional)
 - `NG_APP_ENV`
 
+Vercel production build uses `pnpm build:prod:sentry` (see `vercel.json`). Set in the project dashboard (never commit secrets):
+
+- `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` — source map upload at build time
+- `SENTRY_URL=https://us.sentry.io` — if the DSN uses `ingest.us.sentry.io`
+
 ## Common gotchas (battle-tested)
 
 1. **`pnpm dlx ng` does NOT work.** Use `pnpm exec ng` or `pnpm ng`. The `ng` binary belongs to `@angular/cli`, not a standalone package.
