@@ -4,12 +4,12 @@ Crypto portfolio tracker for investors who log trades manually. Sign in, record 
 
 **[→ stackr.joseparra.dev](https://stackr.joseparra.dev)** · Angular 21 · Supabase · Tailwind v4
 
-![Lighthouse Performance](https://img.shields.io/badge/performance-86-orange?logo=googlechrome&logoColor=white)
+![Lighthouse Performance](https://img.shields.io/badge/performance-98-brightgreen?logo=googlechrome&logoColor=white)
 ![Lighthouse Accessibility](https://img.shields.io/badge/accessibility-100-brightgreen?logo=googlechrome&logoColor=white)
 ![Lighthouse Best Practices](https://img.shields.io/badge/best%20practices-100-brightgreen?logo=googlechrome&logoColor=white)
 ![Lighthouse SEO](https://img.shields.io/badge/seo-100-brightgreen?logo=googlechrome&logoColor=white)
 
-> Measured on the authenticated dashboard, Slow 4G throttling, incognito. CLS 0.002 · TBT 30 ms.
+> Desktop scores on the authenticated dashboard. Mobile Slow 4G (incognito): 86 performance · CLS 0.002 · TBT 30 ms.
 
 <table>
   <tr>
