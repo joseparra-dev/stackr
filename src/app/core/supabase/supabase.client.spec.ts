@@ -65,6 +65,7 @@ describe('SUPABASE_CLIENT provider', () => {
           detectSessionInUrl: true,
           flowType: 'pkce',
           storageKey: 'stackr.auth.token',
+          lock: expect.any(Function),
         }),
       }),
     );
