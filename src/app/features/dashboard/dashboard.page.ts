@@ -37,10 +37,6 @@ export class DashboardPage {
   readonly totalPnLUSD = this.holdingsStore.totalPnLUSD;
   readonly totalPnLPercent = this.holdingsStore.totalPnLPercent;
 
-  readonly showAllocation = computed(
-    () => this.hasTransactions() && this.totalValueUSD() > 0,
-  );
-
   readonly historyPoints = this.portfolioHistoryStore.points;
   readonly historyLoading = this.portfolioHistoryStore.loading;
   readonly historyError = this.portfolioHistoryStore.error;

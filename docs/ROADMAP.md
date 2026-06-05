@@ -77,6 +77,10 @@ Acceptance (HU-26): `provideZonelessChangeDetection()`, no `zone.js` polyfill, t
 
 Acceptance (HU-28): Dashboard Lighthouse mobile ≥ 88 incognito; findings in `docs/perf-wave-2-findings.md`.
 
+- [ ] HU-29 — Lighthouse wave 3 (CLS layout reservation, image alt, budget alignment)
+
+Acceptance (HU-29): Dashboard CLS ≤ 0.1 incognito; findings in `docs/perf-wave-3-findings.md`.
+
 ---
 
 ## Future considerations (NOT in v1)

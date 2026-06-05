@@ -5,9 +5,22 @@
   aria-busy="true"
 >
   @for (i of [0, 1, 2]; track i) {
-  <div class="animate-pulse rounded-xl border border-(--color-border) bg-(--color-surface) p-5">
+  <div
+    class="animate-pulse min-h-[9.5rem] rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+  >
     <div class="h-4 w-24 rounded bg-(--color-surface-2)"></div>
+    @if (i === 2) {
+    <div class="mt-3 flex items-center gap-3">
+      <div class="size-8 shrink-0 rounded-full bg-(--color-surface-2)"></div>
+      <div class="min-w-0 flex-1 space-y-2">
+        <div class="h-4 w-16 rounded bg-(--color-surface-2)"></div>
+        <div class="h-3 w-24 rounded bg-(--color-surface-2)"></div>
+      </div>
+    </div>
+    <div class="mt-2 h-8 w-20 rounded bg-(--color-surface-2)"></div>
+    } @else {
     <div class="mt-3 h-8 w-32 rounded bg-(--color-surface-2)"></div>
+    }
   </div>
   }
 </div>
@@ -36,6 +49,18 @@
   aria-busy="true"
 >
   <div class="h-4 w-32 rounded bg-(--color-surface-2)"></div>
-  <div class="mt-6 h-48 rounded bg-(--color-surface-2)"></div>
+  <div class="mt-4 h-[280px] rounded bg-(--color-surface-2)"></div>
 </div>
+} @else if (variant() === 'history-chart') {
+<section
+  class="animate-pulse rounded-xl border border-(--color-border) bg-(--color-surface) p-5"
+  [attr.aria-label]="'shared.skeleton.loadingChart' | translate"
+  aria-busy="true"
+>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="h-4 w-32 rounded bg-(--color-surface-2)"></div>
+    <div class="h-9 w-48 rounded-lg bg-(--color-surface-2)"></div>
+  </div>
+  <div class="mt-4 h-[280px] rounded bg-(--color-surface-2)"></div>
+</section>
 }

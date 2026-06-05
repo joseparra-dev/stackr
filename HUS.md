@@ -553,3 +553,41 @@ HU-27 post-merge dashboard baseline (incognito): Perf 83, LCP 3.9s, CLS 0.114, u
 
 - Branch: `56-perfcore-lighthouse-wave-2-investigate-first-clean-fixes-only`.
 - No bundler aliases or Apex fork unless investigation proves necessary.
+
+---
+
+## HU-29 — perf(core): Lighthouse wave 3 — CLS + image alt quick win
+
+**Size:** S | **Sprint:** Post-MVP / Performance polish
+
+### User Story
+
+As a user on the dashboard, I want the layout to stay stable while data loads and images to be accessible, so that Lighthouse CLS drops below 0.1 and image audits pass.
+
+### Context
+
+HU-28 post-merge baseline: CLS 0.114 unchanged; build warns initial bundle ~659 kB vs 500 kB budget. Findings in `docs/perf-wave-3-findings.md`.
+
+### Acceptance Criteria
+
+**Investigation**
+
+- [x] CLS sources documented (skeleton mismatch, allocation mount, defer placeholder height)
+- [x] Image alt audit sources documented
+
+**Implementation**
+
+- [x] Summary skeleton + cards reserve height for “Top holding” layout
+- [x] Allocation chart always mounted when user has transactions (internal empty state)
+- [x] `history-chart` skeleton matches portfolio history section (`280px` chart area)
+- [x] Coin thumbs get descriptive `alt` (`shared.asset.logoAlt`); decorative only for brand/login icons; avatar alt empty with named button label
+- [x] `angular.json` initial budget warning aligned to ~660 kB documented floor
+- [x] `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build` pass
+
+**Performance (dashboard, incognito)**
+
+- [ ] CLS ≤ 0.1; Accessibility image audits clean (validate post-deploy)
+
+### Notes
+
+- Branch: `58-perfcore-lighthouse-wave-3-cls-image-alt-quick-win`.

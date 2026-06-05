@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 import { TranslatePipe } from '../pipes/translate.pipe';
 
-export type SkeletonVariant = 'summary-cards' | 'table' | 'chart';
+export type SkeletonVariant = 'summary-cards' | 'table' | 'chart' | 'history-chart';
 
 @Component({
   selector: 'app-skeleton',

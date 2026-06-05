@@ -195,7 +195,7 @@ describe('DashboardPage', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeTruthy();
   });
 
-  it('hides allocation chart when portfolio value is zero', async () => {
+  it('shows allocation chart with empty state when portfolio value is zero', async () => {
     const tx = makeTransaction({ asset: bitcoinAsset, quantity: 1, pricePerUnitUsd: 50_000 });
 
     mocks.transactions.set([tx]);
@@ -204,7 +204,7 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeTruthy();
   });
 
   it('applies danger tone for negative PnL', async () => {
