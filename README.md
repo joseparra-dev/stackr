@@ -38,16 +38,16 @@ These are the decisions that shaped the codebase — not feature descriptions.
 
 ## Stack
 
-| Layer | Choice | Reason |
-|-------|--------|--------|
-| Framework | Angular 21 — standalone, signals, zoneless | signals-first architecture; no NgRx at this scale |
-| Backend | Supabase — PostgreSQL + Auth + RLS | typed queries; ownership enforced at DB level, not in JS |
-| Styling | Tailwind v4 | CSS variable tokens; zero runtime style injection |
-| Charts | ng-apexcharts (tree-shakeable) | only the line chart module ships to the initial bundle |
-| i18n | Custom signal-based | English eager, Spanish lazy chunk; no Angular i18n build steps |
-| Testing | Vitest + @analogjs | faster than Jest; no `zone.js` test setup |
-| Errors | Sentry (lazy init) | loaded on idle callback; source maps stripped from deploy output |
-| Deploy | Vercel + GitHub Actions | preview deploy per PR; production on merge to `main` |
+| Layer     | Choice                                     | Reason                                                           |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------- |
+| Framework | Angular 21 — standalone, signals, zoneless | signals-first architecture; no NgRx at this scale                |
+| Backend   | Supabase — PostgreSQL + Auth + RLS         | typed queries; ownership enforced at DB level, not in JS         |
+| Styling   | Tailwind v4                                | CSS variable tokens; zero runtime style injection                |
+| Charts    | ng-apexcharts (tree-shakeable)             | only the line chart module ships to the initial bundle           |
+| i18n      | Custom signal-based                        | English eager, Spanish lazy chunk; no Angular i18n build steps   |
+| Testing   | Vitest + @analogjs                         | faster than Jest; no `zone.js` test setup                        |
+| Errors    | Sentry (lazy init)                         | loaded on idle callback; source maps stripped from deploy output |
+| Deploy    | Vercel + GitHub Actions                    | preview deploy per PR; production on merge to `main`             |
 
 ---
 
@@ -73,16 +73,16 @@ Folder-by-feature: each feature owns its page, store, service, types, and specs.
 
 ## Architecture decisions
 
-| Decision | Record |
-|----------|--------|
-| Signals over NgRx | [ADR 0002](docs/adr/0002-why-signals-not-ngrx.md) |
-| Weighted average P&L over FIFO | [ADR 0006](docs/adr/0006-pnl-calculation-strategy.md) |
-| Supabase over Firebase | [ADR 0001](docs/adr/0001-why-supabase.md) |
-| Folder-by-feature | [ADR 0007](docs/adr/0007-why-folder-by-feature.md) |
-| Manual entry over Web3 | [ADR 0003](docs/adr/0003-why-manual-entry-not-web3.md) |
-| Tailwind v4 | [ADR 0004](docs/adr/0004-why-tailwind-v4.md) |
-| CoinGecko over paid feeds | [ADR 0005](docs/adr/0005-why-coingecko.md) |
-| Component naming convention | [ADR 0008](docs/adr/0008-component-naming-convention.md) |
+| Decision                       | Record                                                   |
+| ------------------------------ | -------------------------------------------------------- |
+| Signals over NgRx              | [ADR 0002](docs/adr/0002-why-signals-not-ngrx.md)        |
+| Weighted average P&L over FIFO | [ADR 0006](docs/adr/0006-pnl-calculation-strategy.md)    |
+| Supabase over Firebase         | [ADR 0001](docs/adr/0001-why-supabase.md)                |
+| Folder-by-feature              | [ADR 0007](docs/adr/0007-why-folder-by-feature.md)       |
+| Manual entry over Web3         | [ADR 0003](docs/adr/0003-why-manual-entry-not-web3.md)   |
+| Tailwind v4                    | [ADR 0004](docs/adr/0004-why-tailwind-v4.md)             |
+| CoinGecko over paid feeds      | [ADR 0005](docs/adr/0005-why-coingecko.md)               |
+| Component naming convention    | [ADR 0008](docs/adr/0008-component-naming-convention.md) |
 
 ---
 
@@ -103,7 +103,7 @@ Folder-by-feature: each feature owns its page, store, service, types, and specs.
 
 ![Holdings](docs/screenshots/holdings.png)
 
-*Holdings — cost basis, live value, and P&L per asset*
+_Holdings — cost basis, live value, and P&L per asset_
 
 ---
 
@@ -137,8 +137,8 @@ pnpm build       # production bundle
 
 ## Author
 
-**Jose Parra** — Senior Frontend Engineer  
-[LinkedIn](https://linkedin.com/in/joseparra-dev) · [joseparra.dev](https://joseparra.dev)
+**Jose Parra** — Frontend Software Engineer  
+[LinkedIn](https://linkedin.com/in/ing-joseparra) · [joseparra.dev](https://joseparra.dev)
 
 ---
 
