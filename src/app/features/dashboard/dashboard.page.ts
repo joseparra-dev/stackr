@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   untracked,
@@ -19,7 +20,14 @@ import { formatPercent, formatSignedUsd, formatUsd } from '@shared/utils/format-
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AllocationChart, DashboardPortfolioHistory, EmptyState, ErrorState, Skeleton, TranslatePipe],
+  imports: [
+    AllocationChart,
+    DashboardPortfolioHistory,
+    EmptyState,
+    ErrorState,
+    Skeleton,
+    TranslatePipe,
+  ],
   templateUrl: './dashboard.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -72,6 +80,8 @@ export class DashboardPage {
 
   constructor() {
     void this.transactionsStore.load();
+
+    inject(DestroyRef).onDestroy(() => this.pricesStore.stopPolling());
 
     effect(() => {
       const assetIds = this.transactionsStore.transactions().map((tx) => tx.assetId);

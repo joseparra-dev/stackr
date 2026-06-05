@@ -45,6 +45,12 @@ export class PricesStore {
     );
   }
 
+  stopPolling(): void {
+    this.coinGecko.stopPolling();
+    this._prices.set({});
+    this._loading.set(false);
+  }
+
   clearError(): void {
     this._error.set(null);
   }

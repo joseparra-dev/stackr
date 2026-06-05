@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { DeferBlockBehavior, DeferBlockState, type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  DeferBlockBehavior,
+  DeferBlockState,
+  type ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PortfolioHistoryStore } from '@features/dashboard/portfolio-history.store';
@@ -54,6 +59,7 @@ function makeStoreMocks() {
       loading: signal(false).asReadonly(),
       error: signal(null).asReadonly(),
       subscribeToAssets: vi.fn(),
+      stopPolling: vi.fn(),
       clearError: vi.fn(),
     },
   };
@@ -180,7 +186,9 @@ describe('DashboardPage', () => {
     await deferBlocks[0]?.render(DeferBlockState.Complete);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('[data-testid="portfolio-value-chart-stub"]')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="portfolio-value-chart-stub"]'),
+    ).toBeTruthy();
   });
 
   it('shows allocation chart when portfolio has value', async () => {
@@ -192,7 +200,9 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]'),
+    ).toBeTruthy();
   });
 
   it('shows allocation chart with empty state when portfolio value is zero', async () => {
@@ -204,7 +214,9 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="allocation-chart-stub"]'),
+    ).toBeTruthy();
   });
 
   it('applies danger tone for negative PnL', async () => {
