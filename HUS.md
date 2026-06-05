@@ -1,6 +1,6 @@
 # User Stories (HUs) — Stackr MVP
 
-> Source of truth for the 25 user stories of the MVP.
+> Source of truth for the 26 user stories of the MVP.
 > Copy each block as a GitHub Issue and assign to its Sprint milestone.
 > Drag to the "Stackr — Roadmap" Project board.
 
@@ -454,3 +454,40 @@ As a recruiter visiting the repo, I want a compelling README that sells the proj
 - [ ] Lighthouse scores visible.
 - [ ] License: MIT.
 - [ ] LinkedIn post drafted.
+
+---
+
+## HU-26 — chore(core): Zoneless change detection migration
+
+**Size:** M | **Sprint:** Week 6 (post-launch tech debt)
+
+### User Story
+
+As a developer, I want Stackr to run without `zone.js`, so the app aligns with Angular 21 defaults (signals + zoneless CD) and avoids spurious Supabase auth lock errors in the console.
+
+### Context
+
+Supabase Auth uses `navigator.locks` by default when `zone.js` patches native `Promise`, which surfaces `NavigatorLockAcquireTimeoutError` in dev (HMR, multiple tabs). The error is benign but noisy. Angular’s recommended fix is zoneless change detection; an in-process `processLock` ships as an interim hardening step on the same branch.
+
+### Acceptance Criteria
+
+**Interim:**
+
+- [x] Supabase client uses `processLock` instead of default `navigatorLock` (`auth.lock` in `supabase.client.ts`).
+- [x] Sentry `ignoreErrors` filters benign `LockAcquireTimeoutError` variants (no false Issues in prod).
+- [x] `@supabase/auth-js` declared as a direct dependency (same major as `@supabase/supabase-js`).
+
+**Full migration:**
+
+- [x] `provideZonelessChangeDetection()` registered in `app.config.ts`.
+- [x] `zone.js` removed from `angular.json` polyfills.
+- [x] Vitest setup uses zoneless test bed (`setupTestBed({ zoneless: true })`; `setup-zone` removed).
+- [x] `zone.js` removed from `package.json` dependencies.
+- [x] `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build` pass.
+- [ ] `pnpm e2e` pass (no Playwright specs in repo yet).
+- [ ] Manual check: no `NavigatorLockAcquireTimeoutError` on `pnpm start` after login/session refresh.
+
+### Notes
+
+- Not part of HU-24 (Sentry/Vercel); that HU is already in production.
+- Branch: `52-chorecore-zoneless-change-detection-migration`.

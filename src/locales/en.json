@@ -175,7 +175,8 @@
       "emptyMessage": "Allocation appears once assets have a live price.",
       "ariaSummary": "Portfolio allocation by asset: {parts}",
       "ariaSlice": "{name} ({symbol}): {value}, {percent} of portfolio",
-      "chartTotal": "Total"
+      "chartTotal": "Total",
+      "listAria": "Allocation breakdown by asset"
     },
     "history": {
       "heading": "Portfolio value",

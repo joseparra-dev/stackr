@@ -16,18 +16,50 @@
   />
   } @else {
   <div class="mt-4" role="img" [attr.aria-label]="ariaSummary()">
-    <apx-chart
-      [series]="series()"
-      [chart]="chart()"
-      [labels]="labels()"
-      [colors]="colors"
-      [legend]="legend()"
-      [dataLabels]="dataLabels"
-      [stroke]="stroke()"
-      [plotOptions]="plotOptions()"
-      [tooltip]="tooltip()"
-      [theme]="apexTheme()"
-    />
+    <ul class="space-y-4" [attr.aria-label]="'dashboard.allocation.listAria' | translate">
+      @for (slice of slices(); track slice.assetId; let i = $index) {
+      <li>
+        <div class="flex items-baseline justify-between gap-3">
+          <span class="flex min-w-0 items-center gap-2.5 font-medium text-(--color-text)">
+            <span
+              class="size-3 shrink-0 rounded-full"
+              [style.background-color]="sliceColor(i)"
+              aria-hidden="true"
+            ></span>
+            <span class="truncate text-sm">{{ slice.symbol }}</span>
+            <span class="truncate text-xs font-normal text-(--color-text-muted)"
+              >{{ slice.name }}</span
+            >
+          </span>
+          <span class="shrink-0 text-sm font-semibold text-(--color-text) tabular-nums">
+            {{ formatAllocationPercent(slice.percent) }}
+          </span>
+        </div>
+        <div
+          class="mt-2 h-3 overflow-hidden rounded-full bg-(--color-surface-2)"
+          role="presentation"
+        >
+          <div
+            class="h-full rounded-full"
+            [style.width.%]="barWidthPercent(slice.percent)"
+            [style.background-color]="sliceColor(i)"
+          ></div>
+        </div>
+        <p class="mt-1.5 text-xs text-(--color-text-muted) tabular-nums">
+          {{ formatUsd(slice.valueUsd) }}
+        </p>
+      </li>
+      }
+    </ul>
+
+    <p class="mt-5 border-t border-(--color-border) pt-4 text-sm text-(--color-text-muted)">
+      <span class="font-medium text-(--color-text)"
+        >{{ 'dashboard.allocation.chartTotal' | translate }}</span
+      >
+      <span class="ms-2 font-semibold text-(--color-text) tabular-nums"
+        >{{ formatUsd(totalValueUsd()) }}</span
+      >
+    </p>
   </div>
 
   <ul class="sr-only">

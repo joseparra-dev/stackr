@@ -13,6 +13,13 @@ export function initSentry(): void {
     dsn,
     environment: import.meta.env['NG_APP_ENV'] ?? 'development',
     ...(typeof release === 'string' && release.length > 0 ? { release } : {}),
+    // Benign Supabase auth lock contention (zone.js + Web Locks API); auth still works.
+    ignoreErrors: [
+      'NavigatorLockAcquireTimeoutError',
+      'ProcessLockAcquireTimeoutError',
+      /Acquiring an exclusive Navigator LockManager lock/,
+      /Acquiring process lock with name/,
+    ],
   });
 }
 

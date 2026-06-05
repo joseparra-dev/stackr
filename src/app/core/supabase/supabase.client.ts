@@ -1,5 +1,6 @@
 import { InjectionToken, makeEnvironmentProviders } from '@angular/core';
 import type { EnvironmentProviders } from '@angular/core';
+import { processLock } from '@supabase/auth-js';
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient, SupabaseClientOptions } from '@supabase/supabase-js';
 
@@ -15,6 +16,10 @@ const DEFAULT_OPTIONS: SupabaseClientOptions<'public'> = {
     // PKCE over implicit flow: mitigates token interception on OAuth redirect (OWASP A07).
     flowType: 'pkce',
     storageKey: STORAGE_KEY,
+    // Web Locks API + zone.js (Angular polyfill) causes spurious
+    // NavigatorLockAcquireTimeoutError in dev. In-process lock is enough
+    // for a single tab; cross-tab sync uses BroadcastChannel in auth-js.
+    lock: processLock,
   },
 };
 
