@@ -23,7 +23,9 @@ export async function withExponentialBackoff<T>(
   const maxAttempts = options.maxAttempts ?? DEFAULT_MAX_ATTEMPTS;
   const baseDelayMs = options.baseDelayMs ?? DEFAULT_BASE_DELAY_MS;
   const sleep = options.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
-  const shouldRetry = options.shouldRetry ?? isRateLimitError;
+  // Never retry rate-limit errors: retrying immediately burns more quota and
+  // delays the window reset. The next scheduled poll (30 s) is the right retry.
+  const shouldRetry = options.shouldRetry ?? ((error: unknown) => !isRateLimitError(error));
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {

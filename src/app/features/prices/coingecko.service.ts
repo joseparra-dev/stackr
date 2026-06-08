@@ -29,7 +29,7 @@ export class CoinGeckoService {
   private onError: ((error: AppError) => void) | null = null;
 
   async getDailyPrices(assetId: string, days: HistoryRangeDays): Promise<ReadonlyMap<string, number>> {
-    const url = `${environment.coingecko.baseUrl}/coins/${assetId}/market_chart?vs_currency=usd&days=${days}`;
+    const url = this.buildUrl(`/coins/${assetId}/market_chart`, `vs_currency=usd&days=${days}`);
 
     const response = await withExponentialBackoff(async () => {
       try {
@@ -92,7 +92,7 @@ export class CoinGeckoService {
   }
 
   private async fetchPrices(ids: readonly string[]): Promise<PriceMap> {
-    const url = `${environment.coingecko.baseUrl}/simple/price?ids=${ids.join(',')}&vs_currencies=usd`;
+    const url = this.buildUrl('/simple/price', `ids=${ids.join(',')}&vs_currencies=usd`);
 
     return withExponentialBackoff(async () => {
       try {
@@ -147,6 +147,12 @@ export class CoinGeckoService {
 
     document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
     this.boundVisibilityHandler = null;
+  }
+
+  private buildUrl(path: string, queryString: string): string {
+    const key = environment.coingecko.apiKey;
+    const suffix = key ? `&x_cg_demo_api_key=${key}` : '';
+    return `${environment.coingecko.baseUrl}${path}?${queryString}${suffix}`;
   }
 }
 

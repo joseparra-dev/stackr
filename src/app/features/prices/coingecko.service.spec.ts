@@ -112,33 +112,25 @@ describe('CoinGeckoService', () => {
     await expect(second).resolves.toEqual({ bitcoin: 68_000 });
   });
 
-  it('throws AppError when CoinGecko keeps returning HTTP 429', async () => {
-    vi.useFakeTimers();
-
+  it('throws AppError immediately on HTTP 429 without retrying', async () => {
     const promise = service.getPrices(['solana']);
 
-    for (let attempt = 0; attempt < 3; attempt++) {
-      httpMock.expectOne(`${PRICES_URL}?ids=solana&vs_currencies=usd`).flush(null, {
-        status: 429,
-        statusText: 'Too Many Requests',
-      });
-      if (attempt < 2) {
-        await vi.advanceTimersByTimeAsync(1_000 * 2 ** attempt);
-      }
-    }
+    httpMock.expectOne(`${PRICES_URL}?ids=solana&vs_currencies=usd`).flush(null, {
+      status: 429,
+      statusText: 'Too Many Requests',
+    });
 
     await expect(promise).rejects.toMatchObject({ code: 'api/rate-limit' });
-    vi.useRealTimers();
   });
 
-  it('retries on HTTP 429 and succeeds on a later attempt', async () => {
+  it('retries on transient HTTP 500 and succeeds on a later attempt', async () => {
     vi.useFakeTimers();
 
     const promise = service.getPrices(['bitcoin']);
 
     httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush(null, {
-      status: 429,
-      statusText: 'Too Many Requests',
+      status: 500,
+      statusText: 'Internal Server Error',
     });
     await vi.advanceTimersByTimeAsync(1_000);
 
@@ -215,12 +207,12 @@ describe('CoinGeckoService', () => {
       service.startPolling(['bitcoin'], undefined, onError);
 
       httpMock.expectOne(`${PRICES_URL}?ids=bitcoin&vs_currencies=usd`).flush(null, {
-        status: 500,
-        statusText: 'Internal Server Error',
+        status: 429,
+        statusText: 'Too Many Requests',
       });
 
       await vi.waitFor(() => expect(onError).toHaveBeenCalled());
-      expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'api/server-error' }));
+      expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'api/rate-limit' }));
     });
 
     it('pauses polling while the document is hidden and refetches when visible', async () => {

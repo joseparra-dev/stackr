@@ -31,12 +31,24 @@ describe('withExponentialBackoff', () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it('retries rate-limit errors with increasing delays', async () => {
+  it('fails immediately on rate-limit without retrying', async () => {
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    const fn = vi.fn().mockRejectedValue(new AppError('api/rate-limit', 'Rate limited'));
+
+    await expect(withExponentialBackoff(fn, { sleep })).rejects.toMatchObject({
+      code: 'api/rate-limit',
+    });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(sleep).not.toHaveBeenCalled();
+  });
+
+  it('retries transient errors with increasing delays', async () => {
     const sleep = vi.fn().mockResolvedValue(undefined);
     const fn = vi
       .fn()
-      .mockRejectedValueOnce(new AppError('api/rate-limit', 'Rate limited'))
-      .mockRejectedValueOnce(new AppError('api/rate-limit', 'Rate limited'))
+      .mockRejectedValueOnce(new AppError('api/server-error', 'Server error'))
+      .mockRejectedValueOnce(new AppError('api/server-error', 'Server error'))
       .mockResolvedValue('ok');
 
     await expect(withExponentialBackoff(fn, { sleep })).resolves.toBe('ok');
@@ -47,27 +59,15 @@ describe('withExponentialBackoff', () => {
     expect(sleep).toHaveBeenNthCalledWith(2, 2_000);
   });
 
-  it('throws after max attempts are exhausted', async () => {
+  it('throws after max attempts are exhausted on transient errors', async () => {
     const sleep = vi.fn().mockResolvedValue(undefined);
-    const fn = vi.fn().mockRejectedValue(new AppError('api/rate-limit', 'Rate limited'));
+    const fn = vi.fn().mockRejectedValue(new AppError('api/server-error', 'Server error'));
 
     await expect(withExponentialBackoff(fn, { sleep, maxAttempts: 3 })).rejects.toMatchObject({
-      code: 'api/rate-limit',
+      code: 'api/server-error',
     });
 
     expect(fn).toHaveBeenCalledTimes(3);
     expect(sleep).toHaveBeenCalledTimes(2);
-  });
-
-  it('does not retry non-rate-limit errors', async () => {
-    const sleep = vi.fn().mockResolvedValue(undefined);
-    const fn = vi.fn().mockRejectedValue(new AppError('api/server-error', 'Server error'));
-
-    await expect(withExponentialBackoff(fn, { sleep })).rejects.toMatchObject({
-      code: 'api/server-error',
-    });
-
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(sleep).not.toHaveBeenCalled();
   });
 });
